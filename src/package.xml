@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--package name="stsimcbmcfs3" displayName="Integrates the Carbon Budget Model for the Canadian Forest Sector (CBM-CFS3) into the ST-Sim simulation model." version="1.0.17" isAddOn="True" extendsPackage="stsim" requiresAddOns="stsimsf" url="https://apexrms.github.io/stsimcbmcfs3/"-->
+<package name="lucasbuilder" displayName="LUCAS Carbon Budget Model" version="2.0.0" url="https://apexrms.github.io/stsimcbmcfs3/">
+
+<builtFor package="stsim" version="4.0.0"/>
+<!--builtFor package="stsim" version=""/-->
+ 
+ 
+  <!--transformers>
+    <transformer name="Primary" isPrimary="True">
+      <include>
+		    <transformer name="LoadCBMCFS3Output"/>
+        <transformer name="FlowPathways"/>
+        <transformer name="Spinup"/>      
+      </include-->
+
+	<dataSheet name="Database" displayName="CBM Database" isSingleRow="True" dataScope="Library">
+     <column name="Path" dataType="String" isExternalFile="True" externalFileAbsolute="True" externalFileFilter="CBM-CFS3 Files|*.mdb;*.accdb|All Files|*.*"/>
+  </dataSheet>
+
+  <dataSheet name="EcoBoundary" displayName="Ecological Boundary" displayMember="Name" dataScope="Project">
+    <column name="Name" dataType="String"/>
+    <column name="Description" dataType="String" isOptional="True"/>
+  </dataSheet>
+
+  <dataSheet name="AdminBoundary" displayName="Administrative Boundary" displayMember="Name" dataScope="Project">
+    <column name="Name" dataType="String"/>
+    <column name="Description" dataType="String" isOptional="True"/>
+  </dataSheet>
+  
+  <dataSheet name="SpeciesType" displayName="Species Type" displayMember="Name" dataScope="Project">
+    <column name="Name" dataType="String"/>
+    <column name="Description" dataType="String" isOptional="True"/>
+  </dataSheet>
+
+  <dataSheet name="DisturbanceType" displayName="Disturbance Type" displayMember="Name" dataScope="Project">
+    <column name="Name" dataType="String"/>
+    <column name="Description" dataType="String" isOptional="True"/>
+  </dataSheet>
+
+  <dataSheet name="CBMCFS3Stock" displayName="CBM Stock" displayMember="Name" dataScope="Project">
+    <column name="Name" dataType="String"/>
+    <column name="Description" dataType="String" isOptional="True"/>
+  </dataSheet>
+
+        <!--dataSheet name="CrosswalkSpecies" displayName="CBM Crosswalk Spatial Unit and Species Type" dataScope="Scenario">
+            <dataSheet name="CrosswalkSpecies" displayName="CBM Crosswalk Species"-->
+  <dataSheet name="CrossWalkSpecies" displayName="Spatial Unit and Species Type">
+    <!--column name="CrosswalkSpeciesID" dataType="Integer" isPrimary="True"/-->
+    <!--column name="ScenarioID" dataType="Integer" isCompositeIndex="True"/-->
+    <column name="EcoBoundaryID" dataType="Integer" displayName="CBM Ecological Boundary" validationType="Datasheet" formula1="EcoBoundary" allowDbNull="False"/>
+    <column name="AdminBoundaryID" dataType="Integer" displayName="CBM Administrative Boundary" validationType="Datasheet" formula1="AdminBoundary" allowDbNull="False"/>
+    <column name="SpeciesTypeID" dataType="Integer" displayName="CBM Species Type" validationType="Datasheet" formula1="SpeciesType" allowDbNull="False"/>
+    <column name="StratumID" dataType="Integer" displayName="ST-Sim Stratum" validationType="Datasheet" formula1="stsim_Stratum" isOptional="True"/>
+    <column name="SecondaryStratumID" dataType="Integer" displayName="ST-Sim Secondary Stratum" validationType="Datasheet" formula1="stsim_SecondaryStratum" isOptional="True"/>
+    <column name="TertiaryStratumID" dataType="Integer" displayName="ST-Sim Tertiary Stratum" validationType="Datasheet" formula1="stsim_TertiaryStratum" isOptional="True" displayNameSource="stsim_Terminology" displayNameColumn="TertiaryStratumLabel"/>
+    <column name="StateClassID" dataType="Integer" displayName="ST-Sim State Class" validationType="Datasheet" formula1="stsim_StateClass" isOptional="True" initOptionalVisible="True" />
+    <column name="AverageTemperature" dataType="Double" displayName="Average Temperature" isOptional="True"/> 
+    <column name="CBMOutputFile" displayName="CBM Output File" dataType="String" isExternalFile="True" isOptional="True" initOptionalVisible="True"/> 
+  </dataSheet>
+
+  <dataSheet name="CrosswalkDisturbance" displayName="Disturbance">
+    <!--column name="CrosswalkDisturbanceID" dataType="Integer" isPrimary="True"/-->
+    <!--column name="ScenarioID" dataType="Integer" isCompositeIndex="True"/-->
+    <column name="DisturbanceTypeID" dataType="Integer" displayName="CBM Disturbance Type" validationType="Datasheet" formula1="DisturbanceType" allowDbNull="False"/>
+    <column name="TransitionGroupID" dataType="Integer" displayName="ST-Sim Transition Type/Group" validationType="Datasheet" formula1="stsim_TransitionGroup" allowDbNull="False"/>
+  </dataSheet>
+
+  <dataSheet name="CrosswalkStock" displayName="Carbon Stock">
+    <!--column name="CrosswalkStockID" dataType="Integer" isPrimary="True"/-->
+    <!--column name="ScenarioID" dataType="Integer" isCompositeIndex="True"/-->
+    <column name="CBMStock" displayName="CBM Stock" dataType="String" allowDbNull="False"/>
+    <column name="StockTypeID" dataType="Integer" displayName="ST-Sim Stock Type" validationType="Datasheet" formula1="stsim_StockType" allowDbNull="False"/>
+  </dataSheet>
+ 
+  <dataSheet name="Spinup" displayName="Spin-up">
+    <!--column name="SpinupID" dataType="Integer" isPrimary="True"/-->
+    <!--column name="ScenarioID" dataType="Integer" isCompositeIndex="True"/-->
+    <column name="StratumID" dataType="Integer" displayName="ST-Sim Stratum" validationType="Datasheet" formula1="stsim_Stratum" isOptional="True" initOptionalVisible="True"/>
+    <column name="SecondaryStratumID" dataType="Integer" displayName="ST-Sim Secondary Stratum" validationType="Datasheet" formula1="stsim_SecondaryStratum" isOptional="True" initOptionalVisible="True"/>
+    <column name="TertiaryStratumID" dataType="Integer" displayName="ST-Sim Tertiary Stratum" validationType="Datasheet" formula1="stsim_TertiaryStratum" isOptional="True"/>
+    <column name="StateClassID" dataType="Integer" displayName="ST-Sim State Class" validationType="Datasheet" formula1="stsim_StateClass" isOptional="True" initOptionalVisible="True" />
+    <column name="MostRecentDisturbanceTGID" dataType="Integer" displayName="Most Recent Disturbance" validationType="Datasheet" formula1="stsim_TransitionGroup"/>
+    <column name="HistoricalDisturbanceTGID" dataType="Integer" displayName="Historical Disturbance" validationType="Datasheet" formula1="stsim_TransitionGroup"/>
+    <column name="ReturnInterval" displayName="Return Interval" dataType="Integer" validationType="WholeNumber" validationCondition="Greater" formula1="0" isOptional="True"/>
+    <column name="SpinupDuration" displayName="Number of Return Intervals" dataType="Integer" validationType="WholeNumber" validationCondition="Greater" formula1="0" allowDBNull="False"/>
+    <column name="MaxAgeForLastCycle" displayName="Max Age" dataType="Integer" validationType="WholeNumber" validationCondition="Greater" formula1="0" isOptional="True"/>
+   </dataSheet>
+  
+  <dataSheet name="MerchantableVolumeCurve" displayName="Merchantable Volume Curve">
+    <!--column name="MerchantableVolumeCurveID" dataType="Integer" isPrimary="True"/-->
+    <!--column name="ScenarioID" dataType="Integer" isCompositeIndex="True"/-->
+    <column name="StratumID" dataType="Integer" displayName="ST-Sim Stratum" validationType="Datasheet" formula1="stsim_Stratum" isOptional="True" initOptionalVisible="True"/>
+    <column name="SecondaryStratumID" dataType="Integer" displayName="ST-Sim Secondary Stratum" validationType="Datasheet" formula1="stsim_SecondaryStratum" isOptional="True" initOptionalVisible="True"/>
+    <column name="StateClassID" dataType="Integer" displayName="ST-Sim State Class" validationType="Datasheet" formula1="stsim_StateClass" isOptional="True" initOptionalVisible="True" />
+    <column name="Age" dataType="Integer" displayName="Age"/>
+    <column name="MerchantableVolume" dataType="Double" displayName="Merchantable Volume"/>
+  </dataSheet>
+ 
+  <!--Transformer-->
+  <transformer
+    name="LoadCBMCFS3Output"
+    displayName="1 - Load CBM Output"
+    isRunnable="True"
+    programName="Rscript.exe"
+    programArguments="1-load-cbmcfs3-output.R"
+    transformerSpecificOutput="False">
+    <dataSheet name="CrosswalkSpecies" type="Input"/>   
+    <dataSheet name="CrosswalkStock" type="Input"/>  
+    <dataSheet name="stsim_StateAttributeValue" type="Input"/>
+    <dataSheet name="stsim_RunControl" type="Input"/>  
+  </transformer>
+
+  <transformer
+    name="FlowPathways"
+    displayName="2 - Generate Flow Pathways"
+    isRunnable="True"
+    programName="Rscript.exe"
+    programArguments="2-flow-pathways.R"
+    transformerSpecificOutput="False">
+    <dataSheet name="stsim_RunControl" type="Input"/> 
+    <dataSheet name="Spinup" type="Input"/> <!--Should be type="Both" ? -->
+    <dataSheet name="CrosswalkSpecies" type="Input"/>        
+    <dataSheet name="CrosswalkDisturbance" type="Input"/>        
+    <dataSheet name="CrosswalkStock" type="Input"/>           
+    <datafeed name="stsim_InitialStocks" type="Input"/>
+    <dataSheet name="stsim_OutputOptionsStockFlow" type="Input"/> 
+    <dataSheet name="stsim_FlowPathway" type="Both"/>        
+    <dataSheet name="stsim_StockTypeGroupMembership" type="Input"/>  
+    <dataSheet name="stsim_FlowTypeGroupMembership" type="Input"/>  
+    <dataSheet name="stsim_FlowMultiplier" type="Both"/>         
+    <dataSheet name="stsim_FlowOrder" type="Input"/>                    
+    <dataSheet name="stsim_StateAttributeValue" type="Both"/>
+    <dataSheet name="stsim_OutputOptions" type="Input"/>
+    <dataSheet name="stsim_Transition" type="Both"/> 
+    <!--dataSheet name="stsim_FlowType" type="Input"/-->	
+    <dataSheet name="MerchantableVolumeCurve" type="Output"/>		
+  </transformer>
+
+  <!--transformer
+    name="Spinup"
+    displayName="3 - Run Spin-up"
+    isRunnable="True"
+    transformerSpecificOutput="False">
+    <runtime>
+      <transformer name="SpinupPreProcess"/>
+      <transformer name="stsim_Primary"/>
+      <transformer name="SpinupPostProcess"/>
+    </runtime>
+    <dataSheet name="Spinup" type="Both"/>
+    <dataSheet name="CrosswalkSpecies" type="Input"/>        
+    <dataSheet name="CrosswalkDisturbance" type="Input"/>        
+    <dataSheet name="CrosswalkStock" type="Input"/>           
+    <datafeed name="stsim_InitialStocks" type="Input"/>
+    <dataSheet name="stsim_OutputOptionsStockFlow" type="Input"/> 
+    <dataSheet name="stsim_FlowPathway" type="Input"/>        
+    <dataSheet name="stsim_StockTypeGroupMembership" type="Input"/>  
+    <dataSheet name="stsim_FlowTypeGroupMembership" type="Input"/>  
+    <dataSheet name="stsim_FlowMultiplier" type="Input"/>         
+    <dataSheet name="stsim_FlowOrder" type="Input"/>                    
+    <dataSheet name="stsim_StateAttributeValue" type="Both"/>
+    <dataSheet name="stsim_OutputOptions" type="Input"/>
+    <dataSheet name="stsim_Transition" type="Both"/>
+    
+    <dataSheet name="stsim_RunControl" type="Output"/>
+    <dataSheet name="stsim_TransitionMultiplierValue" type="Output"/>
+    <dataSheet name="stsim_InitialConditionsNonSpatial" type="Output"/>
+    <dataSheet name="stsim_InitialConditionsNonSpatialDistribution" type="Output"/>
+    <dataSheet name="stsim_DeterministicTransition" type="Input"/>
+    <dataSheet name="stsim_OutputStock" type="Input"/>
+  </transformer-->
+
+  <transformer
+    name="SpinupPreProcess"
+    displayName="3 Spin-up Pre-Process (before ST-Sim)"
+    programName="Rscript.exe"
+    programArguments="3-spinup-pre.R">
+    <dataSheet name="Spinup" type="Both"/>
+    <dataSheet name="stsim_RunControl" type="Output"/>
+    <dataSheet name="stsim_TransitionMultiplierValue" type="Output"/>
+    <dataSheet name="stsim_InitialConditionsNonSpatial" type="Output"/>
+    <dataSheet name="stsim_InitialConditionsNonSpatialDistribution" type="Output"/>
+    <dataSheet name="stsim_DeterministicTransition" type="Input"/>
+    <dataSheet name="stsim_Transition" type="Both"/>
+  </transformer>
+
+  <transformer
+    name="SpinupPostProcess"
+    displayName="5 Spin-up Post-Process (after ST-Sim)"
+    programName="Rscript.exe"
+    programArguments="4-spinup-post.R">
+    <dataSheet name="Spinup" type="Both"/>
+    <dataSheet name="stsim_InitialStockNonSpatial" type="Input"/>
+    <dataSheet name="stsim_OutputStock" type="Input"/>
+    <dataSheet name="stsim_StateAttributeValue" type="Both"/>
+  </transformer>
+
+  <!-- Layouts -->
+  <layout type="Library" appendTo="stsim_Options">
+    <item name="Database"/>
+  </layout>
+
+  <layout type="Project" appendTo="stsim_Advanced">
+    <group name="CBMCFS3Group" displayName="CBM">
+      <item name="EcoBoundary"/>
+      <item name="AdminBoundary"/>
+      <item name="SpeciesType"/>
+      <item name="DisturbanceType"/>
+      <item name="CBMCFS3Stock"/>
+    </group>
+  </layout>
+
+  <layout type="Scenario" appendTo="stsim_Advanced">
+    <group name="CBMCFS3Group" displayName="CBM">
+      <group name="CrosswalkGroup" displayName="Crosswalk to ST-Sim">
+        <item name="CrosswalkSpecies" displayName="Spatial Unit and Species Type"/>
+        <item name="CrosswalkDisturbance" displayName="Disturbance"/>
+        <item name="CrosswalkStock" displayName="Carbon Stock"/>
+      </group>
+      <item name="Spinup" displayName="Spin-up"/>        
+      <item name="MerchantableVolumeCurve" displayName="Merchantable Volume Curve"/>
+    </group>
+  </layout>
+
+  <!--updateProvider 
+    schemaVersion="2" 
+    minPackageVersion="1.0.13" 
+    className="SyncroSim.Core.XMLUpdateProvider" 
+    classAssembly="SyncroSim.Core"/-->
+</package>

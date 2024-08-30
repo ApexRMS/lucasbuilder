@@ -1,0 +1,14 @@
+stsimcbmcfs3.ssimpkg
+src/.metadata
+install_script.cmd
+data/.Rhistory
+.Rproj.user
+*.Rproj
+.Rhistory
+*.suo
+*.sqlite
+*.json
+*.bak
+model
+dev
+LUCAS_CBMCFS3
