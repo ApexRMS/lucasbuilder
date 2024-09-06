@@ -14,9 +14,9 @@
         <transformer name="Spinup"/>      
       </include-->
 
-	<dataSheet name="Database" displayName="CBM Database" isSingleRow="True" dataScope="Library">
+	<!--dataSheet name="Database" displayName="CBM Database" isSingleRow="True" dataScope="Library">
      <column name="Path" dataType="String" isExternalFile="True" externalFileAbsolute="True" externalFileFilter="CBM-CFS3 Files|*.mdb;*.accdb|All Files|*.*"/>
-  </dataSheet>
+  </dataSheet-->
 
   <dataSheet name="EcoBoundary" displayName="Ecological Boundary" displayMember="Name" dataScope="Project">
     <column name="Name" dataType="String"/>
@@ -205,9 +205,9 @@
   </transformer>
 
   <!-- Layouts -->
-  <layout type="Library" appendTo="stsim_Options">
+  <!--layout type="Library" appendTo="stsim_Options">
     <item name="Database"/>
-  </layout>
+  </layout-->
 
   <layout type="Project" appendTo="stsim_Advanced">
     <group name="CBMCFS3Group" displayName="CBM">
