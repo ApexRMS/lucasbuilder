@@ -19,29 +19,29 @@ spinup <- datasheet(myScenario, "lucasbuilder_Spinup", optional=TRUE) %>%
 
 # Check that primary stratum does not mix unspecified (wildcard) and specified (non-wildcard) values
 stratum_check <- spinup %>%
-  mutate(StratumIsSpecified = ifelse(is.na(StratumID), 0, 1)) %>%
+  mutate(StratumIsSpecified = ifelse(is.na(StratumId), 0, 1)) %>%
   summarize(Valid = ifelse(sum(StratumIsSpecified) == 0 | sum(StratumIsSpecified) == nrow(spinup), TRUE, FALSE))
 if(!stratum_check$Valid)
   stop("The ST-Sim Stratum in the Spin-up datasheet has both specified and unspecified values.")
 
 # Check that secondary stratum does not mix unspecified (wildcard) and specified (non-wildcard) values
 secondary_stratum_check <- spinup %>%
-  mutate(SecondaryStratumIsSpecified = ifelse(is.na(SecondaryStratumID), 0, 1)) %>%
+  mutate(SecondaryStratumIsSpecified = ifelse(is.na(SecondaryStratumId), 0, 1)) %>%
   summarize(Valid = ifelse(sum(SecondaryStratumIsSpecified) == 0 | sum(SecondaryStratumIsSpecified) == nrow(spinup), TRUE, FALSE))
 if(!secondary_stratum_check$Valid)
   stop("The ST-Sim Secondary Stratum in the Spin-up datasheet has both specified and unspecified values.")
 
 # Create tertiary stratum
 spinup <- spinup %>% 
-  mutate(TertiaryStratumID = paste0("Last Disturbance: ", 
-                                    strip_type(MostRecentDisturbanceTGID)))
+  mutate(TertiaryStratumId = paste0("Last Disturbance: ", 
+                                    strip_type(MostRecentDisturbanceTGId)))
 # Throw error if empty
 if (nrow(spinup) == 0){
   stop("Spinup datasheet is empty, conditions could not be initiated")
 }
 
 # Save tertiary stratum
-unique_tertiary <- data.frame(Name = unique(spinup$TertiaryStratumID))
+unique_tertiary <- data.frame(Name = unique(spinup$TertiaryStratumId))
 saveDatasheet(myProject, data = unique_tertiary, 
               name = "stsim_TertiaryStratum")
 
@@ -52,7 +52,7 @@ saveDatasheet(myScenario, data = spinup,
 
 # (2) Impute Spinup params from CBM ---------------------------------------
 
-if (is.null(spinup$HistoricalDisturbanceTGID)){
+if (is.null(spinup$HistoricalDisturbanceTGId)){
   # TODO script for inputation
   # Spinup duration, stratums and state class
   # can impute max age => use return interval
@@ -90,13 +90,13 @@ for (rownb in 1:nrow_unique){
   
   # Collect row-wise params
   the_row <- slice(spinup, rownb)
-  stratum <- the_row$StratumID
-  secondary_stratum <- the_row$SecondaryStratumID
-  tertiary_stratum <- the_row$TertiaryStratumID
+  stratum <- the_row$StratumId
+  secondary_stratum <- the_row$SecondaryStratumId
+  tertiary_stratum <- the_row$TertiaryStratumId
   
-  state_class <- the_row$StateClassID
-  dist_hist <- the_row$HistoricalDisturbanceTGID
-  dist_last <- the_row$MostRecentDisturbanceTGID
+  state_class <- the_row$StateClassId
+  dist_hist <- the_row$HistoricalDisturbanceTGId
+  dist_last <- the_row$MostRecentDisturbanceTGId
   
   # If primary stratum is blank create a new primary stratum called "All" (changed to "[Unspecified]" to match template lib)
   if(is.na(stratum)){
@@ -124,22 +124,22 @@ for (rownb in 1:nrow_unique){
   # Bind them
   temp_df <- bind_rows(data.frame(Timestep = ts_seq, Amount = 1), 
                        data.frame(Timestep = ts_seq_add, Amount = 0)) %>% 
-    mutate(TransitionGroupID = dist_hist) %>% 
+    mutate(TransitionGroupId = dist_hist) %>% 
     mutate_if(is.factor, as.character)
   
   # Check if the 2 disturbances are the same
   if(dist_hist != dist_last){
     end_rows <- which(temp_df$Timestep %in% 
                         c(spinup_duration, spinup_duration + 1))
-    temp_df[end_rows, ]$TransitionGroupID <- dist_last
+    temp_df[end_rows, ]$TransitionGroupId <- dist_last
     temp_df <- add_row(temp_df, Timestep = 0, Amount = 0, 
-                       TransitionGroupID = dist_last)
+                       TransitionGroupId = dist_last)
   }
   
   # If there are any transition groups that are not 
   # included in the multipliers, set them to 
   # zero for the run.
-  includedTransGroups = unique(temp_df$TransitionGroupID)
+  includedTransGroups = unique(temp_df$TransitionGroupId)
   allTransitionGroups = datasheet(myProject, name = "TransitionGroup")
   excludeTransitionGroups = filter(allTransitionGroups, Name != includedTransGroups & IsAuto == TRUE)
   nExclude = nrow(excludeTransitionGroups)
@@ -153,10 +153,10 @@ for (rownb in 1:nrow_unique){
   
   # Add row params
   temp_df <-  temp_df %>% 
-    mutate(StratumID = stratum, 
-           SecondaryStratumID = secondary_stratum, 
-           TertiaryStratumID = tertiary_stratum,
-           StateClassID = state_class)
+    mutate(StratumId = stratum, 
+           SecondaryStratumId = secondary_stratum, 
+           TertiaryStratumId = tertiary_stratum,
+           StateClassId = state_class)
   
   final_df <- bind_rows(final_df, temp_df)
   stratum_col <- c(stratum_col, stratum)
@@ -169,7 +169,7 @@ final_df <- final_df %>%
 saveDatasheet(myScenario, data = final_df, 
               name = "stsim_TransitionMultiplierValue")
 
-spinup$StratumID <- stratum_col
+spinup$StratumId <- stratum_col
 saveDatasheet(myScenario, data = spinup, 
              name = "lucasbuilder_Spinup")
 
@@ -180,7 +180,7 @@ IC_nonspatial <- data.frame(TotalAmount = nrow_unique,
                             CalcFromDist = TRUE)
 
 IC_nonspatial_dist <- spinup %>% 
-  select(StratumID, SecondaryStratumID, TertiaryStratumID, StratumID, StateClassID) %>% 
+  select(StratumId, SecondaryStratumId, TertiaryStratumId, StratumId, StateClassId) %>% 
   mutate(AgeMin = 0, AgeMax = 0, RelativeAmount = 1)
 
 saveDatasheet(myScenario, data = IC_nonspatial,
@@ -213,12 +213,12 @@ if (nrow(deter_transitions) == 0){
 }
 
 all_disturbances <- 
-  strip_type(unique(c(spinup_unique$MostRecentDisturbanceTGID, 
-                      spinup_unique$HistoricalDisturbanceTGID)))
+  strip_type(unique(c(spinup_unique$MostRecentDisturbanceTGId, 
+                      spinup_unique$HistoricalDisturbanceTGId)))
 
 new_transitions <- deter_transitions %>% 
   select(-Location) %>% 
-  expand_grid(TransitionTypeID = all_disturbances,
+  expand_grid(TransitionTypeId = all_disturbances,
               Probability = 1) %>% 
   mutate_if(is.factor, as.character) %>% 
   as.data.frame()

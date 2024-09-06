@@ -46,60 +46,60 @@
         <!--dataSheet name="CrosswalkSpecies" displayName="CBM Crosswalk Spatial Unit and Species Type" dataScope="Scenario">
             <dataSheet name="CrosswalkSpecies" displayName="CBM Crosswalk Species"-->
   <dataSheet name="CrosswalkSpecies" displayName="Spatial Unit and Species Type">
-    <!--column name="CrosswalkSpeciesID" dataType="Integer" isPrimary="True"/-->
-    <!--column name="ScenarioID" dataType="Integer" isCompositeIndex="True"/-->
-    <column name="EcoBoundaryID" dataType="Integer" displayName="CBM Ecological Boundary" validationType="Datasheet" formula1="EcoBoundary" allowDbNull="False"/>
-    <column name="AdminBoundaryID" dataType="Integer" displayName="CBM Administrative Boundary" validationType="Datasheet" formula1="AdminBoundary" allowDbNull="False"/>
-    <column name="SpeciesTypeID" dataType="Integer" displayName="CBM Species Type" validationType="Datasheet" formula1="SpeciesType" allowDbNull="False"/>
-    <column name="StratumID" dataType="Integer" displayName="ST-Sim Stratum" validationType="Datasheet" formula1="stsim_Stratum" isOptional="True"/>
-    <column name="SecondaryStratumID" dataType="Integer" displayName="ST-Sim Secondary Stratum" validationType="Datasheet" formula1="stsim_SecondaryStratum" isOptional="True"/>
-    <column name="TertiaryStratumID" dataType="Integer" displayName="ST-Sim Tertiary Stratum" validationType="Datasheet" formula1="stsim_TertiaryStratum" isOptional="True" displayNameSource="stsim_Terminology" displayNameColumn="TertiaryStratumLabel"/>
-    <column name="StateClassID" dataType="Integer" displayName="ST-Sim State Class" validationType="Datasheet" formula1="stsim_StateClass" isOptional="True" initOptionalVisible="True" />
+    <!--column name="CrosswalkSpeciesId" dataType="Integer" isPrimary="True"/-->
+    <!--column name="ScenarioId" dataType="Integer" isCompositeIndex="True"/-->
+    <column name="EcoBoundaryId" dataType="Integer" displayName="CBM Ecological Boundary" validationType="Datasheet" formula1="EcoBoundary" allowDbNull="False"/>
+    <column name="AdminBoundaryId" dataType="Integer" displayName="CBM Administrative Boundary" validationType="Datasheet" formula1="AdminBoundary" allowDbNull="False"/>
+    <column name="SpeciesTypeId" dataType="Integer" displayName="CBM Species Type" validationType="Datasheet" formula1="SpeciesType" allowDbNull="False"/>
+    <column name="StratumId" dataType="Integer" displayName="ST-Sim Stratum" validationType="Datasheet" formula1="stsim_Stratum" isOptional="True"/>
+    <column name="SecondaryStratumId" dataType="Integer" displayName="ST-Sim Secondary Stratum" validationType="Datasheet" formula1="stsim_SecondaryStratum" isOptional="True"/>
+    <column name="TertiaryStratumId" dataType="Integer" displayName="ST-Sim Tertiary Stratum" validationType="Datasheet" formula1="stsim_TertiaryStratum" isOptional="True" displayNameSource="stsim_Terminology" displayNameColumn="TertiaryStratumLabel"/>
+    <column name="StateClassId" dataType="Integer" displayName="ST-Sim State Class" validationType="Datasheet" formula1="stsim_StateClass" isOptional="True" initOptionalVisible="True" />
     <column name="AverageTemperature" dataType="Double" displayName="Average Temperature" isOptional="True"/> 
     <column name="CBMOutputFile" displayName="CBM Output File" dataType="String" isExternalFile="True" isOptional="True" initOptionalVisible="True"/> 
   </dataSheet>
 
   <dataSheet name="CrosswalkDisturbance" displayName="Disturbance">
-    <!--column name="CrosswalkDisturbanceID" dataType="Integer" isPrimary="True"/-->
-    <!--column name="ScenarioID" dataType="Integer" isCompositeIndex="True"/-->
-    <column name="DisturbanceTypeID" dataType="Integer" displayName="CBM Disturbance Type" validationType="Datasheet" formula1="DisturbanceType" allowDbNull="False"/>
-    <column name="TransitionGroupID" dataType="Integer" displayName="ST-Sim Transition Type/Group" validationType="Datasheet" formula1="stsim_TransitionGroup" allowDbNull="False"/>
+    <!--column name="CrosswalkDisturbanceId" dataType="Integer" isPrimary="True"/-->
+    <!--column name="ScenarioId" dataType="Integer" isCompositeIndex="True"/-->
+    <column name="DisturbanceTypeId" dataType="Integer" displayName="CBM Disturbance Type" validationType="Datasheet" formula1="DisturbanceType" allowDbNull="False"/>
+    <column name="TransitionGroupId" dataType="Integer" displayName="ST-Sim Transition Type/Group" validationType="Datasheet" formula1="stsim_TransitionGroup" allowDbNull="False"/>
   </dataSheet>
 
   <dataSheet name="CrosswalkStock" displayName="Carbon Stock">
-    <!--column name="CrosswalkStockID" dataType="Integer" isPrimary="True"/-->
-    <!--column name="ScenarioID" dataType="Integer" isCompositeIndex="True"/-->
+    <!--column name="CrosswalkStockId" dataType="Integer" isPrimary="True"/-->
+    <!--column name="ScenarioId" dataType="Integer" isCompositeIndex="True"/-->
     <column name="CBMStock" displayName="CBM Stock" dataType="String" allowDbNull="False"/>
-    <column name="StockTypeID" dataType="Integer" displayName="ST-Sim Stock Type" validationType="Datasheet" formula1="stsim_StockType" allowDbNull="False"/>
+    <column name="StockTypeId" dataType="Integer" displayName="ST-Sim Stock Type" validationType="Datasheet" formula1="stsim_StockType" allowDbNull="False"/>
   </dataSheet>
 
   <dataSheet name="MerchantableVolume" displayName="Merchantable Volume">
-    <column name="StateClassID" dataType="Integer" displayName="ST-Sim State Class" validationType="Datasheet" formula1="stsim_StateClass" allowDBNull="False"/>
-    <!--column name="SpeciesTypeID" dataType="Integer" displayName="CBM Species Type" validationType="Datasheet" formula1="SpeciesType" isOptional="True" initOptionalVisible="True"/-->
+    <column name="StateClassId" dataType="Integer" displayName="ST-Sim State Class" validationType="Datasheet" formula1="stsim_StateClass" allowDBNull="False"/>
+    <!--column name="SpeciesTypeId" dataType="Integer" displayName="CBM Species Type" validationType="Datasheet" formula1="SpeciesType" isOptional="True" initOptionalVisible="True"/-->
     <column name="Volume" displayName="Volume" dataType="Double" validationType="Decimal" validationCondition="GreaterEqual" formula1="0"/>
     <column name="Age" displayName="Age" dataType="Integer" validationType="WholeNumber" validationCondition="Greater" formula1="0" isOptional="True"/>
   </dataSheet>
  
   <dataSheet name="Spinup" displayName="Spin-up">
-    <!--column name="SpinupID" dataType="Integer" isPrimary="True"/-->
-    <!--column name="ScenarioID" dataType="Integer" isCompositeIndex="True"/-->
-    <column name="StratumID" dataType="Integer" displayName="ST-Sim Stratum" validationType="Datasheet" formula1="stsim_Stratum" isOptional="True" initOptionalVisible="True"/>
-    <column name="SecondaryStratumID" dataType="Integer" displayName="ST-Sim Secondary Stratum" validationType="Datasheet" formula1="stsim_SecondaryStratum" isOptional="True" initOptionalVisible="True"/>
-    <column name="TertiaryStratumID" dataType="Integer" displayName="ST-Sim Tertiary Stratum" validationType="Datasheet" formula1="stsim_TertiaryStratum" isOptional="True"/>
-    <column name="StateClassID" dataType="Integer" displayName="ST-Sim State Class" validationType="Datasheet" formula1="stsim_StateClass" isOptional="True" initOptionalVisible="True" />
-    <column name="MostRecentDisturbanceTGID" dataType="Integer" displayName="Most Recent Disturbance" validationType="Datasheet" formula1="stsim_TransitionGroup"/>
-    <column name="HistoricalDisturbanceTGID" dataType="Integer" displayName="Historical Disturbance" validationType="Datasheet" formula1="stsim_TransitionGroup"/>
+    <!--column name="SpinupId" dataType="Integer" isPrimary="True"/-->
+    <!--column name="ScenarioId" dataType="Integer" isCompositeIndex="True"/-->
+    <column name="StratumId" dataType="Integer" displayName="ST-Sim Stratum" validationType="Datasheet" formula1="stsim_Stratum" isOptional="True" initOptionalVisible="True"/>
+    <column name="SecondaryStratumId" dataType="Integer" displayName="ST-Sim Secondary Stratum" validationType="Datasheet" formula1="stsim_SecondaryStratum" isOptional="True" initOptionalVisible="True"/>
+    <column name="TertiaryStratumId" dataType="Integer" displayName="ST-Sim Tertiary Stratum" validationType="Datasheet" formula1="stsim_TertiaryStratum" isOptional="True"/>
+    <column name="StateClassId" dataType="Integer" displayName="ST-Sim State Class" validationType="Datasheet" formula1="stsim_StateClass" isOptional="True" initOptionalVisible="True" />
+    <column name="MostRecentDisturbanceTGId" dataType="Integer" displayName="Most Recent Disturbance" validationType="Datasheet" formula1="stsim_TransitionGroup"/>
+    <column name="HistoricalDisturbanceTGId" dataType="Integer" displayName="Historical Disturbance" validationType="Datasheet" formula1="stsim_TransitionGroup"/>
     <column name="ReturnInterval" displayName="Return Interval" dataType="Integer" validationType="WholeNumber" validationCondition="Greater" formula1="0" isOptional="True"/>
     <column name="SpinupDuration" displayName="Number of Return Intervals" dataType="Integer" validationType="WholeNumber" validationCondition="Greater" formula1="0" allowDBNull="False"/>
     <column name="MaxAgeForLastCycle" displayName="Max Age" dataType="Integer" validationType="WholeNumber" validationCondition="Greater" formula1="0" isOptional="True"/>
    </dataSheet>
   
   <dataSheet name="MerchantableVolumeCurve" displayName="Merchantable Volume Curve">
-    <!--column name="MerchantableVolumeCurveID" dataType="Integer" isPrimary="True"/-->
-    <!--column name="ScenarioID" dataType="Integer" isCompositeIndex="True"/-->
-    <column name="StratumID" dataType="Integer" displayName="ST-Sim Stratum" validationType="Datasheet" formula1="stsim_Stratum" isOptional="True" initOptionalVisible="True"/>
-    <column name="SecondaryStratumID" dataType="Integer" displayName="ST-Sim Secondary Stratum" validationType="Datasheet" formula1="stsim_SecondaryStratum" isOptional="True" initOptionalVisible="True"/>
-    <column name="StateClassID" dataType="Integer" displayName="ST-Sim State Class" validationType="Datasheet" formula1="stsim_StateClass" isOptional="True" initOptionalVisible="True" />
+    <!--column name="MerchantableVolumeCurveId" dataType="Integer" isPrimary="True"/-->
+    <!--column name="ScenarioId" dataType="Integer" isCompositeIndex="True"/-->
+    <column name="StratumId" dataType="Integer" displayName="ST-Sim Stratum" validationType="Datasheet" formula1="stsim_Stratum" isOptional="True" initOptionalVisible="True"/>
+    <column name="SecondaryStratumId" dataType="Integer" displayName="ST-Sim Secondary Stratum" validationType="Datasheet" formula1="stsim_SecondaryStratum" isOptional="True" initOptionalVisible="True"/>
+    <column name="StateClassId" dataType="Integer" displayName="ST-Sim State Class" validationType="Datasheet" formula1="stsim_StateClass" isOptional="True" initOptionalVisible="True" />
     <column name="Age" dataType="Integer" displayName="Age"/>
     <column name="MerchantableVolume" dataType="Double" displayName="Merchantable Volume"/>
   </dataSheet>

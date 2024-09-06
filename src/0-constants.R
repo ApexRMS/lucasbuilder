@@ -7,7 +7,7 @@
 # crosswalk function ---
 
 # Crosswalk function
-crossSF <- function(CBMStock){ as.character(crosswalkStock$StockTypeID[crosswalkStock$CBMStock==CBMStock])}
+crossSF <- function(CBMStock){ as.character(crosswalkStock$StockTypeId[crosswalkStock$CBMStock==CBMStock])}
 
 # Constants ----------
 

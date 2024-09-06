@@ -23,18 +23,18 @@ initial_stocks <- datasheet(myScenario, "stsim_InitialStockNonSpatial") %>%
 
 output_stocks <- datasheet(myScenario, "stsim_OutputStock") %>%
   mutate_if(is.factor, as.character) %>% 
-  mutate(StockTypeID = strip_type(StockGroupID)) %>% 
-  left_join(initial_stocks, by = "StockTypeID")
+  mutate(StockTypeId = strip_type(StockGroupId)) %>% 
+  left_join(initial_stocks, by = "StockTypeId")
 
 # remove all entries with no match in the initial_stocks table
 # To see what is removed:
-# output_stocks %>% filter(is.na(StateAttributeTypeID)) %>% pull(StockTypeID) %>% table
+# output_stocks %>% filter(is.na(StateAttributeTypeId)) %>% pull(StockTypeId) %>% table
 
-output_stocks_noNA <- output_stocks %>% drop_na(StateAttributeTypeID)
+output_stocks_noNA <- output_stocks %>% drop_na(StateAttributeTypeId)
 
 state_attributes <- datasheet(myScenario, "stsim_StateAttributeValue", optional = T) %>% 
   mutate_if(is.factor, as.character) %>% 
-  filter(!str_detect(StateAttributeTypeID, "Carbon Initial Conditions"))
+  filter(!str_detect(StateAttributeTypeId, "Carbon Initial Conditions"))
 
 # (2) Wrangle outputs into state attribute table --------------------------
 
@@ -52,11 +52,11 @@ for (rownb in 1:nrow_unique){
   interval_dist <- the_row$ReturnInterval
   spinup_duration <- nb_cycles*interval_dist
   last_cycle_duration <- the_row$MaxAgeForLastCycle
-  TSTGroup <- the_row$MostRecentDisturbanceTGID
-  stratum <- the_row$StratumID
-  secondary_stratum <- the_row$SecondaryStratumID
-  tertiary_stratum <- the_row$TertiaryStratumID
-  state_class <- the_row$StateClassID
+  TSTGroup <- the_row$MostRecentDisturbanceTGId
+  stratum <- the_row$StratumId
+  secondary_stratum <- the_row$SecondaryStratumId
+  tertiary_stratum <- the_row$TertiaryStratumId
+  state_class <- the_row$StateClassId
   
   # If primary stratum is blank create a new primary stratum called "All" (changed to "[Unspecified]")
   # NB: this primary stratum was added to project definitions in spinup_pre.R
@@ -70,24 +70,24 @@ for (rownb in 1:nrow_unique){
     output_stocks_filtered_secondary_stratum <- output_stocks_noNA
   } else{
     output_stocks_filtered_secondary_stratum <- output_stocks_noNA %>% 
-      filter(SecondaryStratumID == secondary_stratum)
+      filter(SecondaryStratumId == secondary_stratum)
   }
   
   output_stocks_filtered <- output_stocks_filtered_secondary_stratum %>% 
     filter(Timestep >= spinup_duration, 
            Timestep <= (spinup_duration + last_cycle_duration),
-           StratumID == stratum,
-           TertiaryStratumID == tertiary_stratum,
-           StateClassID == state_class) %>% 
+           StratumId == stratum,
+           TertiaryStratumId == tertiary_stratum,
+           StateClassId == state_class) %>% 
     mutate(TSTMin = Timestep - spinup_duration, 
            TSTMax = TSTMin, 
-           TSTGroupID = TSTGroup,
-           TertiaryStratumID = NA) %>%
+           TSTGroupId = TSTGroup,
+           TertiaryStratumId = NA) %>%
     rename(Value = Amount) %>% 
-    select(-c(StockGroupID, StockTypeID, TertiaryStratumID))
+    select(-c(StockGroupId, StockTypeId, TertiaryStratumId))
   
   if(remove_stratum){
-    output_stocks_filtered$StratumID = NA
+    output_stocks_filtered$StratumId = NA
   }
   
   state_attributes_final <- state_attributes_final %>% 
