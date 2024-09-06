@@ -73,13 +73,7 @@
     <column name="StockTypeId" dataType="Integer" displayName="ST-Sim Stock Type" validationType="Datasheet" formula1="stsim_StockType" allowDbNull="False"/>
   </dataSheet>
 
-  <dataSheet name="MerchantableVolume" displayName="Merchantable Volume">
-    <column name="StateClassId" dataType="Integer" displayName="ST-Sim State Class" validationType="Datasheet" formula1="stsim_StateClass" allowDBNull="False"/>
-    <!--column name="SpeciesTypeId" dataType="Integer" displayName="CBM Species Type" validationType="Datasheet" formula1="SpeciesType" isOptional="True" initOptionalVisible="True"/-->
-    <column name="Volume" displayName="Volume" dataType="Double" validationType="Decimal" validationCondition="GreaterEqual" formula1="0"/>
-    <column name="Age" displayName="Age" dataType="Integer" validationType="WholeNumber" validationCondition="Greater" formula1="0" isOptional="True"/>
-  </dataSheet>
- 
+   
   <dataSheet name="Spinup" displayName="Spin-up">
     <!--column name="SpinupId" dataType="Integer" isPrimary="True"/-->
     <!--column name="ScenarioId" dataType="Integer" isCompositeIndex="True"/-->
@@ -114,7 +108,6 @@
     transformerSpecificOutput="False">
     <dataSheet name="CrosswalkSpecies" type="Input"/>   
     <dataSheet name="CrosswalkStock" type="Input"/>
-    <dataSheet name="MerchantableVolume" type="Input"/>  
     <dataSheet name="stsim_StateAttributeValue" type="Input"/>
     <dataSheet name="stsim_RunControl" type="Input"/>  
   </transformer>
@@ -131,7 +124,6 @@
     <dataSheet name="CrosswalkSpecies" type="Input"/>        
     <dataSheet name="CrosswalkDisturbance" type="Input"/>        
     <dataSheet name="CrosswalkStock" type="Input"/>
-    <dataSheet name="MerchantableVolume" type="Input"/>
     <datafeed name="stsim_InitialStocks" type="Input"/>
     <dataSheet name="stsim_OutputOptionsStockFlow" type="Input"/> 
     <dataSheet name="stsim_FlowPathway" type="Both"/>        
@@ -226,7 +218,6 @@
         <item name="CrosswalkDisturbance" displayName="Disturbance"/>
         <item name="CrosswalkStock" displayName="Carbon Stock"/>
       </group>
-      <item name="MerchantableVolume" displayName="Merchantable Volume"/>
       <item name="Spinup" displayName="Spin-up"/>        
       <item name="MerchantableVolumeCurve" displayName="Merchantable Volume Curve"/>
     </group>
