@@ -1,4 +1,4 @@
-"SPUID","AdminBoundaryID","EcoBoundaryID","MapsheetID","SPUOnOffSwitch"
+SPUId,AdminBoundaryId,EcoBoundaryId,MapsheetId,SPUOnOffSwitch
 1,1,17,-1,1
 3,2,16,-1,1
 4,2,17,-1,0
