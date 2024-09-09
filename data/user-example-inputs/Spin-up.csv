@@ -1,0 +1,9 @@
+StratumID,SecondaryStratumID,TertiaryStratumID,StateClassID,MostRecentDisturbanceTGID,HistoricalDisturbanceTGID,ReturnInterval,SpinupDuration,MaxAgeForLastCycle
+Sierra Nevada,Mariposa County,,Alder/Maple Group,97% clear-cut [Type],Wildfire [Type],300,10,299
+Sierra Nevada,Mariposa County,,Alder/Maple Group,Wildfire [Type],Wildfire [Type],300,10,299
+Sierra Nevada,Mariposa County,,California Mixed Conifer Group,97% clear-cut [Type],Wildfire [Type],150,10,299
+Sierra Nevada,Mariposa County,,California Mixed Conifer Group,Wildfire [Type],Wildfire [Type],150,10,299
+Sierra Nevada,Mariposa County,,Ponderosa Pine Group,97% clear-cut [Type],Wildfire [Type],150,10,299
+Sierra Nevada,Mariposa County,,Ponderosa Pine Group,Wildfire [Type],Wildfire [Type],150,10,299
+Sierra Nevada,Mariposa County,,Western Oak Group,97% clear-cut [Type],Wildfire [Type],150,10,299
+Sierra Nevada,Mariposa County,,Western Oak Group,Wildfire [Type],Wildfire [Type],150,10,299

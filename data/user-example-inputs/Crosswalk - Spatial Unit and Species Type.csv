@@ -1,0 +1,5 @@
+CBM Ecological Boundary,CBM Administrative Boundary,CBM Species Type,ST-Sim Stratum,ST-Sim Secondary Stratum,ST-Sim Tertiary Stratum,ST-Sim State Class,Average Temperature,CBMSimulationDataFileName
+Pacific Maritime,British Columbia,Alder,Sierra Nevada,Mariposa County,,Alder/Maple Group,10.47,alder-maple-group.txt
+Montane Cordillera,British Columbia,Other softwoods,Sierra Nevada,Mariposa County,,California Mixed Conifer Group,10.4,california-mixed-conifer-group.txt
+Montane Cordillera,British Columbia,Ponderosa pine,Sierra Nevada,Mariposa County,,Ponderosa Pine Group,7.56,ponderosa-pine-group.txt
+Montane Cordillera,British Columbia,Oak,Sierra Nevada,Mariposa County,,Western Oak Group,12.89,western-oak-group-b2.txt
