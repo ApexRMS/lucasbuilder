@@ -1,7 +1,7 @@
-# ApexRMS - Jan 2022
-# script creates "cbm-example" template library for lucasbuilder package
+# ApexRMS - Sep 2024
+# script creates "Lucas Example Merchantable" template library for lucasbuilder package
+# template library includes merchantable volume curves
 
-# setwd("C:/GitHub/lucasbuilder")
 
 library(rsyncrosim)
 library(readxl)
@@ -10,12 +10,17 @@ library(tidyverse)
 options(stringsAsFactors=FALSE)
 
 # Settings ----
-mySession <- session("C:/SyncroSim versions/SyncroSim304")
+
+rootPath <- "C:/Users/AmandaSchwantes/Documents/GitHub/lucasbuilder/"
+
+mySession <- session("C:/Program Files/SyncroSim3")
 # version(mySession)
-libraryName <- "A303/CBM/model/CBM-test" #"model/cbm-cfs3-example"
+libraryName <- paste0(rootPath,"model/Lucas Example Merchantable")
 myProjectName <- "Definitions"
 #initialInputsDirectory <- "C:/GitHub/lucasbuilder/data/" # "../data/"
-initialInputsDirectory <- "~/A303/CBM/data/" # "../data/"
+#initialInputsDirectory <- "~/A303/CBM/data/" # "../data/"
+initialInputsDirectory <- paste0(rootPath,"data/user-example-inputs-merch/")
+definitionsPath <- paste0(initialInputsDirectory,"ConusLibrary/")
 
 # Build base library ----
 
@@ -29,7 +34,7 @@ initialInputsDirectory <- "~/A303/CBM/data/" # "../data/"
 myLibrary <- ssimLibrary(libraryName, 
                          packages = c("stsim", "lucasbuilder"),
                          session = mySession, overwrite = TRUE)
-name(myLibrary) <- "CBM-CFS3 SyncroSim 3 test"
+#name(myLibrary) <- "CBM-CFS3 SyncroSim 3 test"
 myProject <- project(myLibrary, project=myProjectName)
 
 # load library
@@ -46,14 +51,14 @@ myProject <- project(myLibrary, project=myProjectName)
 
 # Library definitions ----
 
-# Define the default path/connection to the CBM database
-CBMDatabasePath <- "C:/Program Files (x86)/Operational-Scale CBM-CFS3/Admin/DBs/ArchiveIndex_Beta_Install.mdb"
-
-sheetname <- "lucasbuilder_Database"
-mySheet <- datasheet(myLibrary, name=sheetname)
-mySheet[1, "Path"] <- CBMDatabasePath
-saveDatasheet(myLibrary, mySheet, sheetname)
-
+# # Define the default path/connection to the CBM database
+# CBMDatabasePath <- "C:/Program Files (x86)/Operational-Scale CBM-CFS3/Admin/DBs/ArchiveIndex_Beta_Install.mdb"
+# 
+# sheetname <- "lucasbuilder_Database"
+# mySheet <- datasheet(myLibrary, name=sheetname)
+# mySheet[1, "Path"] <- CBMDatabasePath
+# saveDatasheet(myLibrary, mySheet, sheetname)
+# 
 # Project definitions ----
 
 ## General ----
@@ -75,42 +80,69 @@ saveDatasheet(myLibrary, mySheet, sheetname)
 
 ## Transitions ----
 
-### Transition type
-distTypes <- read_xlsx(path = paste0(initialInputsDirectory, "Disturbance Type.xlsx"), sheet = "Disturbance Type") %>%
-  data.frame() %>%
-  select(DistTypeID, Name) %>% 
-  filter(Name %in% c("Wildfire", "97% clear-cut")) %>%
-#   mutate(transitions = case_when(str_detect(DistTypeName, "fire") ~ "Fire",
-#                                  str_detect(DistTypeName, "cut") ~ "Clearcut"))
-# transitionTypes <- distTypes[!is.na(distTypes$transitions),]
-# transitionTypes <- transitionTypes[-which(transitionTypes$DistTypeName %in% c("Partial cutting", "Salvage logging after fire")),]
-# tranistionTypes <- transitionTypes %>%
-  mutate(
-    color = case_when(str_detect(Name, "fire") ~ "255,255,0,0",
-                                   str_detect(Name, "cut") ~ "255,255,255,0"))
-
-transitionTypes <- distTypes %>%
-  mutate(transitions = paste0(Name, " [Type]"))
+# ### Transition type
+# distTypes <- read_xlsx(path = paste0(initialInputsDirectory, "Disturbance Type.xlsx"), sheet = "Disturbance Type") %>%
+#   data.frame() %>%
+#   select(DistTypeID, Name) %>% 
+#   filter(Name %in% c("Wildfire", "97% clear-cut")) %>%
+# #   mutate(transitions = case_when(str_detect(DistTypeName, "fire") ~ "Fire",
+# #                                  str_detect(DistTypeName, "cut") ~ "Clearcut"))
+# # transitionTypes <- distTypes[!is.na(distTypes$transitions),]
+# # transitionTypes <- transitionTypes[-which(transitionTypes$DistTypeName %in% c("Partial cutting", "Salvage logging after fire")),]
+# # tranistionTypes <- transitionTypes %>%
+#   mutate(
+#     color = case_when(str_detect(Name, "fire") ~ "255,255,0,0",
+#                                    str_detect(Name, "cut") ~ "255,255,255,0"))
+# 
+# transitionTypes <- distTypes %>%
+#   mutate(transitions = paste0(Name, " [Type]"))
 
 sheetName <- "stsim_TransitionType"
 mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull <- data.frame(Name = distTypes$Name, 
-                          ID = distTypes$DistTypeID,
-                          Color = distTypes$color ) 
+
+mySheetFull <- read.csv(paste0(definitionsPath,"Transition Type.csv"))
+
+# mySheetFull <- data.frame(Name = distTypes$Name, 
+#                           ID = distTypes$DistTypeID,
+#                           Color = distTypes$color ) 
 saveDatasheet(myProject, mySheetFull, sheetName)
 
-# ### Transition group
-# sheetName <- "stsim_TransitionGroup"
-# mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-# mySheetFull <- data.frame(Name = unique(transitionTypes$transitions))
-# saveDatasheet(myProject, mySheetFull, sheetName)
+sheetName <- "stsim_TransitionGroup"
+csvName <- "Transition Group.csv"
+myData <- read.csv(paste0(initialInputsDirectory, csvName))
+saveDatasheet(myProject, myData, sheetName)
+
+sheetName <- "stsim_TransitionTypeGroup"
+csvName <- "Transition Types by Group.csv"
+myData <- read.csv(paste0(definitionsPath, csvName))
+names(myData) <- gsub("ID","Id",names(myData))
+saveDatasheet(myProject, myData, sheetName)
+
+sheetName <- "stsim_TransitionSimulationGroup"
+csvName <- "Transition Simulation Groups.csv"
+myData <- read.csv(paste0(definitionsPath, csvName))
+names(myData) <- gsub("ID","Id",names(myData))
+saveDatasheet(myProject, myData, sheetName)
+
+# Distributions
+sheetName <- "core_DistributionType"
+csvName <- "Distributions.csv"
+myData <- read.csv(paste0(definitionsPath, csvName))
+saveDatasheet(myProject, myData, sheetName)
+
+# External Variable
+sheetName <- "core_ExternalVariableType"
+csvName <- "External Variables.csv"
+myData <- read.csv(paste0(definitionsPath, csvName))
+saveDatasheet(myProject, myData, sheetName)
+
 
 ## Ages ----
 
 ### Age groups
 sheetName <- "stsim_AgeGroup"
 mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "Age Groups.xlsx"), sheet = "Age Groups") %>%
+mySheetFull <- read_xlsx(path = paste0(rootPath, "data/Age Groups.xlsx"), sheet = "Age Groups") %>%
   data.frame()
 saveDatasheet(myProject, mySheetFull, sheetName)
 
@@ -119,16 +151,14 @@ saveDatasheet(myProject, mySheetFull, sheetName)
 ### Attribute group
 sheetName <- "stsim_AttributeGroup"
 mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "Attribute Group.xlsx"), sheet = "Attribute Group") %>%
-  data.frame()
+mySheetFull <- read.csv(paste0(definitionsPath, "Attribute Group.csv"))
 saveDatasheet(myProject, mySheetFull, sheetName)
 
 ### State attribute type
 sheetName <- "stsim_StateAttributeType"
 mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "State Attribute Type.xlsx"), sheet = "State Attribute Type") %>%
-  data.frame()
-names(mySheetFull) <- names(mySheet)
+mySheetFull <- read.csv(paste0(definitionsPath, "State Attribute Type.csv"))
+names(myData) <- gsub("ID","Id",names(myData))
 saveDatasheet(myProject, mySheetFull, sheetName)
 
 ### Stock/Flow definitions ----
@@ -136,29 +166,25 @@ saveDatasheet(myProject, mySheetFull, sheetName)
 #### Stock type
 sheetName <- "stsim_StockType"
 mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "Stock Type.xlsx"), sheet = "Stock Type") %>%
-  data.frame()
+mySheetFull <- read.csv(paste0(definitionsPath, "Stock Type.csv"))
 saveDatasheet(myProject, mySheetFull, sheetName)
 
 #### Stock group
 sheetName <- "stsim_StockGroup"
 mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "Stock Group.xlsx"), sheet = "Stock Group") %>%
-  data.frame()
+mySheetFull <- read.csv(paste0(definitionsPath, "Stock Group.csv"))
 saveDatasheet(myProject, mySheetFull, sheetName)
 
 #### Flow type
 sheetName <- "stsim_FlowType"
 mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "Flow Type.xlsx"), sheet = "Flow Type") %>%
-  data.frame()
+mySheetFull <- read.csv(paste0(definitionsPath, "Flow Type.csv"))
 saveDatasheet(myProject, mySheetFull, sheetName)
 
 #### Flow group
 sheetName <- "stsim_FlowGroup"
 mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "Flow Group.xlsx"), sheet = "Flow Group") %>%
-  data.frame()
+mySheetFull <- read.csv(paste0(definitionsPath, "Flow Group.csv"))
 saveDatasheet(myProject, mySheetFull, sheetName)
 
 #### terminology
@@ -171,48 +197,42 @@ saveDatasheet(myProject, mySheetFull, sheetName)
 #### Ecological boundary
 sheetName <- "lucasbuilder_EcoBoundary"
 mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "Ecological Boundary.xlsx"), sheet = "Ecological Boundary") %>%
-  data.frame()
+mySheetFull <- read.csv(paste0(definitionsPath, "Ecological Boundary LUCAS.csv"))
 saveDatasheet(myProject, mySheetFull, sheetName)
 
 #### Administrative boundary
 sheetName <- "lucasbuilder_AdminBoundary"
 mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "Administrative Boundary.xlsx"), sheet = "Administrative Boundary") %>%
-  data.frame()
+mySheetFull <- read.csv(paste0(definitionsPath, "Administrative Boundary LUCAS.csv"))
 saveDatasheet(myProject, mySheetFull, sheetName)
 
 #### Species type
 sheetName <- "lucasbuilder_SpeciesType"
 mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "Species Type.xlsx"), sheet = "Species Type") %>%
-  data.frame()
+mySheetFull <- read.csv(paste0(definitionsPath, "Species Type.csv"))
 saveDatasheet(myProject, mySheetFull, sheetName)
 
 #### Disturbance type
 sheetName <- "lucasbuilder_DisturbanceType"
 mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "Disturbance Type.xlsx"), sheet = "Disturbance Type") %>%
-  data.frame() %>%
-  select(Name)
+mySheetFull <- read.csv(paste0(definitionsPath, "Disturbance Type.csv"))
 saveDatasheet(myProject, mySheetFull, sheetName)
 
 #### CBM-CFS3 stock
 sheetName <- "lucasbuilder_CBMCFS3Stock"
 mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "CBM-CFS3 Crosswalk Carbon Stock.xlsx"), sheet = "CBM-CFS3 Crosswalk Carbon Stock") %>%
-  data.frame() %>%
-  select(CBM.CFS3.Stock)%>%
-  rename(Name = CBM.CFS3.Stock) 
+mySheetFull <- read.csv(paste0(definitionsPath, "CBM Crosswalk Carbon Stock.csv")) %>%
+  select(CBMStock) %>%
+  rename(Name = CBMStock) 
 saveDatasheet(myProject, mySheetFull, sheetName)
 
 ## Terminology ----
 sheetName <- "stsim_Terminology"
 mySheet <- datasheet(myProject, name=sheetName)
 mySheet$AmountLabel[1] <- "Area"
-mySheet$AmountUnits[1] <- "Hectares"
-mySheet$StateLabelX[1] <- "Species Type"
-mySheet$StateLabelY[1] <- "Forest Type"
+mySheet$AmountUnits[1] <- "hectares"
+mySheet$StateLabelX[1] <- "LULC"
+mySheet$StateLabelY[1] <- "SubClass"
 mySheet$PrimaryStratumLabel[1] <- "Ecological Boundary"
 mySheet$SecondaryStratumLabel[1] <- "Administrative Boundary"
 mySheet$TimestepUnits[1] <- "Year"
@@ -238,31 +258,28 @@ folder1 <- folder(ssimObject = myProject, "1 - Predefined Inputs")
 
 ## Flow pathways
 myScenarioName <- "Flow Pathways"
-myScenario = scenario(myProject, scenario = myScenarioName, folder = "1 - Predefined Inputs")
+myScenario <- scenario(myProject, scenario = myScenarioName, folder = folderId(folder1))
 
 sheetName <- "stsim_FlowPathwayDiagram"
 mySheet <- datasheet(myScenario, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "Flow Pathway Diagram.xlsx"), sheet = "Flow Pathway Diagram") %>%
-  data.frame()
-names(mySheetFull) <- names(mySheet)
+mySheetFull <- read.csv(paste0(definitionsPath, "Flow Pathway Diagram.csv"))
+names(mySheetFull) <- gsub("ID","Id",names(mySheetFull))
 saveDatasheet(myScenario, mySheetFull, sheetName)
 
 sheetName <- "stsim_FlowPathway"
 mySheet <- datasheet(myScenario, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "Flow Pathways.xlsx"), sheet = "Flow Pathways") %>%
-  data.frame()
-names(mySheetFull) <- names(mySheet)
+mySheetFull <- read.csv(paste0(definitionsPath, "Flow Pathways.csv"))
+names(mySheetFull) <- gsub("ID","Id",names(mySheetFull))
 saveDatasheet(myScenario, mySheetFull, sheetName)
 
 ## Flow order
 myScenarioName <- "Flow Order"
-myScenario = scenario(myProject, scenario = myScenarioName, folder = "1 - Predefined Inputs")
+myScenario = scenario(myProject, scenario = myScenarioName, folder = folderId(folder1))
 
 sheetName <- "stsim_FlowOrder"
 mySheet <- datasheet(myScenario, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "Flow Order.xlsx"), sheet = "Flow Order") %>%
-  data.frame()
-names(mySheetFull) <- names(mySheet)
+mySheetFull <- read.csv(paste0(definitionsPath, "Flow Order.csv"))
+names(mySheetFull) <- gsub("ID","Id",names(mySheetFull))
 saveDatasheet(myScenario, mySheetFull, sheetName)
 
 sheetName <- "stsim_FlowOrderOptions"
@@ -273,45 +290,41 @@ saveDatasheet(myScenario, mySheetFull, sheetName)
 
 ## Flow group membership
 myScenarioName <- "Flow Group Membership"
-myScenario = scenario(myProject, scenario = myScenarioName, folder = "1 - Predefined Inputs")
+myScenario <- scenario(myProject, scenario = myScenarioName, folder = folderId(folder1))
 
 sheetName <- "stsim_FlowTypeGroupMembership"
 mySheet <- datasheet(myScenario, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "Flow Type-Group Membership.xlsx"), sheet = "Flow Type-Group Membership") %>%
-  data.frame() %>%
-  mutate(Flow.Type = str_replace(Flow.Type, "Net Growth:", "Net Growth Forest:"))
-names(mySheetFull) <- names(mySheet)
+mySheetFull <- read.csv(paste0(definitionsPath,"Flow Type-Group Membership.csv"))
+names(mySheetFull) <- gsub("ID","Id",names(mySheetFull))
 saveDatasheet(myScenario, mySheetFull, sheetName)
 
 ## Stock group membership
 myScenarioName <- "Stock Group Membership"
-myScenario = scenario(myProject, scenario = myScenarioName, folder = "1 - Predefined Inputs")
+myScenario <- scenario(myProject, scenario = myScenarioName, folder = folderId(folder1))
 
 sheetName <- "stsim_StockTypeGroupMembership"
 mySheet <- datasheet(myScenario, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "Stock Type-Group Membership.xlsx"), sheet = "Stock Type-Group Membership") %>%
-  data.frame()
-names(mySheetFull) <- names(mySheet)
+mySheetFull <- read.csv(paste0(definitionsPath, "Stock Type-Group Membership.csv"))
+names(mySheetFull) <- gsub("ID","Id",names(mySheetFull))
 saveDatasheet(myScenario, mySheetFull, sheetName)
 
 ## Initial stocks
 myScenarioName <- "Initial Stocks"
-myScenario = scenario(myProject, scenario = myScenarioName, folder = "1 - Predefined Inputs")
+myScenario <- scenario(myProject, scenario = myScenarioName, folder = folderId(folder1))
 
 sheetName <- "stsim_InitialStockNonSpatial"
 mySheet <- datasheet(myScenario, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "Initial Stocks - Non Spatial.xlsx"), sheet = "Initial Stock - Non Spatial") %>%
-  data.frame()
-names(mySheetFull) <- names(mySheet)
+mySheetFull <- read.csv(paste0(definitionsPath, "Initial Stock - Non Spatial.csv"))
+names(mySheetFull) <- gsub("ID","Id",names(mySheetFull))
 saveDatasheet(myScenario, mySheetFull, sheetName)
 
 ## Stock flow output options
 myScenarioName <- "Stock Flow Output Options"
-myScenario = scenario(myProject, scenario = myScenarioName, folder = "1 - Predefined Inputs")
+myScenario <- scenario(myProject, scenario = myScenarioName, folder = folderId(folder1))
 
 sheetName <- "stsim_OutputOptionsStockFlow"
 mySheet <- datasheet(myScenario, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "SF Output Options - Spatial.xlsx"), sheet = "SF Output Options") %>%
+mySheetFull <- read_xlsx(path = paste0(rootPath, "Data/SF Output Options - Spatial.xlsx"), sheet = "SF Output Options") %>%
   data.frame()
 # names(mySheetFull) <- names(mySheet)
 saveDatasheet(myScenario, mySheetFull, sheetName)
@@ -319,28 +332,26 @@ saveDatasheet(myScenario, mySheetFull, sheetName)
 ## Crosswalk to ST-Sim
 ### Disturbance
 myScenarioName <- "CBM Crosswalk - Disturbance"
-myScenario = scenario(myProject, scenario = myScenarioName, folder = "1 - Predefined Inputs")
+myScenario <- scenario(myProject, scenario = myScenarioName, folder = folderId(folder1))
 
 sheetName <- "lucasbuilder_CrosswalkDisturbance" # datasheet containing the LUCAS-CBM Stock crosswalk table
 mySheet <- datasheet(myScenario, name=sheetName, optional=T, empty = T)
-mySheetFull <- transitionTypes %>% 
-  select(Name,transitions)
-names(mySheetFull) <- names(mySheet)
+mySheetFull <- read.csv(paste0(definitionsPath,"CBM Crosswalk Disturbance.csv"))
+names(mySheetFull) <- gsub("ID","Id",names(mySheetFull))
 saveDatasheet(myScenario, mySheetFull, sheetName)
 
 ### Carbon stock
 myScenarioName <- "CBM Crosswalk - Stocks"
-myScenario = scenario(myProject, scenario = myScenarioName, folder = "1 - Predefined Inputs")
+myScenario <- scenario(myProject, scenario = myScenarioName, folder = folderId(folder1))
 
 sheetName <- "lucasbuilder_CrosswalkStock" # datasheet containing the LUCAS-CBM Stock crosswalk table
 mySheet <- datasheet(myScenario, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "CBM-CFS3 Crosswalk Carbon Stock.xlsx"), sheet = "CBM-CFS3 Crosswalk Carbon Stock") %>%
-  data.frame()
-names(mySheetFull) <- names(mySheet)
+mySheetFull <- read.csv(paste0(definitionsPath,"CBM Crosswalk Carbon Stock.csv"))
+names(mySheetFull) <- gsub("ID","Id",names(mySheetFull))
 saveDatasheet(myScenario, mySheetFull, sheetName)
 
 ### Output options non-spatial 
-myScenario <- scenario(myProject, scenario = "Output Options [Non-spatial]", folder = "1 - Predefined Inputs")
+myScenario <- scenario(myProject, scenario = "Output Options [Non-spatial]", folder = folderId(folder1))
 sheetName <- "stsim_OutputOptions"
 mySheet <- datasheet(myScenario, name = sheetName, empty = T, optional = T)
 mySheet[1, "SummaryOutputSC"] <- T
@@ -359,14 +370,14 @@ mySheet[1, "SummaryOutputOmitSS"] <- F
 mySheet[1, "SummaryOutputOmitTS"] <- F
 saveDatasheet(myScenario, mySheet, sheetName)
 
-### Output Options Spatial 
-myScenario <- scenario(myProject, scenario = "Output Options [Spatial]", folder = "1 - Predefined Inputs")
-sheetName <- "stsim_OutputOptionsSpatial"
-mySheet <- datasheet(myScenario, name = sheetName, empty = T, optional = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "Output Options Spatial.xlsx"), sheet = "Output Options Spatial") %>%
-  data.frame()
-names(mySheetFull) <- names(mySheet)
-saveDatasheet(myScenario, mySheetFull, sheetName)
+# ### Output Options Spatial 
+# myScenario <- scenario(myProject, scenario = "Output Options [Spatial]", folder = folderId(folder1))
+# sheetName <- "stsim_OutputOptionsSpatial"
+# mySheet <- datasheet(myScenario, name = sheetName, empty = T, optional = T)
+# mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "Output Options Spatial.xlsx"), sheet = "Output Options Spatial") %>%
+#   data.frame()
+# names(mySheetFull) <- names(mySheet)
+# saveDatasheet(myScenario, mySheetFull, sheetName)
 
 
 #########################
@@ -382,7 +393,7 @@ saveDatasheet(myScenario, mySheetFull, sheetName)
 # # Invoke a system command
 # sysOut <- system(command, intern=TRUE)
 
-folder2 <- folder(ssimObject = myProjet, folder = "2 - User Defined Inputs")
+folder2 <- folder(ssimObject = myProject, folder = "2 - User Defined Inputs")
 folder2.1 <- folder(ssimObject = myProject, folder = "2.1 - Run Setup Inputs", parentFolder = folder2)
 folder2.2 <- folder(ssimObject = myProject, folder = "2.2 - Run Forecast Inputs", parentFolder = folder2)
 
@@ -401,77 +412,120 @@ folder2.2 <- folder(ssimObject = myProject, folder = "2.2 - Run Forecast Inputs"
 # load in SUST crosswalk data
 ## user could also define these values in Syncrosim UI 
 
-CBMDir <- "C:/gitproject/lucasbuilder/data/user-example-inputs/cbm-cfs3-simulation-results/"
-CBMDir <- "~/A303/CBM/data/user-example-inputs/cbm-cfs3-simulation-results/"
-crosswalkSUSTPath <- "data/user-example-inputs/Crosswalk - Spatial Unit and Species Type.csv"
-crosswalkSUSTPath <- "~/A303/CBM/data/user-example-inputs/Crosswalk - Spatial Unit and Species Type.csv"
+#CBMDir <- "C:/gitproject/lucasbuilder/data/user-example-inputs/cbm-cfs3-simulation-results/"
+#CBMDir <- "~/A303/CBM/data/user-example-inputs/cbm-cfs3-simulation-results/"
+CBMDir <- paste0(initialInputsDirectory,"cbm-cfs3-simulation-results/")
+#crosswalkSUSTPath <- "data/user-example-inputs/Crosswalk - Spatial Unit and Species Type.csv"
+#crosswalkSUSTPath <- "~/A303/CBM/data/user-example-inputs/Crosswalk - Spatial Unit and Species Type.csv"
+crosswalkSUSTPath <- paste0(initialInputsDirectory,"Crosswalk - Spatial Unit and Species Type.csv")
+merchVolumePath <- paste0(initialInputsDirectory,"MerchantableVolumeCurves.csv")
+
 crosswalkSUSTFull <- read.csv(crosswalkSUSTPath, check.names = F)
-crosswalkSUSTFull$CBMSimulationDataFilePath <- paste0(CBMDir, crosswalkSUSTFull$CBMSimulationDataFileName)
-crosswalkSUSTFull$CBMSimulationDataFileName <- NULL
+crosswalkSUSTFull$CBMOutputFile <- paste0(CBMDir, crosswalkSUSTFull$CBMOutputFile)
 
 
-### Primary stratum [OPTIONAL]
-## This adds all unique primary stratum names from the crosswalk table to the definitions of the new model
+
+# ### Primary stratum [OPTIONAL]
+# ## This adds all unique primary stratum names from the crosswalk table to the definitions of the new model
+# sheetName <- "stsim_Stratum"
+# mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
+# mySheetFull <- data.frame(Name = unique(crosswalkSUSTFull$StratumId),
+#                           Id = 1:length(unique(crosswalkSUSTFull$StratumId)))
+# # for(i in seq(1:nrow(crosswalkSUSTFull))) {
+# #   crosswalkSUST <- crosswalkSUSTFull %>% slice(i)
+# #   myValue = crosswalkSUST$`ST-Sim Stratum`
+# #   mySheet = addRow(mySheet, data.frame(Name = myValue,
+# #                                        Id = 1))
+# #   mySheetFull = bind_rows(mySheetFull, mySheet) %>% unique()
+# # }
+# saveDatasheet(myProject, mySheetFull, sheetName)
+
 sheetName <- "stsim_Stratum"
-mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull = data.frame()
-for(i in seq(1:nrow(crosswalkSUSTFull))) {
-  crosswalkSUST <- crosswalkSUSTFull %>% slice(i)
-  myValue = crosswalkSUST$`ST-Sim Stratum`
-  mySheet = addRow(mySheet, data.frame(Name = myValue,
-                                       Id = 1))
-  mySheetFull = bind_rows(mySheetFull, mySheet) %>% unique()
-}
-saveDatasheet(myProject, mySheetFull, sheetName)
+csvName <- "Ecological Boundary.csv"
+myData <- read.csv(paste0(definitionsPath, csvName))
+saveDatasheet(myProject, myData, sheetName)
 
 
-### Secondary stratum [OPTIONAL]
+# ### Secondary stratum [OPTIONAL]
+# sheetName <- "stsim_SecondaryStratum"
+# mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
+# mySheetFull <- data.frame(Name = unique(crosswalkSUSTFull$SecondaryStratumId),
+#                           Id = 1:length(unique(crosswalkSUSTFull$SecondaryStratumId)))
+# # for(i in seq(1:nrow(crosswalkSUSTFull))) {
+# #   crosswalkSUST <- crosswalkSUSTFull %>% slice(i)
+# #   myValue = crosswalkSUST$`ST-Sim Secondary Stratum`
+# #   mySheet = addRow(mySheet, data.frame(Name = myValue,
+# #                                        Id = 1))
+# #   mySheetFull = bind_rows(mySheetFull, mySheet) %>% unique()
+# # }
+# saveDatasheet(myProject, mySheetFull, sheetName)
+
 sheetName <- "stsim_SecondaryStratum"
-mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull = data.frame()
-for(i in seq(1:nrow(crosswalkSUSTFull))) {
-  crosswalkSUST <- crosswalkSUSTFull %>% slice(i)
-  myValue = crosswalkSUST$`ST-Sim Secondary Stratum`
-  mySheet = addRow(mySheet, data.frame(Name = myValue,
-                                       Id = 1))
-  mySheetFull = bind_rows(mySheetFull, mySheet) %>% unique()
-}
-saveDatasheet(myProject, mySheetFull, sheetName)
+csvName <- "Administrative Boundary.csv"
+myData <- read.csv(paste0(definitionsPath, csvName))
+saveDatasheet(myProject, myData, sheetName)
+
+sheetName <- "stsim_TertiaryStratum"
+csvName <- "Tertiary Stratum.csv"
+myData <- read.csv(paste0(definitionsPath, csvName))
+saveDatasheet(myProject, myData, sheetName)
+
+# ### State Label X 
+# sheetName <- "stsim_StateLabelX"
+# mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
+# mySheetFull = data.frame()
+# for(i in seq(1:nrow(crosswalkSUSTFull))) {
+#   crosswalkSUST <- crosswalkSUSTFull %>% slice(i)
+#   myValue = crosswalkSUST$`ST-Sim State Class`
+#   mySheet = addRow(mySheet, data.frame(Name = myValue))
+#   mySheetFull = bind_rows(mySheetFull, mySheet) %>% unique()
+# }
+# saveDatasheet(myProject, mySheetFull, sheetName)
+# 
+# 
+# ### State Label Y 
+# sheetName <- "stsim_StateLabelY"
+# mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
+# mySheetFull = data.frame()
+# for(i in seq(1:nrow(crosswalkSUSTFull))) {
+#   crosswalkSUST <- crosswalkSUSTFull %>% slice(i)
+#   myValue = crosswalkSUST$`ST-Sim State Class`
+#   mySheet = addRow(mySheet, data.frame(Name = myValue))
+#   mySheetFull = bind_rows(mySheetFull, mySheet) %>% unique()
+# }
+# saveDatasheet(myProject, mySheetFull, sheetName)
+# 
+# 
+# ### State Class Type [REQUIRED]
+# sheetName <- "stsim_StateClass"
+# mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
+# mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "user-example-inputs/State Class.xlsx"), sheet = "State Class") %>%
+#   data.frame()
+# names(mySheetFull) <- names(mySheet)
+# saveDatasheet(myProject, mySheetFull, sheetName)
 
 
-### State Label X 
+
 sheetName <- "stsim_StateLabelX"
-mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull = data.frame()
-for(i in seq(1:nrow(crosswalkSUSTFull))) {
-  crosswalkSUST <- crosswalkSUSTFull %>% slice(i)
-  myValue = crosswalkSUST$`ST-Sim State Class`
-  mySheet = addRow(mySheet, data.frame(Name = myValue))
-  mySheetFull = bind_rows(mySheetFull, mySheet) %>% unique()
-}
-saveDatasheet(myProject, mySheetFull, sheetName)
+csvName <- "LULC.csv"
+myData <- read.csv(paste0(definitionsPath, csvName))
+saveDatasheet(myProject, myData, sheetName)
 
-
-### State Label Y 
 sheetName <- "stsim_StateLabelY"
-mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull = data.frame()
-for(i in seq(1:nrow(crosswalkSUSTFull))) {
-  crosswalkSUST <- crosswalkSUSTFull %>% slice(i)
-  myValue = crosswalkSUST$`ST-Sim State Class`
-  mySheet = addRow(mySheet, data.frame(Name = myValue))
-  mySheetFull = bind_rows(mySheetFull, mySheet) %>% unique()
-}
-saveDatasheet(myProject, mySheetFull, sheetName)
+csvName <- "Subclass.csv"
+myData <- read.csv(paste0(definitionsPath, csvName))
+saveDatasheet(myProject, myData, sheetName)
 
-
-### State Class Type [REQUIRED]
 sheetName <- "stsim_StateClass"
-mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(initialInputsDirectory, "user-example-inputs/State Class.xlsx"), sheet = "State Class") %>%
-  data.frame()
-names(mySheetFull) <- names(mySheet)
-saveDatasheet(myProject, mySheetFull, sheetName)
+csvName <- "State Class.csv"
+myData <- read.csv(paste0(definitionsPath, csvName))
+
+myData <- myData %>%
+  rename(StateLabelXId = StateLabelXID,
+         StateLabelYId = StateLabelYID,
+         Id = ID)
+
+saveDatasheet(myProject, myData, sheetName)
 
 
 ## Project Definitions ---- [Needed for Flow-pathways/spin-up Transformers]
@@ -505,7 +559,7 @@ maxIteration <- 1
 minTimestep <- 0
 minIteration <- 1
 
-myScenario <- scenario(myProject, scenario = "Run Control", folder = "2.1 - Run Setup Inputs" )# <- paste0("Run Control [Non-spatial; ", maxTimestep, " years; ", maxIteration, " MC]"))
+myScenario <- scenario(myProject, scenario = "Run Control", folder = folderId(folder2.1) )# <- paste0("Run Control [Non-spatial; ", maxTimestep, " years; ", maxIteration, " MC]"))
 sheetName <- "stsim_RunControl"
 mySheet <- datasheet(myScenario, name = sheetName, empty = T, optional = T)
 mySheet[1,"MinimumIteration"] <- minIteration
@@ -517,19 +571,34 @@ saveDatasheet(myScenario, mySheet, sheetName)
 
 ### Species Type Crosswalk 
 myScenarioName <- "CBM Crosswalk - Spatial Unit and Species Type"
-myScenario = scenario(myProject, scenario = myScenarioName, folder = "2.1 - Run Setup Inputs")
+myScenario = scenario(myProject, scenario = myScenarioName, folder = folderId(folder2.1))
 #sheetName <- "lucasbuilder_CrosswalkSpecies"
-sheetName <- "lucasbuilder_CrossWalkSpecies"
+sheetName <- "lucasbuilder_CrosswalkSpecies"
 mySheet <- datasheet(myScenario, name = sheetName, empty = T, optional = T)
-mySheetFull <- crosswalkSUSTFull
-names(mySheetFull) <- names(mySheet)
+#mySheetFull <- crosswalkSUSTFull
+#names(mySheetFull) <- names(mySheet)
+saveDatasheet(myScenario, crosswalkSUSTFull, sheetName)
+
+### Merchantable Volume Curve 
+myScenarioName <- "Merchantable Volume Curves"
+myScenario <- scenario(myProject, scenario = myScenarioName, folder = folderId(folder2.1))
+sheetName <- "lucasbuilder_MerchantableVolumeCurve"
+mySheet <- datasheet(myScenario, name = sheetName, empty = T, optional = T)
+mySheetFull <- read.csv(paste0(initialInputsDirectory,"MerchantableVolumeCurves.csv"))
+
+mySheetFull <- mySheetFull %>%
+  mutate(StratumId = unique(crosswalkSUSTFull$StratumId),
+         SecondaryStratumId = unique(crosswalkSUSTFull$SecondaryStratumId)) %>%
+  arrange(Age)
+
+#names(mySheetFull) <- names(mySheet)
 saveDatasheet(myScenario, mySheetFull, sheetName)
 
 #### Generate Flow Multiplier Dependencies ---- 
 
 ### Initial Conditions 
 myScenarioName <- "Initial Conditions" # paste0("Initial Conditions [Non-spatial; Single cell; ", standArea, " ha; Age ", initialStandAge, "]")
-myScenario = scenario(myProject, scenario = myScenarioName, folder = "2.1 - Run Setup Inputs")
+myScenario = scenario(myProject, scenario = myScenarioName, folder = folderId(folder2.1))
 sheetName <- "stsim_InitialConditionsNonSpatial"
 mySheet <- datasheet(myScenario, name = sheetName, empty = T, optional = T)
 mySheet[1, "TotalAmount"] <- standArea * nrow(crosswalkSUSTFull)
@@ -552,11 +621,11 @@ mySheetFull = data.frame()
 # }
 for(i in seq(1:nrow(crosswalkSUSTFull))) {
   crosswalkSUST <- crosswalkSUSTFull %>% slice(i)
-  mySheet = data.frame(StratumId = crosswalkSUST$`ST-Sim Stratum`,
-                                       SecondaryStratumId = crosswalkSUST$`ST-Sim Secondary Stratum`,
-                                       StateClassId = crosswalkSUST$`ST-Sim State Class`,
-                                       AgeMin = initialStandAge,
-                                       RelativeAmount = standArea)
+  mySheet <- data.frame(StratumId = crosswalkSUST$StratumId,
+                        SecondaryStratumId = crosswalkSUST$SecondaryStratumId,
+                        StateClassId = crosswalkSUST$StateClassId,
+                        AgeMin = initialStandAge,
+                        RelativeAmount = standArea)
   mySheetFull = bind_rows(mySheetFull, mySheet) %>% unique()
 }
 saveDatasheet(myScenario, mySheetFull, sheetName, append = F)
@@ -565,7 +634,7 @@ saveDatasheet(myScenario, mySheetFull, sheetName, append = F)
 
 ### Transition Pathways Diagram 
 # Note, only deterministic transitions are defined here.
-myScenario <- scenario(myProject, scenario <- "Transition Pathways", folder = "2.1 - Run Setup Inputs")
+myScenario <- scenario(myProject, scenario <- "Transition Pathways", folder = folderId(folder2.1))
 sheetName <- "stsim_DeterministicTransition"
 mySheet <- datasheet(myScenario, name=sheetName, optional=T, empty = T)
 mySheetFull = data.frame()
@@ -577,20 +646,22 @@ mySheetFull = data.frame()
 # } 
 for(i in seq(1:nrow(crosswalkSUSTFull))) {
   crosswalkSUST <- crosswalkSUSTFull %>% slice(i)
-  myValue = crosswalkSUST$`ST-Sim State Class`
+  myValue = crosswalkSUST$StateClassId
   mySheet = data.frame(StateClassIdSource = myValue,
-                                       Location = paste0("A", c(i)))
+                       Location = paste0("A", c(i)))
+  mySheetFull = bind_rows(mySheetFull, mySheet)
 } 
-mySheetFull = bind_rows(mySheetFull, mySheet)
 saveDatasheet(myScenario, mySheetFull, sheetName)
 
 ### CBM spin-up 
 myScenarioName = "Spin-up"
-myScenario = scenario(myProject, scenario = myScenarioName, folder = "2.1 - Run Setup Inputs")
+myScenario = scenario(myProject, scenario = myScenarioName, folder = folderId(folder2.1))
 sheetName = "lucasbuilder_Spinup"
 sheetData = datasheet(myScenario, sheetName, empty = T)
-sheetData = read.csv("data/user-example-inputs/Spin-up.csv")
-sheetData = read.csv("~/A303/CBM/data/user-example-inputs/Spin-up.csv")
+#sheetData = read.csv("data/user-example-inputs/Spin-up.csv")
+#sheetData = read.csv("~/A303/CBM/data/user-example-inputs/Spin-up.csv")
+sheetData = read.csv(paste0(definitionsPath,"Spin-up.csv"))
+names(sheetData) <- gsub("ID","Id",names(sheetData))
 # sheetData$StratumID <- NA
 # sheetData$SecondaryStratumID <- NA
 saveDatasheet(myScenario, sheetData, sheetName)
@@ -622,118 +693,118 @@ saveDatasheet(myScenario, sheetData, sheetName)
 # saveDatasheet(myScenario, mySheet, sheetName, append = F)
 
 
-#### Landscape Dependencies ---- 
+# #### Landscape Dependencies ---- 
+# 
+# myScenario <- scenario(myProject, scenario = "Run Control - Landscape", folder = folderId(folder2.2) )
+# sheetName <- "stsim_RunControl"
+# mySheet <- datasheet(myScenario, name = sheetName, empty = T, optional = T)
+# mySheet[1,"MinimumIteration"] <- 1
+# mySheet[1,"MaximumIteration"] <- 3
+# mySheet[1,"MinimumTimestep"] <- 2021
+# mySheet[1,"MaximumTimestep"] <- 2030
+# mySheet[1,"IsSpatial"] <- T
+# saveDatasheet(myScenario, mySheet, sheetName)
+# 
+# ### Initial Conditions - Landscape
+# myScenarioName <- "Initial Conditions - Landscape" 
+# myScenario = scenario(myProject, scenario = myScenarioName, folder = folderId(folder2.2))
+# sheetName <- "stsim_InitialConditionsSpatial"
+# mySheet <- datasheet(myScenario, name = sheetName, empty = T, optional = T)
+# # mySheetFull <- addRow(mySheet, data.frame(StratumFileName = paste0(initialInputsDirectory, "user-example-inputs/spatial/eco-boundary.tif"),
+# #                            SecondaryStratumFileName = paste0(initialInputsDirectory, "user-example-inputs/spatial/admin-boundary.tif"),
+# #                            StateClassFileName = paste0(initialInputsDirectory, "user-example-inputs/spatial/state-class.tif"), 
+# #                            AgeFileName = paste0(initialInputsDirectory, "user-example-inputs/spatial/age.tif")))
+# mySheetFull <- data.frame(StratumFileName = paste0(path.expand(initialInputsDirectory), "user-example-inputs/spatial/eco-boundary.tif"),
+#                                           SecondaryStratumFileName = paste0(path.expand(initialInputsDirectory), "user-example-inputs/spatial/admin-boundary.tif"),
+#                                           StateClassFileName = paste0(path.expand(initialInputsDirectory), "user-example-inputs/spatial/state-class.tif"), 
+#                                           AgeFileName = paste0(path.expand(initialInputsDirectory), "user-example-inputs/spatial/age.tif"))
+# saveDatasheet(myScenario, mySheetFull, sheetName)
+# 
+# sheetName <- "stsim_InitialTSTSpatial"
+# mySheet <- datasheet(myScenario, name = sheetName, empty = T, optional = T, folder = folderId(folder2.2))
+# # mySheetFull <- addRow(mySheet, data.frame(TransitionGroupId = "Wildfire [Type]",
+# #                                           TSTFileName = paste0(initialInputsDirectory, "user-example-inputs/spatial/age.tif")))
+# mySheetFull <- data.frame(TransitionGroupId = "Wildfire [Type]",
+#                                           TSTFileName = paste0(path.expand(initialInputsDirectory), "user-example-inputs/spatial/age.tif"))
+# saveDatasheet(myScenario, mySheetFull, sheetName)
 
-myScenario <- scenario(myProject, scenario = "Run Control - Landscape", folder = "2.2 - Run Forecast Inputs" )
-sheetName <- "stsim_RunControl"
-mySheet <- datasheet(myScenario, name = sheetName, empty = T, optional = T)
-mySheet[1,"MinimumIteration"] <- 1
-mySheet[1,"MaximumIteration"] <- 3
-mySheet[1,"MinimumTimestep"] <- 2021
-mySheet[1,"MaximumTimestep"] <- 2030
-mySheet[1,"IsSpatial"] <- T
-saveDatasheet(myScenario, mySheet, sheetName)
 
-### Initial Conditions - Landscape
-myScenarioName <- "Initial Conditions - Landscape" 
-myScenario = scenario(myProject, scenario = myScenarioName, folder = "2.2 - Run Forecast Inputs")
-sheetName <- "stsim_InitialConditionsSpatial"
-mySheet <- datasheet(myScenario, name = sheetName, empty = T, optional = T)
-# mySheetFull <- addRow(mySheet, data.frame(StratumFileName = paste0(initialInputsDirectory, "user-example-inputs/spatial/eco-boundary.tif"),
-#                            SecondaryStratumFileName = paste0(initialInputsDirectory, "user-example-inputs/spatial/admin-boundary.tif"),
-#                            StateClassFileName = paste0(initialInputsDirectory, "user-example-inputs/spatial/state-class.tif"), 
-#                            AgeFileName = paste0(initialInputsDirectory, "user-example-inputs/spatial/age.tif")))
-mySheetFull <- data.frame(StratumFileName = paste0(path.expand(initialInputsDirectory), "user-example-inputs/spatial/eco-boundary.tif"),
-                                          SecondaryStratumFileName = paste0(path.expand(initialInputsDirectory), "user-example-inputs/spatial/admin-boundary.tif"),
-                                          StateClassFileName = paste0(path.expand(initialInputsDirectory), "user-example-inputs/spatial/state-class.tif"), 
-                                          AgeFileName = paste0(path.expand(initialInputsDirectory), "user-example-inputs/spatial/age.tif"))
-saveDatasheet(myScenario, mySheetFull, sheetName)
-
-sheetName <- "stsim_InitialTSTSpatial"
-mySheet <- datasheet(myScenario, name = sheetName, empty = T, optional = T, folder = "2.2 - Run Forecast Inputs")
-# mySheetFull <- addRow(mySheet, data.frame(TransitionGroupId = "Wildfire [Type]",
-#                                           TSTFileName = paste0(initialInputsDirectory, "user-example-inputs/spatial/age.tif")))
-mySheetFull <- data.frame(TransitionGroupId = "Wildfire [Type]",
-                                          TSTFileName = paste0(path.expand(initialInputsDirectory), "user-example-inputs/spatial/age.tif"))
-saveDatasheet(myScenario, mySheetFull, sheetName)
-
-
-### Transition Pathways Diagram 
-# Note, only deterministic transitions are defined here.
-myScenario <- scenario(myProject, scenario <- "Transition Pathways - Landscape", folder = "2.2 - Run Forecast Inputs")
-sheetName <- "stsim_DeterministicTransition"
-mySheet <- datasheet(myScenario, name=sheetName, optional=T, empty = T)
-mySheetFull = data.frame()
+# ### Transition Pathways Diagram 
+# # Note, only deterministic transitions are defined here.
+# myScenario <- scenario(myProject, scenario <- "Transition Pathways - Landscape", folder = folderId(folder2.2))
+# sheetName <- "stsim_DeterministicTransition"
+# mySheet <- datasheet(myScenario, name=sheetName, optional=T, empty = T)
+# mySheetFull = data.frame()
+# # for(i in seq(1:nrow(crosswalkSUSTFull))) {
+# #   crosswalkSUST <- crosswalkSUSTFull %>% slice(i)
+# #   myValue = crosswalkSUST$`ST-Sim State Class`
+# #   mySheet = addRow(mySheet, data.frame(StateClassIdSource = myValue,
+# #                                        Location = paste0("A", c(i))))
+# # } 
 # for(i in seq(1:nrow(crosswalkSUSTFull))) {
 #   crosswalkSUST <- crosswalkSUSTFull %>% slice(i)
 #   myValue = crosswalkSUST$`ST-Sim State Class`
-#   mySheet = addRow(mySheet, data.frame(StateClassIdSource = myValue,
-#                                        Location = paste0("A", c(i))))
+#   mySheet = data.frame(StateClassIdSource = myValue,
+#                                        Location = paste0("A", c(i)))
 # } 
-for(i in seq(1:nrow(crosswalkSUSTFull))) {
-  crosswalkSUST <- crosswalkSUSTFull %>% slice(i)
-  myValue = crosswalkSUST$`ST-Sim State Class`
-  mySheet = data.frame(StateClassIdSource = myValue,
-                                       Location = paste0("A", c(i)))
-} 
-mySheetFull = bind_rows(mySheetFull, mySheet)
-saveDatasheet(myScenario, mySheetFull, sheetName)
-
-sheetName <- "stsim_Transition"
-mySheet <- datasheet(myScenario, name=sheetName, optional=T, empty = T)
-mySheetFull = data.frame()
+# mySheetFull = bind_rows(mySheetFull, mySheet)
+# saveDatasheet(myScenario, mySheetFull, sheetName)
+# 
+# sheetName <- "stsim_Transition"
+# mySheet <- datasheet(myScenario, name=sheetName, optional=T, empty = T)
+# mySheetFull = data.frame()
+# # for(i in seq(1:nrow(crosswalkSUSTFull))) {
+# #   crosswalkSUST <- crosswalkSUSTFull %>% slice(i)
+# #   myValue = crosswalkSUST$`ST-Sim State Class`
+# #   mySheet = addRow(mySheet, data.frame(StateClassIdSource = myValue,
+# #                                        TransitionTypeID = "Wildfire",
+# #                                        Probability = 0.01))
+# # } 
 # for(i in seq(1:nrow(crosswalkSUSTFull))) {
 #   crosswalkSUST <- crosswalkSUSTFull %>% slice(i)
 #   myValue = crosswalkSUST$`ST-Sim State Class`
-#   mySheet = addRow(mySheet, data.frame(StateClassIdSource = myValue,
-#                                        TransitionTypeID = "Wildfire",
-#                                        Probability = 0.01))
+#   mySheet = data.frame(StateClassIdSource = myValue,
+#                                        TransitionTypeId = "Wildfire",
+#                                        Probability = 0.01)
 # } 
-for(i in seq(1:nrow(crosswalkSUSTFull))) {
-  crosswalkSUST <- crosswalkSUSTFull %>% slice(i)
-  myValue = crosswalkSUST$`ST-Sim State Class`
-  mySheet = data.frame(StateClassIdSource = myValue,
-                                       TransitionTypeId = "Wildfire",
-                                       Probability = 0.01)
-} 
-mySheetFull = bind_rows(mySheetFull, mySheet)
-saveDatasheet(myScenario, mySheetFull, sheetName)
-
-### Transition Multiplier - Landscape
-myScenario <- scenario(myProject, scenario <- "Transition Multiplier - Landscape", folder = "2.2 - Run Forecast Inputs")
-sheetName <- "stsim_TransitionMultiplierValue"
-mySheet <- datasheet(myScenario, name=sheetName, optional=T, empty = T)
-mySheetFull = data.frame()
-# mySheet = addRow(mySheet, data.frame(TransitionGroupId = "Wildfire [Type]",
+# mySheetFull = bind_rows(mySheetFull, mySheet)
+# saveDatasheet(myScenario, mySheetFull, sheetName)
+# 
+# ### Transition Multiplier - Landscape
+# myScenario <- scenario(myProject, scenario <- "Transition Multiplier - Landscape", folder = folderId(folder2.2))
+# sheetName <- "stsim_TransitionMultiplierValue"
+# mySheet <- datasheet(myScenario, name=sheetName, optional=T, empty = T)
+# mySheetFull = data.frame()
+# # mySheet = addRow(mySheet, data.frame(TransitionGroupId = "Wildfire [Type]",
+# #                                      Amount = 1, 
+# #                                      DistributionType = "Beta", 
+# #                                      DistributionFrequencyId = "Iteration and Timestep",
+# #                                      DistributionSD = 2,
+# #                                      DistributionMin = 0, 
+# #                                      DistributionMax = 10))
+# mySheet = data.frame(TransitionGroupId = "Wildfire [Type]",
 #                                      Amount = 1, 
 #                                      DistributionType = "Beta", 
 #                                      DistributionFrequencyId = "Iteration and Timestep",
 #                                      DistributionSD = 2,
 #                                      DistributionMin = 0, 
-#                                      DistributionMax = 10))
-mySheet = data.frame(TransitionGroupId = "Wildfire [Type]",
-                                     Amount = 1, 
-                                     DistributionType = "Beta", 
-                                     DistributionFrequencyId = "Iteration and Timestep",
-                                     DistributionSD = 2,
-                                     DistributionMin = 0, 
-                                     DistributionMax = 10)
-mySheetFull = bind_rows(mySheetFull, mySheet)
-saveDatasheet(myScenario, mySheetFull, sheetName)
-
-### Fire Size - Landscape
-myScenario <- scenario(myProject, scenario <- "Fire Size - Landscape", folder = "2.2 - Run Forecast Inputs")
-sheetName <- "stsim_TransitionSizeDistribution"
-mySheet <- datasheet(myScenario, name=sheetName, optional=T, empty = T)
-mySheetFull = data.frame()
-# mySheet = addRow(mySheet, data.frame(TransitionGroupId = c("Wildfire [Type]","Wildfire [Type]"),
+#                                      DistributionMax = 10)
+# mySheetFull = bind_rows(mySheetFull, mySheet)
+# saveDatasheet(myScenario, mySheetFull, sheetName)
+# 
+# ### Fire Size - Landscape
+# myScenario <- scenario(myProject, scenario <- "Fire Size - Landscape", folder = folderId(folder2.2))
+# sheetName <- "stsim_TransitionSizeDistribution"
+# mySheet <- datasheet(myScenario, name=sheetName, optional=T, empty = T)
+# mySheetFull = data.frame()
+# # mySheet = addRow(mySheet, data.frame(TransitionGroupId = c("Wildfire [Type]","Wildfire [Type]"),
+# #                                      MaximumArea = c(90, 80),
+# #                                      RelativeAmount = c(0.9, 0.1)))
+# mySheet = data.frame(TransitionGroupId = c("Wildfire [Type]","Wildfire [Type]"),
 #                                      MaximumArea = c(90, 80),
-#                                      RelativeAmount = c(0.9, 0.1)))
-mySheet = data.frame(TransitionGroupId = c("Wildfire [Type]","Wildfire [Type]"),
-                                     MaximumArea = c(90, 80),
-                                     RelativeAmount = c(0.9, 0.1))
-mySheetFull = bind_rows(mySheetFull, mySheet)
-saveDatasheet(myScenario, mySheetFull, sheetName)
+#                                      RelativeAmount = c(0.9, 0.1))
+# mySheetFull = bind_rows(mySheetFull, mySheet)
+# saveDatasheet(myScenario, mySheetFull, sheetName)
 
 
 ###############
@@ -753,10 +824,11 @@ folder3 <- folder(ssimObject = myProject, folder = "3 - Run Setup")
 
 ### Load CBM Output
 myScenarioName <- "Load CBM Output"
-myScenario = scenario(myProject, scenario = myScenarioName, folder = "3 - Run Setup")
+myScenario = scenario(myProject, scenario = myScenarioName, folder = folderId(folder3))
 dependency(myScenario) <- c("Run Control",
                             "CBM Crosswalk - Stocks",
-                            "CBM Crosswalk - Spatial Unit and Species Type")
+                            "CBM Crosswalk - Spatial Unit and Species Type",
+                            "Merchantable Volume Curves")
 
 # set "Load CBM-CFS3 Output" transformer to run for this scenario
 sheetName <- "core_Pipeline"
@@ -768,7 +840,7 @@ saveDatasheet(myScenario, mySheetFull, sheetName)
 
 ### Generate Flow Multipliers
 myScenarioName <- "Generate Flow Multipliers"
-myScenario = scenario(myProject, scenario = myScenarioName, folder = "3 - Run Setup")
+myScenario = scenario(myProject, scenario = myScenarioName, folder = folderId(folder3))
 dependency(myScenario) <- c("Flow Pathways",
                             "Stock Group Membership",
                             "Flow Group Membership",
@@ -795,7 +867,7 @@ saveDatasheet(myScenario, mySheet, sheetName)
 
 ### Run Spin-up ## NOW NEEDS TO BE BROKEN IN 3 SEPARATE STAGES
 myScenarioName <- "Run Spin-up"
-myScenario = scenario(myProject, scenario = myScenarioName, folder = "3 - Run Setup")
+myScenario = scenario(myProject, scenario = myScenarioName, folder = folderId(folder3))
 dependency(myScenario) <- c("Flow Order",
                             "Spin-up",
                             "Transition Pathways",
@@ -828,7 +900,7 @@ folder4 <- folder(ssimObject = myProject, folder = "4 - Run Forecast")
 
 ### Single cell
 myScenarioName <- "Single Cell - No Disturbance"
-myScenario = scenario(myProject, scenario = myScenarioName, folder = "4 - Run Forecast")
+myScenario = scenario(myProject, scenario = myScenarioName, folder = folderId(folder4))
 dependency(myScenario) <- c("Flow Order",
                             "Initial Conditions",
                             "Output Options [Non-spatial]",
@@ -844,16 +916,16 @@ dependency(myScenario) <- c("Flow Order",
 #                           RunOrder = 1)
 # saveDatasheet(myScenario, mySheetFull, sheetName)
 
-### Landscape
-myScenarioName <- "Landscape"
-myScenario = scenario(myProject, scenario = myScenarioName, folder = "4 - Run Forecast")
-dependency(myScenario) <- c("Run Control - Landscape",
-                            "Initial Conditions - Landscape",
-                            "Output Options [Spatial]",
-                            "Transition Pathways - Landscape",
-                            "Transition Multiplier - Landscape", 
-                            "Fire Size - Landscape",
-                            "Run Spin-up")
+# ### Landscape
+# myScenarioName <- "Landscape"
+# myScenario = scenario(myProject, scenario = myScenarioName, folder = folderId(folder4))
+# dependency(myScenario) <- c("Run Control - Landscape",
+#                             "Initial Conditions - Landscape",
+#                             "Output Options [Spatial]",
+#                             "Transition Pathways - Landscape",
+#                             "Transition Multiplier - Landscape", 
+#                             "Fire Size - Landscape",
+#                             "Run Spin-up")
 
 # # set "stsim" transformer to run for this scenario
 # sheetName <- "core_Pipeline"
