@@ -1,0 +1,30 @@
+EcoBoundaryId,AdminBoundaryId,SpeciesTypeId,StratumId,SecondaryStratumId,TertiaryStratumId,StateClassId,AverageTemperature,CBMOutputFile
+Atlantic Maritime,Quebec,Maple,Puget Lowland,Washington,,Forest: Maple/Beech/Birch Group,6.71,maple-beech-birch-group.txt
+Atlantic Maritime,Quebec,Spruce - Genus type,Puget Lowland,Washington,,Forest: Spruce/Fir Group,4.64,spruce-fir-group.txt
+Boreal Shield West,Ontario,Birch,Puget Lowland,Washington,,Forest: Aspen/Birch Group,5.15,aspen-birch-group.txt
+Mixedwood Plains,Ontario,Ash,Puget Lowland,Washington,,Forest: Elm/Ash/Cottonwood Group,14.23,elm-ash-cottonwood-group.txt
+Mixedwood Plains,Ontario,Cypress,Puget Lowland,Washington,,Forest: Oak/Gum/Cypress Group,18.33,oak-gum-cyprus-group.txt
+Mixedwood Plains,Ontario,Hickory,Puget Lowland,Washington,,Forest: Oak/Hickory Group,13.22,oak-hickory-group.txt
+Mixedwood Plains,Ontario,Jack pine,Puget Lowland,Washington,,Forest: White/Red/Jack Pine Group,6.81,white-red-jack-pine-group.txt
+Mixedwood Plains,Ontario,Oak,Puget Lowland,Washington,,Forest: Oak/Pine Group,16.8,oak-pine-group.txt
+Mixedwood Plains,Ontario,Other hardwoods,Puget Lowland,Washington,,Forest: Exotic Hardwoods Group,19.23,exotic-hardwoods-group.txt
+Mixedwood Plains,Ontario,Other hardwoods,Puget Lowland,Washington,,Forest: Tropical Hardwoods Group,22.08,tropical-hardwoods-group.txt
+Mixedwood Plains,Ontario,Pine - Genus type,Puget Lowland,Washington,,Forest: Loblolly/Shortleaf Pine Group,17.47,loblolly-shortleaf-pine-group.txt
+Mixedwood Plains,Ontario,Pine - Genus type,Puget Lowland,Washington,,Forest: Longleaf/Slash Pine Group,19.62,longleaf-slash-pine-group.txt
+Montane Cordillera,Alberta,Douglas-fir and Rocky Mountain Douglas-fir,Puget Lowland,Washington,,Forest: Douglas-fir Inland Group,7.16,douglas-fir-inland-group.txt
+Montane Cordillera,British Columbia,Lodgepole pine,Puget Lowland,Washington,,Forest: Lodgepole Pine Group,3.14,lodgepole-pine-group.txt
+Montane Cordillera,British Columbia,Mountain hemlock,Puget Lowland,Washington,,Forest: Fir/Spruce/Mountain Hemlock Group,3.8,fir-spruce-mountain-hemlock-group.txt
+Montane Cordillera,British Columbia,Oak,Puget Lowland,Washington,,Forest: Western Oak Group,12.89,western-oak-group.txt
+Montane Cordillera,British Columbia,Other hardwoods,Puget Lowland,Washington,,Forest: Other Western Hardwoods Group,12.81,other-western-hardwoods-group.txt
+Montane Cordillera,British Columbia,Other softwoods,Puget Lowland,Washington,,Forest: California Mixed Conifer Group,10.4,california-mixed-conifer-group.txt
+Montane Cordillera,British Columbia,Other softwoods,Puget Lowland,Washington,,Forest: Exotic Softwoods Group,7.63,exotic-softwoods-group.txt
+Montane Cordillera,British Columbia,Other softwoods,Puget Lowland,Washington,,Forest: Other Western Softwood Group,2.47,other-western-softwoods-group.txt
+Montane Cordillera,British Columbia,Other softwoods,Puget Lowland,Washington,,Forest: Pinyon/Juniper Group,9.74,pinyon-juniper-group.txt
+Montane Cordillera,British Columbia,Ponderosa pine,Puget Lowland,Washington,,Forest: Ponderosa Pine Group,7.56,ponderosa-pine-group.txt
+Montane Cordillera,British Columbia,Western larch,Puget Lowland,Washington,,Forest: Western Larch Group,5.31,western-larch-group.txt
+Pacific Maritime,British Columbia,Alder,Puget Lowland,Washington,,Forest: Alder/Maple Group,10.47,alder-maple-group.txt
+Pacific Maritime,British Columbia,Douglas-fir - Genus type,Puget Lowland,Washington,,Forest: Douglas-fir Coastal Group,7.17,douglas-fir-coastal-group.txt
+Pacific Maritime,British Columbia,Other hardwoods,Puget Lowland,Washington,,Forest: Tanoak/Laurel Group,13.12,tanoak-laurel-group.txt
+Pacific Maritime,British Columbia,Other softwoods,Puget Lowland,Washington,,Forest: Redwood Group,12.69,redwood-group.txt
+Pacific Maritime,British Columbia,Sitka spruce,Puget Lowland,Washington,,Forest: Hemlock/Sitka Spruce Group,8.38,hemlock-sitka-spruce-group.txt
+Pacific Maritime,British Columbia,Western white pine,Puget Lowland,Washington,,Forest: Western White Pine Group,9.75,western-white-pine-group.txt

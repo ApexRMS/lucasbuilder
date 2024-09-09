@@ -1,0 +1,30 @@
+Iteration,Timestep,StratumIDSource,StateClassIDSource,StratumIDDest,StateClassIDDest,AgeMin,AgeMax,Location
+,,Puget Lowland,Forest: Alder/Maple Group,Puget Lowland,,,,F3
+,,Puget Lowland,Forest: Aspen/Birch Group,Puget Lowland,,,,F2
+,,Puget Lowland,Forest: California Mixed Conifer Group,Puget Lowland,,,,D3
+,,Puget Lowland,Forest: Douglas-fir Coastal Group,Puget Lowland,,,,B2
+,,Puget Lowland,Forest: Douglas-fir Inland Group,Puget Lowland,,,,H1
+,,Puget Lowland,Forest: Elm/Ash/Cottonwood Group,Puget Lowland,,,,E4
+,,Puget Lowland,Forest: Exotic Hardwoods Group,Puget Lowland,,,,G4
+,,Puget Lowland,Forest: Exotic Softwoods Group,Puget Lowland,,,,D4
+,,Puget Lowland,Forest: Fir/Spruce/Mountain Hemlock Group,Puget Lowland,,,,C1
+,,Puget Lowland,Forest: Hemlock/Sitka Spruce Group,Puget Lowland,,,,C3
+,,Puget Lowland,Forest: Loblolly/Shortleaf Pine Group,Puget Lowland,,,,A4
+,,Puget Lowland,Forest: Lodgepole Pine Group,Puget Lowland,,,,C2
+,,Puget Lowland,Forest: Longleaf/Slash Pine Group,Puget Lowland,,,,A3
+,,Puget Lowland,Forest: Maple/Beech/Birch Group,Puget Lowland,,,,F1
+,,Puget Lowland,Forest: Oak/Gum/Cypress Group,Puget Lowland,,,,E3
+,,Puget Lowland,Forest: Oak/Hickory Group,Puget Lowland,,,,E2
+,,Puget Lowland,Forest: Oak/Pine Group,Puget Lowland,,,,E1
+,,Puget Lowland,Forest: Other Western Hardwoods Group,Puget Lowland,,,,G2
+,,Puget Lowland,Forest: Other Western Softwood Group,Puget Lowland,,,,D2
+,,Puget Lowland,Forest: Pinyon/Juniper Group,Puget Lowland,,,,B1
+,,Puget Lowland,Forest: Ponderosa Pine Group,Puget Lowland,,,,B3
+,,Puget Lowland,Forest: Redwood Group,Puget Lowland,,,,D1
+,,Puget Lowland,Forest: Spruce/Fir Group,Puget Lowland,,,,A2
+,,Puget Lowland,Forest: Tanoak/Laurel Group,Puget Lowland,,,,G1
+,,Puget Lowland,Forest: Tropical Hardwoods Group,Puget Lowland,,,,G3
+,,Puget Lowland,Forest: Western Larch Group,Puget Lowland,,,,C4
+,,Puget Lowland,Forest: Western Oak Group,Puget Lowland,,,,F4
+,,Puget Lowland,Forest: Western White Pine Group,Puget Lowland,,,,B4
+,,Puget Lowland,Forest: White/Red/Jack Pine Group,Puget Lowland,,,,A1

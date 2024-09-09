@@ -1,0 +1,34 @@
+CBMStock,StockTypeID
+Aboveground Fast DOM,DOM: Aboveground Fast
+Aboveground Medium DOM,DOM: Aboveground Medium
+Aboveground Slow DOM,DOM: Aboveground Slow
+Aboveground Very Fast DOM,DOM: Aboveground Very Fast
+Atmosphere,Atmosphere
+Belowground Fast DOM,DOM: Belowground Fast
+Belowground Slow DOM,DOM: Belowground Slow
+Belowground Very Fast DOM,DOM: Belowground Very Fast
+Black Carbon,DOM: Black Carbon
+CH4,Atmosphere: CH4
+CO,Atmosphere: CO
+CO2,Atmosphere: CO2
+Coarse Roots,Biomass: Coarse Root
+Fine Roots,Biomass: Fine Root
+Foliage,Biomass: Foliage
+Hardwood Branch Snag,DOM: Snag Branch
+Hardwood Coarse Roots,Biomass: Coarse Root
+Hardwood Fine Roots,Biomass: Fine Root
+Hardwood Foliage,Biomass: Foliage
+Hardwood Merchantable,Biomass: Merchantable
+Hardwood Other,Biomass: Other Wood
+Hardwood Stem Snag,DOM: Snag Stem
+Medium DOM,DOM: Aboveground Medium
+Merchantable,Biomass: Merchantable
+Other,Biomass: Other Wood
+Products,Forestry Sector
+Softwood Branch Snag,DOM: Snag Branch
+Softwood Coarse Roots,Biomass: Coarse Root
+Softwood Fine Roots,Biomass: Fine Root
+Softwood Foliage,Biomass: Foliage
+Softwood Merchantable,Biomass: Merchantable
+Softwood Other,Biomass: Other Wood
+Softwood Stem Snag,DOM: Snag Stem

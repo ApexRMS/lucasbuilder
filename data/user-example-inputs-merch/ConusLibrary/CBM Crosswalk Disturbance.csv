@@ -1,0 +1,15 @@
+DisturbanceTypeID,TransitionGroupID
+20% commercial thinning,Forest Harvest: Forest Selection 20% [Type]
+50% commercial thinning,Forest Harvest: Forest Selection [Type]
+85% precommercial thinning,Forest Harvest: Forest Selection 85% [Type]
+97% clear-cut,Forest Harvest: Forest Clearcut [Type]
+"Deforestation - Agriculture - Salvage, uprooting and decay",Ag Expansion
+"Deforestation - Municipal - Salvage, uprooting and decay",Urbanization: High [Type]
+"Deforestation - Municipal - Salvage, uprooting and decay",Urbanization: Low [Type]
+"Deforestation - Municipal - Salvage, uprooting and decay",Urbanization: Medium [Type]
+"Deforestation - Recreation - Salvage, uprooting and decay",Urbanization: Open [Type]
+Mountain pine beetle - Low impact,Insect: Low Severity [Type]
+Mountain pine beetle - Moderate impact,Insect: Medium Severity [Type]
+Mountain pine beetle - Severe impact,Insect: High Severity [Type]
+Salvage logging after fire,Forest Harvest: Salvage Logging [Type]
+Wildfire,Fire: High Severity [Type]

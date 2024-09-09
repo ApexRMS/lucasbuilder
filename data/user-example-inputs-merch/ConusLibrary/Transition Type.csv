@@ -1,0 +1,232 @@
+Name,ID,Color,Legend,Description
+Ag Contraction: Alder/Maple Group,100,"255,128,0,128",,NLCD Change
+Ag Contraction: Aspen/Birch Group,101,"255,165,42,42",,NLCD Change
+Ag Contraction: California Mixed Conifer Group,102,"255,255,0,0",,NLCD Change
+Ag Contraction: Douglas-fir Coastal Group,103,"255,0,0,255",,NLCD Change
+Ag Contraction: Douglas-fir Inland Group,501,,,
+Ag Contraction: Elm/Ash/Cottonwood Group,104,"255,0,128,0",,NLCD Change
+Ag Contraction: Exotic Hardwoods Group,105,"255,0,255,255",,NLCD Change
+Ag Contraction: Exotic Softwoods Group,106,"255,0,255,255",,NLCD Change
+Ag Contraction: Fir/Spruce/Mountain Hemlock Group,107,"255,0,128,128",,NLCD Change
+Ag Contraction: Grassland,128,"255,128,0,128",,NLCD Change
+Ag Contraction: Hemlock/Sitka Spruce Group,108,"255,255,255,0",,NLCD Change
+Ag Contraction: Loblolly/Shortleaf Pine Group,109,"255,0,0,255",,NLCD Change
+Ag Contraction: Lodgepole Pine Group,110,"255,128,0,128",,NLCD Change
+Ag Contraction: Longleaf/Slash Pine Group,111,"255,255,165,0",,NLCD Change
+Ag Contraction: Maple/Beech/Birch Group,112,"255,255,0,0",,NLCD Change
+Ag Contraction: Oak/Gum/Cypress Group,113,"255,0,128,0",,NLCD Change
+Ag Contraction: Oak/Hickory Group,114,"255,165,42,42",,NLCD Change
+Ag Contraction: Oak/Pine Group,115,"255,128,128,128",,NLCD Change
+Ag Contraction: Other Western Hardwoods Group,116,"255,255,0,0",,NLCD Change
+Ag Contraction: Other Western Softwood Group,117,"255,255,165,0",,NLCD Change
+Ag Contraction: Pinyon/Juniper Group,118,"255,255,255,0",,NLCD Change
+Ag Contraction: Ponderosa Pine Group,119,"255,0,128,0",,NLCD Change
+Ag Contraction: Redwood Group,120,"255,165,42,42",,NLCD Change
+Ag Contraction: Shrubland,129,"255,0,128,128",,NLCD Change
+Ag Contraction: Spruce/Fir Group,121,"255,0,128,128",,NLCD Change
+Ag Contraction: Tanoak/Laurel Group,122,"255,128,128,128",,NLCD Change
+Ag Contraction: Tropical Hardwoods Group,123,"255,0,255,255",,NLCD Change
+Ag Contraction: Western Larch Group,124,"255,0,0,255",,NLCD Change
+Ag Contraction: Western Oak Group,125,"255,128,0,128",,NLCD Change
+Ag Contraction: Western White Pine Group,126,"255,0,0,255",,NLCD Change
+Ag Contraction: Wetland Herbaceous,130,"255,255,0,0",,NLCD Change
+Ag Contraction: Wetland Woody,131,"255,255,165,0",,NLCD Change
+Ag Contraction: White/Red/Jack Pine Group,127,"255,165,42,42",,NLCD Change
+Ag Expansion: Cropland,51,"255,0,128,128",,NLCD Change
+Ag Expansion: Pasture,50,"255,255,165,0",,NLCD Change
+Fire: High Severity,20,"255,255,165,0",,Landfire Disturbance data
+Fire: Low Severity,22,"255,128,128,128",,Landfire Disturbance data
+Fire: Medium Severity,21,"255,255,0,0",,Landfire Disturbance data
+Forest Harvest: Forest Clearcut,40,"255,165,42,42",,Landfire Disturbance data
+Forest Harvest: Forest Selection,41,"255,0,128,0",,Landfire Disturbance data
+Forest Harvest: Forest Selection 20%,44,"255,255,255,0",,
+Forest Harvest: Forest Selection 85%,43,"255,0,128,128",,
+Forest Harvest: Salvage Logging,42,"255,0,255,255",,
+Insect: High Severity,30,"255,128,0,128",,Based on ADS data with mortality > 30%
+Insect: Low Severity,32,"255,0,0,255",,Based on ADS data with mortality 4-10%
+Insect: Medium Severity,31,"255,255,255,0",,Based on ADS data with mortality 10-30%
+Intensification: Low to High,14,"255,0,0,255",,NLCD Change
+Intensification: Low to Medium,13,"255,255,0,0",,NLCD Change
+Intensification: Medium to High,15,"255,255,255,0",,NLCD Change
+Intensification: Open to High,12,"255,255,165,0",,NLCD Change
+Intensification: Open to Low,10,"255,0,128,0",,NLCD Change
+Intensification: Open to Medium,11,"255,0,128,128",,NLCD Change
+Reforestation Cropland: Alder/Maple Group,323,,,
+Reforestation Cropland: Aspen/Birch Group,322,,,
+Reforestation Cropland: California Mixed Conifer Group,315,,,
+Reforestation Cropland: Douglas-fir Coastal Group,306,,,
+Reforestation Cropland: Douglas-fir Inland Group,503,,,
+Reforestation Cropland: Elm/Ash/Cottonwood Group,320,,,
+Reforestation Cropland: Exotic Hardwoods Group,328,,,
+Reforestation Cropland: Exotic Softwoods Group,316,,,
+Reforestation Cropland: Fir/Spruce/Mountain Hemlock Group,309,,,
+Reforestation Cropland: Hemlock/Sitka Spruce Group,311,,,
+Reforestation Cropland: Loblolly/Shortleaf Pine Group,304,,,
+Reforestation Cropland: Lodgepole Pine Group,310,,,
+Reforestation Cropland: Longleaf/Slash Pine Group,303,,,
+Reforestation Cropland: Maple/Beech/Birch Group,321,,,
+Reforestation Cropland: Oak/Gum/Cypress Group,319,,,
+Reforestation Cropland: Oak/Hickory Group,318,,,
+Reforestation Cropland: Oak/Pine Group,317,,,
+Reforestation Cropland: Other Western Hardwoods Group,326,,,
+Reforestation Cropland: Other Western Softwood Group,314,,,
+Reforestation Cropland: Pinyon/Juniper Group,305,,,
+Reforestation Cropland: Ponderosa Pine Group,307,,,
+Reforestation Cropland: Redwood Group,313,,,
+Reforestation Cropland: Spruce/Fir Group,302,,,
+Reforestation Cropland: Tanoak/Laurel Group,325,,,
+Reforestation Cropland: Tropical Hardwoods Group,327,,,
+Reforestation Cropland: Western Larch Group,312,,,
+Reforestation Cropland: Western Oak Group,324,,,
+Reforestation Cropland: Western White Pine Group,308,,,
+Reforestation Cropland: White/Red/Jack Pine Group,301,,,
+Reforestation Grassland: Alder/Maple Group,407,,,
+Reforestation Grassland: Aspen/Birch Group,406,,,
+Reforestation Grassland: California Mixed Conifer Group,399,,,
+Reforestation Grassland: Douglas-fir Coastal Group,390,,,
+Reforestation Grassland: Douglas-fir Inland Group,506,,,
+Reforestation Grassland: Elm/Ash/Cottonwood Group,404,,,
+Reforestation Grassland: Exotic Hardwoods Group,412,,,
+Reforestation Grassland: Exotic Softwoods Group,400,,,
+Reforestation Grassland: Fir/Spruce/Mountain Hemlock Group,393,,,
+Reforestation Grassland: Hemlock/Sitka Spruce Group,395,,,
+Reforestation Grassland: Loblolly/Shortleaf Pine Group,388,,,
+Reforestation Grassland: Lodgepole Pine Group,394,,,
+Reforestation Grassland: Longleaf/Slash Pine Group,387,,,
+Reforestation Grassland: Maple/Beech/Birch Group,405,,,
+Reforestation Grassland: Oak/Gum/Cypress Group,403,,,
+Reforestation Grassland: Oak/Hickory Group,402,,,
+Reforestation Grassland: Oak/Pine Group,401,,,
+Reforestation Grassland: Other Western Hardwoods Group,410,,,
+Reforestation Grassland: Other Western Softwood Group,398,,,
+Reforestation Grassland: Pinyon/Juniper Group,389,,,
+Reforestation Grassland: Ponderosa Pine Group,391,,,
+Reforestation Grassland: Redwood Group,397,,,
+Reforestation Grassland: Spruce/Fir Group,386,,,
+Reforestation Grassland: Tanoak/Laurel Group,409,,,
+Reforestation Grassland: Tropical Hardwoods Group,411,,,
+Reforestation Grassland: Western Larch Group,396,,,
+Reforestation Grassland: Western Oak Group,408,,,
+Reforestation Grassland: Western White Pine Group,392,,,
+Reforestation Grassland: White/Red/Jack Pine Group,385,,,
+Reforestation Pasture: Alder/Maple Group,351,,,
+Reforestation Pasture: Aspen/Birch Group,350,,,
+Reforestation Pasture: California Mixed Conifer Group,343,,,
+Reforestation Pasture: Douglas-fir Coastal Group,334,,,
+Reforestation Pasture: Douglas-fir Inland Group,504,,,
+Reforestation Pasture: Elm/Ash/Cottonwood Group,348,,,
+Reforestation Pasture: Exotic Hardwoods Group,356,,,
+Reforestation Pasture: Exotic Softwoods Group,344,,,
+Reforestation Pasture: Fir/Spruce/Mountain Hemlock Group,337,,,
+Reforestation Pasture: Hemlock/Sitka Spruce Group,339,,,
+Reforestation Pasture: Loblolly/Shortleaf Pine Group,332,,,
+Reforestation Pasture: Lodgepole Pine Group,338,,,
+Reforestation Pasture: Longleaf/Slash Pine Group,331,,,
+Reforestation Pasture: Maple/Beech/Birch Group,349,,,
+Reforestation Pasture: Oak/Gum/Cypress Group,347,,,
+Reforestation Pasture: Oak/Hickory Group,346,,,
+Reforestation Pasture: Oak/Pine Group,345,,,
+Reforestation Pasture: Other Western Hardwoods Group,354,,,
+Reforestation Pasture: Other Western Softwood Group,342,,,
+Reforestation Pasture: Pinyon/Juniper Group,333,,,
+Reforestation Pasture: Ponderosa Pine Group,335,,,
+Reforestation Pasture: Redwood Group,341,,,
+Reforestation Pasture: Spruce/Fir Group,330,,,
+Reforestation Pasture: Tanoak/Laurel Group,353,,,
+Reforestation Pasture: Tropical Hardwoods Group,355,,,
+Reforestation Pasture: Western Larch Group,340,,,
+Reforestation Pasture: Western Oak Group,352,,,
+Reforestation Pasture: Western White Pine Group,336,,,
+Reforestation Pasture: White/Red/Jack Pine Group,329,,,
+Reforestation Post Fire Shrub: Alder/Maple Group,379,,,
+Reforestation Post Fire Shrub: Aspen/Birch Group,378,,,
+Reforestation Post Fire Shrub: California Mixed Conifer Group,371,,,
+Reforestation Post Fire Shrub: Douglas-fir Coastal Group,362,,,
+Reforestation Post Fire Shrub: Douglas-fir Inland Group,505,,,
+Reforestation Post Fire Shrub: Elm/Ash/Cottonwood Group,376,,,
+Reforestation Post Fire Shrub: Exotic Hardwoods Group,384,,,
+Reforestation Post Fire Shrub: Exotic Softwoods Group,372,,,
+Reforestation Post Fire Shrub: Fir/Spruce/Mountain Hemlock Group,365,,,
+Reforestation Post Fire Shrub: Hemlock/Sitka Spruce Group,367,,,
+Reforestation Post Fire Shrub: Loblolly/Shortleaf Pine Group,360,,,
+Reforestation Post Fire Shrub: Lodgepole Pine Group,366,,,
+Reforestation Post Fire Shrub: Longleaf/Slash Pine Group,359,,,
+Reforestation Post Fire Shrub: Maple/Beech/Birch Group,377,,,
+Reforestation Post Fire Shrub: Oak/Gum/Cypress Group,375,,,
+Reforestation Post Fire Shrub: Oak/Hickory Group,374,,,
+Reforestation Post Fire Shrub: Oak/Pine Group,373,,,
+Reforestation Post Fire Shrub: Other Western Hardwoods Group,382,,,
+Reforestation Post Fire Shrub: Other Western Softwood Group,370,,,
+Reforestation Post Fire Shrub: Pinyon/Juniper Group,361,,,
+Reforestation Post Fire Shrub: Ponderosa Pine Group,363,,,
+Reforestation Post Fire Shrub: Redwood Group,369,,,
+Reforestation Post Fire Shrub: Spruce/Fir Group,358,,,
+Reforestation Post Fire Shrub: Tanoak/Laurel Group,381,,,
+Reforestation Post Fire Shrub: Tropical Hardwoods Group,383,,,
+Reforestation Post Fire Shrub: Western Larch Group,368,,,
+Reforestation Post Fire Shrub: Western Oak Group,380,,,
+Reforestation Post Fire Shrub: Western White Pine Group,364,,,
+Reforestation Post Fire Shrub: White/Red/Jack Pine Group,357,,,
+Reforestation Shrubland: Alder/Maple Group,435,,,
+Reforestation Shrubland: Aspen/Birch Group,434,,,
+Reforestation Shrubland: California Mixed Conifer Group,427,,,
+Reforestation Shrubland: Douglas-fir Coastal Group,418,,,
+Reforestation Shrubland: Douglas-fir Inland Group,507,,,
+Reforestation Shrubland: Elm/Ash/Cottonwood Group,432,,,
+Reforestation Shrubland: Exotic Hardwoods Group,440,,,
+Reforestation Shrubland: Exotic Softwoods Group,428,,,
+Reforestation Shrubland: Fir/Spruce/Mountain Hemlock Group,421,,,
+Reforestation Shrubland: Hemlock/Sitka Spruce Group,423,,,
+Reforestation Shrubland: Loblolly/Shortleaf Pine Group,416,,,
+Reforestation Shrubland: Lodgepole Pine Group,422,,,
+Reforestation Shrubland: Longleaf/Slash Pine Group,415,,,
+Reforestation Shrubland: Maple/Beech/Birch Group,433,,,
+Reforestation Shrubland: Oak/Gum/Cypress Group,431,,,
+Reforestation Shrubland: Oak/Hickory Group,430,,,
+Reforestation Shrubland: Oak/Pine Group,429,,,
+Reforestation Shrubland: Other Western Hardwoods Group,438,,,
+Reforestation Shrubland: Other Western Softwood Group,426,,,
+Reforestation Shrubland: Pinyon/Juniper Group,417,,,
+Reforestation Shrubland: Ponderosa Pine Group,419,,,
+Reforestation Shrubland: Redwood Group,425,,,
+Reforestation Shrubland: Spruce/Fir Group,414,,,
+Reforestation Shrubland: Tanoak/Laurel Group,437,,,
+Reforestation Shrubland: Tropical Hardwoods Group,439,,,
+Reforestation Shrubland: Western Larch Group,424,,,
+Reforestation Shrubland: Western Oak Group,436,,,
+Reforestation Shrubland: Western White Pine Group,420,,,
+Reforestation Shrubland: White/Red/Jack Pine Group,413,,,
+Succession Post Fire: Alder/Maple Group,200,,,
+Succession Post Fire: Aspen/Birch Group,201,,,
+Succession Post Fire: California Mixed Conifer Group,202,,,
+Succession Post Fire: Douglas-fir Coastal Group,203,,,
+Succession Post Fire: Douglas-fir Inland Group,502,,,
+Succession Post Fire: Elm/Ash/Cottonwood Group,204,,,
+Succession Post Fire: Exotic Hardwoods Group,205,,,
+Succession Post Fire: Exotic Softwoods Group,206,,,
+Succession Post Fire: Fir/Spruce/Mountain Hemlock Group,207,,,
+Succession Post Fire: Hemlock/Sitka Spruce Group,208,,,
+Succession Post Fire: Loblolly/Shortleaf Pine Group,209,,,
+Succession Post Fire: Lodgepole Pine Group,210,,,
+Succession Post Fire: Longleaf/Slash Pine Group,211,,,
+Succession Post Fire: Maple/Beech/Birch Group,212,,,
+Succession Post Fire: Oak/Gum/Cypress Group,213,,,
+Succession Post Fire: Oak/Hickory Group,214,,,
+Succession Post Fire: Oak/Pine Group,215,,,
+Succession Post Fire: Other Western Hardwoods Group,216,,,
+Succession Post Fire: Other Western Softwood Group,217,,,
+Succession Post Fire: Pinyon/Juniper Group,218,,,
+Succession Post Fire: Ponderosa Pine Group,219,,,
+Succession Post Fire: Redwood Group,220,,,
+Succession Post Fire: Spruce/Fir Group,221,,,
+Succession Post Fire: Tanoak/Laurel Group,222,,,
+Succession Post Fire: Tropical Hardwoods Group,223,,,
+Succession Post Fire: Western Larch Group,224,,,
+Succession Post Fire: Western Oak Group,225,,,
+Succession Post Fire: Western White Pine Group,226,,,
+Succession Post Fire: White/Red/Jack Pine Group,227,,,
+Succession: Post Fire Recovery,70,"255,128,128,128",,
+Urbanization: High,4,"255,128,0,64",,NLCD Change
+Urbanization: Low,2,"255,255,128,128",,NLCD Change
+Urbanization: Medium,3,"255,255,0,0",,NLCD Change
+Urbanization: Open,1,"255,128,128,128",,NLCD Change
