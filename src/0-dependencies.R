@@ -1,10 +1,10 @@
 ## stsimcbmcfs3 - dependencies
-## ApexRMS, January 2022
+## ApexRMS, Sep 2024
 
 # Run with R-4.1.1
 # This script installs missing dependencies and loads all dependencies
 
-depend <- c("rsyncrosim", "RODBC", "tidyverse") 
+depend <- c("rsyncrosim", "RODBC", "tidyverse","imputeTS") 
 ndepend <- length(depend)
 present <- installed.packages()[ , "Package"]
 needed <- depend[!(depend %in% present)] 
