@@ -29,22 +29,24 @@ crosswalkSUSTFull <- datasheet(myScenario, name = sheetName, optional = T)
 # State Attribute Values ----
 
 # Connect to CBM-CFS3 "ArchiveIndex_Beta_Install.mdb" to assess if the species is Softwood or Hardwood
-CBMDatabasePath <- datasheet(myLibrary, name = "lucasbuilder_Database")
-CBMdatabase <- odbcDriverConnect(paste0("Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=", CBMDatabasePath))
-speciesTypeTable <- sqlFetch(CBMdatabase, "tblSpeciesTypeDefault")
-forestTypeTable <- sqlFetch(CBMdatabase, "tblForestTypeDefault")
-close(CBMdatabase)
+# CBMDatabasePath <- datasheet(myLibrary, name = "lucasbuilder_Database")
+# CBMdatabase <- odbcDriverConnect(paste0("Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=", CBMDatabasePath))
+speciesTypeTable <- read.csv(paste0(pkg_dir,"\\data\\tblSpeciesTypeDefault.csv"), stringsAsFactors = F)
+forestTypeTable <- read.csv(paste0(pkg_dir,"\\data\\tblForestTypeDefault.csv"), stringsAsFactors = F)
+# close(CBMdatabase)
 
 
 ## State Attributes for Living Biomass
 
 sheetName <- "stsim_StateAttributeValue"
-stateAttributeInitialCarbonBiomass <- datasheet(myScenario, name = sheetName, empty = T, optional = T)
-stateAttributeInitialCarbonBiomassFull = data.frame()
+stateAttributeInitialCarbonBiomass <- datasheet(myScenario, name = sheetName, empty = T, optional = T, lookupsAsFactors = F)
+stateAttributeInitialCarbonBiomassFull <- data.frame()
 
 for(i in seq(1:nrow(crosswalkSUSTFull))) {
   
   crosswalkSUST <- crosswalkSUSTFull %>% slice(i)
+  
+  
   CBMSimulationData <- read.csv(crosswalkSUST$CBMOutputFile, header=TRUE, check.names = F)
   CBMSimulationData <- CBMSimulationData[,1:(ncol(CBMSimulationData)-1)]
   
@@ -52,13 +54,13 @@ for(i in seq(1:nrow(crosswalkSUSTFull))) {
   CBMSimulationData <- CBMSimulationData[CBMSimulationData$`Time Step` <= maxTimestep,]
   
   # Get Species and Forest Type Ids
-  speciesTypeId <- speciesTypeTable$SpeciesTypeId[speciesTypeTable$SpeciesTypeName == as.character(crosswalkSUST$SpeciesTypeId)]
-  forestTypeId <- speciesTypeTable$ForestTypeId[speciesTypeTable$SpeciesTypeId == speciesTypeId]
-  forestType <- as.character(forestTypeTable$ForestTypeName[forestTypeTable$ForestTypeId == forestTypeId])
+  speciesTypeId <- speciesTypeTable$SpeciesTypeID[speciesTypeTable$SpeciesTypeName == as.character(crosswalkSUST$SpeciesTypeId)]
+  forestTypeId <- speciesTypeTable$ForestTypeID[speciesTypeTable$SpeciesTypeID == speciesTypeId]
+  forestType <- as.character(forestTypeTable$ForestTypeName[forestTypeTable$ForestTypeID == forestTypeId])
   
-  stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "StratumId"] <- crosswalkSUST$StratumId            
-  stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "SecondaryStratumId"] <- crosswalkSUST$SecondaryStratumId
-  stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "StateClassId"] <- crosswalkSUST$StateClassId
+  stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "StratumId"] <- as.character(crosswalkSUST$StratumId)            
+  stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "SecondaryStratumId"] <- as.character(crosswalkSUST$SecondaryStratumId)
+  stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "StateClassId"] <- as.character(crosswalkSUST$StateClassId)
   stateAtts <- NULL
   for(r in biomassStateAtts){ stateAtts <- c(stateAtts, rep(r,nrow(CBMSimulationData)))}
   stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "StateAttributeTypeId"] <- stateAtts
@@ -72,25 +74,26 @@ for(i in seq(1:nrow(crosswalkSUSTFull))) {
 }
 
 ## State Attributes for DOM
-stateAttributeInitialCarbonDOM <- datasheet(myScenario, name = sheetName, empty = T, optional = T)
-stateAttributeInitialCarbonDOMFull = data.frame()
+stateAttributeInitialCarbonDOM <- datasheet(myScenario, name = sheetName, empty = T, optional = T, lookupsAsFactors = F)
+stateAttributeInitialCarbonDOMFull <- data.frame()
 
 for(i in seq(1:nrow(crosswalkSUSTFull))) {
   
   crosswalkSUST <- crosswalkSUSTFull %>% slice(i)
+    
   CBMSimulationData <- read.csv(crosswalkSUST$CBMOutputFile, header=TRUE, check.names = F)
   CBMSimulationData <- CBMSimulationData[,1:(ncol(CBMSimulationData)-1)]
   # Remove time steps above run control maxTimestep
   CBMSimulationData <- CBMSimulationData[CBMSimulationData$`Time Step` <= maxTimestep,]
   
   # Get Species and Forest Type Ids
-  speciesTypeId <- speciesTypeTable$SpeciesTypeId[speciesTypeTable$SpeciesTypeName == as.character(crosswalkSUST$SpeciesTypeId)]
-  forestTypeId <- speciesTypeTable$ForestTypeId[speciesTypeTable$SpeciesTypeId == speciesTypeId]
-  forestType <- as.character(forestTypeTable$ForestTypeName[forestTypeTable$ForestTypeId == forestTypeId])
+  speciesTypeId <- speciesTypeTable$SpeciesTypeID[speciesTypeTable$SpeciesTypeName == as.character(crosswalkSUST$SpeciesTypeId)]
+  forestTypeId <- speciesTypeTable$ForestTypeID[speciesTypeTable$SpeciesTypeID == speciesTypeId]
+  forestType <- as.character(forestTypeTable$ForestTypeName[forestTypeTable$ForestTypeID == forestTypeId])
   
-  stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "StratumId"] <- crosswalkSUST$StratumId           
-  stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "SecondaryStratumId"] <- crosswalkSUST$SecondaryStratumId
-  stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "StateClassId"] <- crosswalkSUST$StateClassId
+  stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "StratumId"] <- as.character(crosswalkSUST$StratumId)           
+  stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "SecondaryStratumId"] <- as.character(crosswalkSUST$SecondaryStratumId)
+  stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "StateClassId"] <- as.character(crosswalkSUST$StateClassId)
   stateAtts <- NULL
   for(r in DOMStateAtts){ stateAtts <- c(stateAtts, rep(r,nrow(CBMSimulationData)))}
   stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "StateAttributeTypeId"] <-  stateAtts
@@ -114,7 +117,7 @@ saveDatasheet(myScenario, stateAttributesMerged, sheetName)
 
 # load CBM carbon stock crosswalk
 sheetName <- "lucasbuilder_CrosswalkStock"
-crosswalkStock  <- datasheet(myScenario, name = sheetName, optional = T)
+crosswalkStock  <- datasheet(myScenario, name = sheetName, optional = T, lookupsAsFactors = F)
 
 
 ## loop over the rows in the crosswalkSUSTFull
@@ -125,14 +128,14 @@ for (row in 1:nrow(crosswalkSUSTFull)) { # row = 1
   crosswalkSUST <- crosswalkSUSTFull %>% slice(row)
   
   # Get Species and Forest Type Ids
-  speciesTypeId <- speciesTypeTable$SpeciesTypeId[speciesTypeTable$SpeciesTypeName == as.character(crosswalkSUST[1, "SpeciesTypeId"])]
-  forestTypeId <- speciesTypeTable$ForestTypeId[speciesTypeTable$SpeciesTypeId == speciesTypeId]
+  speciesTypeId <- speciesTypeTable$SpeciesTypeID[speciesTypeTable$SpeciesTypeName == as.character(crosswalkSUST[1, "SpeciesTypeId"])]
+  forestTypeId <- speciesTypeTable$ForestTypeID[speciesTypeTable$SpeciesTypeID == speciesTypeId]
    
   # Get Forest Type Name
-  forestType <- as.character(forestTypeTable$ForestTypeName[forestTypeTable$ForestTypeId == forestTypeId])
+  forestType <- as.character(forestTypeTable$ForestTypeName[forestTypeTable$ForestTypeID == forestTypeId])
   
   CBMSimulationData <- read.csv(crosswalkSUST$CBMOutputFile, header=TRUE, check.names = F)
-  
+    
   # Remove blank column that CBM-CFS exports by default
   validationDataWide <- CBMSimulationData[,1:(ncol(CBMSimulationData)-1)]
   
@@ -155,12 +158,14 @@ for (row in 1:nrow(crosswalkSUSTFull)) { # row = 1
   validationCarbon$StateClassId <- crosswalkSUST$StateClassId
   names(validationCarbon)[which(names(validationCarbon) == "Name")] <- "StockGroupId"
   Validation_OutputStock <- rbind(Validation_OutputStock, validationCarbon)
-  
 }
 
 # output validation carbon stocks to result scenario
-SF_OutputStock <- datasheet(myScenario, name = "stsim_OutputStock") 
+SF_OutputStock <- datasheet(myScenario, name = "stsim_OutputStock", optional = T, lookupsAsFactors = F) 
 SF_OutputStock1 <- add_row(SF_OutputStock, Validation_OutputStock)
 
-saveDatasheet(myScenario, SF_OutputStock1, name = "stsim_OutputStock") 
+# remove rows that are all NAs
+SF_OutputStock1 <- SF_OutputStock1 %>%
+  filter(rowSums(is.na(SF_OutputStock1)) != ncol(SF_OutputStock1))
 
+saveDatasheet(myScenario, SF_OutputStock1, name = "stsim_OutputStock")
