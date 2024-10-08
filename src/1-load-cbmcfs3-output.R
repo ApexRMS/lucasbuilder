@@ -46,31 +46,33 @@ for(i in seq(1:nrow(crosswalkSUSTFull))) {
   
   crosswalkSUST <- crosswalkSUSTFull %>% slice(i)
   
+  if (!is.na(crosswalkSUST$CBMOutputFile)){
   
-  CBMSimulationData <- read.csv(crosswalkSUST$CBMOutputFile, header=TRUE, check.names = F)
-  CBMSimulationData <- CBMSimulationData[,1:(ncol(CBMSimulationData)-1)]
-  
-  # Remove time steps above run control maxTimestep
-  CBMSimulationData <- CBMSimulationData[CBMSimulationData$`Time Step` <= maxTimestep,]
-  
-  # Get Species and Forest Type Ids
-  speciesTypeId <- speciesTypeTable$SpeciesTypeID[speciesTypeTable$SpeciesTypeName == as.character(crosswalkSUST$SpeciesTypeId)]
-  forestTypeId <- speciesTypeTable$ForestTypeID[speciesTypeTable$SpeciesTypeID == speciesTypeId]
-  forestType <- as.character(forestTypeTable$ForestTypeName[forestTypeTable$ForestTypeID == forestTypeId])
-  
-  stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "StratumId"] <- as.character(crosswalkSUST$StratumId)            
-  stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "SecondaryStratumId"] <- as.character(crosswalkSUST$SecondaryStratumId)
-  stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "StateClassId"] <- as.character(crosswalkSUST$StateClassId)
-  stateAtts <- NULL
-  for(r in biomassStateAtts){ stateAtts <- c(stateAtts, rep(r,nrow(CBMSimulationData)))}
-  stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "StateAttributeTypeId"] <- stateAtts
-  stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "AgeMin"] <- rep(CBMSimulationData[,"Time Step"], numBiomassStocks)
-  stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "AgeMax"] <- rep(CBMSimulationData[,"Time Step"], numBiomassStocks)
-  stateAttributeInitialCarbonBiomass[stateAttributeInitialCarbonBiomass$AgeMin == (nrow(CBMSimulationData)-1), "AgeMax"] <- NA
-  value <- NULL
-  for(r in biomassStocks){ value <- c(value, CBMSimulationData[,paste(forestType, r)])}
-  stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "Value"] <- value
-  stateAttributeInitialCarbonBiomassFull = rbind(stateAttributeInitialCarbonBiomass, stateAttributeInitialCarbonBiomassFull)
+    CBMSimulationData <- read.csv(crosswalkSUST$CBMOutputFile, header=TRUE, check.names = F)
+    CBMSimulationData <- CBMSimulationData[,1:(ncol(CBMSimulationData)-1)]
+    
+    # Remove time steps above run control maxTimestep
+    CBMSimulationData <- CBMSimulationData[CBMSimulationData$`Time Step` <= maxTimestep,]
+    
+    # Get Species and Forest Type Ids
+    speciesTypeId <- speciesTypeTable$SpeciesTypeID[speciesTypeTable$SpeciesTypeName == as.character(crosswalkSUST$SpeciesTypeId)]
+    forestTypeId <- speciesTypeTable$ForestTypeID[speciesTypeTable$SpeciesTypeID == speciesTypeId]
+    forestType <- as.character(forestTypeTable$ForestTypeName[forestTypeTable$ForestTypeID == forestTypeId])
+    
+    stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "StratumId"] <- as.character(crosswalkSUST$StratumId)            
+    stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "SecondaryStratumId"] <- as.character(crosswalkSUST$SecondaryStratumId)
+    stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "StateClassId"] <- as.character(crosswalkSUST$StateClassId)
+    stateAtts <- NULL
+    for(r in biomassStateAtts){ stateAtts <- c(stateAtts, rep(r,nrow(CBMSimulationData)))}
+    stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "StateAttributeTypeId"] <- stateAtts
+    stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "AgeMin"] <- rep(CBMSimulationData[,"Time Step"], numBiomassStocks)
+    stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "AgeMax"] <- rep(CBMSimulationData[,"Time Step"], numBiomassStocks)
+    stateAttributeInitialCarbonBiomass[stateAttributeInitialCarbonBiomass$AgeMin == (nrow(CBMSimulationData)-1), "AgeMax"] <- NA
+    value <- NULL
+    for(r in biomassStocks){ value <- c(value, CBMSimulationData[,paste(forestType, r)])}
+    stateAttributeInitialCarbonBiomass[1:(nrow(CBMSimulationData)*numBiomassStocks), "Value"] <- value
+    stateAttributeInitialCarbonBiomassFull = rbind(stateAttributeInitialCarbonBiomass, stateAttributeInitialCarbonBiomassFull)
+  }
 }
 
 ## State Attributes for DOM
@@ -81,30 +83,33 @@ for(i in seq(1:nrow(crosswalkSUSTFull))) {
   
   crosswalkSUST <- crosswalkSUSTFull %>% slice(i)
     
-  CBMSimulationData <- read.csv(crosswalkSUST$CBMOutputFile, header=TRUE, check.names = F)
-  CBMSimulationData <- CBMSimulationData[,1:(ncol(CBMSimulationData)-1)]
-  # Remove time steps above run control maxTimestep
-  CBMSimulationData <- CBMSimulationData[CBMSimulationData$`Time Step` <= maxTimestep,]
+  if (!is.na(crosswalkSUST$CBMOutputFile)){
   
-  # Get Species and Forest Type Ids
-  speciesTypeId <- speciesTypeTable$SpeciesTypeID[speciesTypeTable$SpeciesTypeName == as.character(crosswalkSUST$SpeciesTypeId)]
-  forestTypeId <- speciesTypeTable$ForestTypeID[speciesTypeTable$SpeciesTypeID == speciesTypeId]
-  forestType <- as.character(forestTypeTable$ForestTypeName[forestTypeTable$ForestTypeID == forestTypeId])
-  
-  stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "StratumId"] <- as.character(crosswalkSUST$StratumId)           
-  stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "SecondaryStratumId"] <- as.character(crosswalkSUST$SecondaryStratumId)
-  stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "StateClassId"] <- as.character(crosswalkSUST$StateClassId)
-  stateAtts <- NULL
-  for(r in DOMStateAtts){ stateAtts <- c(stateAtts, rep(r,nrow(CBMSimulationData)))}
-  stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "StateAttributeTypeId"] <-  stateAtts
-  stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "AgeMin"] <- rep(CBMSimulationData[, "Time Step"], numDOMStocks)
-  stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "AgeMax"] <- rep(CBMSimulationData[, "Time Step"], numDOMStocks)
-  stateAttributeInitialCarbonDOM[stateAttributeInitialCarbonDOM$AgeMin == (nrow(CBMSimulationData)-1), "AgeMax"] <- NA
-  value <- NULL
-  if(forestType == "Hardwood"){ for(r in DOMStocks_hw){ value <- c(value, CBMSimulationData[,r])} }
-  if(forestType == "Softwood"){ for(r in DOMStocks_sw){ value <- c(value, CBMSimulationData[,r])} }
-  stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "Value"] <- value
-  stateAttributeInitialCarbonDOMFull = rbind(stateAttributeInitialCarbonDOM, stateAttributeInitialCarbonDOMFull)
+    CBMSimulationData <- read.csv(crosswalkSUST$CBMOutputFile, header=TRUE, check.names = F)
+    CBMSimulationData <- CBMSimulationData[,1:(ncol(CBMSimulationData)-1)]
+    # Remove time steps above run control maxTimestep
+    CBMSimulationData <- CBMSimulationData[CBMSimulationData$`Time Step` <= maxTimestep,]
+    
+    # Get Species and Forest Type Ids
+    speciesTypeId <- speciesTypeTable$SpeciesTypeID[speciesTypeTable$SpeciesTypeName == as.character(crosswalkSUST$SpeciesTypeId)]
+    forestTypeId <- speciesTypeTable$ForestTypeID[speciesTypeTable$SpeciesTypeID == speciesTypeId]
+    forestType <- as.character(forestTypeTable$ForestTypeName[forestTypeTable$ForestTypeID == forestTypeId])
+    
+    stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "StratumId"] <- as.character(crosswalkSUST$StratumId)           
+    stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "SecondaryStratumId"] <- as.character(crosswalkSUST$SecondaryStratumId)
+    stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "StateClassId"] <- as.character(crosswalkSUST$StateClassId)
+    stateAtts <- NULL
+    for(r in DOMStateAtts){ stateAtts <- c(stateAtts, rep(r,nrow(CBMSimulationData)))}
+    stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "StateAttributeTypeId"] <-  stateAtts
+    stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "AgeMin"] <- rep(CBMSimulationData[, "Time Step"], numDOMStocks)
+    stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "AgeMax"] <- rep(CBMSimulationData[, "Time Step"], numDOMStocks)
+    stateAttributeInitialCarbonDOM[stateAttributeInitialCarbonDOM$AgeMin == (nrow(CBMSimulationData)-1), "AgeMax"] <- NA
+    value <- NULL
+    if(forestType == "Hardwood"){ for(r in DOMStocks_hw){ value <- c(value, CBMSimulationData[,r])} }
+    if(forestType == "Softwood"){ for(r in DOMStocks_sw){ value <- c(value, CBMSimulationData[,r])} }
+    stateAttributeInitialCarbonDOM[1:(nrow(CBMSimulationData)*numDOMStocks), "Value"] <- value
+    stateAttributeInitialCarbonDOMFull = rbind(stateAttributeInitialCarbonDOM, stateAttributeInitialCarbonDOMFull)
+  }
 }
 
 ## Combine the state attribute datasheets
@@ -134,30 +139,33 @@ for (row in 1:nrow(crosswalkSUSTFull)) { # row = 1
   # Get Forest Type Name
   forestType <- as.character(forestTypeTable$ForestTypeName[forestTypeTable$ForestTypeID == forestTypeId])
   
-  CBMSimulationData <- read.csv(crosswalkSUST$CBMOutputFile, header=TRUE, check.names = F)
+  if (!is.na(crosswalkSUST$CBMOutputFile)){
+  
+    CBMSimulationData <- read.csv(crosswalkSUST$CBMOutputFile, header=TRUE, check.names = F)
+      
+    # Remove blank column that CBM-CFS exports by default
+    validationDataWide <- CBMSimulationData[,1:(ncol(CBMSimulationData)-1)]
     
-  # Remove blank column that CBM-CFS exports by default
-  validationDataWide <- CBMSimulationData[,1:(ncol(CBMSimulationData)-1)]
-  
-  # Remove time steps above run control maxTimestep
-  validationDataWide <- validationDataWide[validationDataWide$`Time Step` <= maxTimestep,]
-  
-  # convert validation carbon data from wide to long format
-  if(forestType == "Softwood"){ validationStocks <- CBM_Stocks_SW }
-  if(forestType == "Hardwood"){ validationStocks <- CBM_Stocks_HW }
-  validationDataWide <- cbind("Timestep"=validationDataWide[, "Time Step"], validationDataWide[, names(validationDataWide) %in% validationStocks])
-  validationCarbon <- gather(validationDataWide, Name, Amount, names(validationDataWide)[2:ncol(validationDataWide)], factor_key = TRUE)
-  validationCarbon$Name <- as.character(validationCarbon$Name)
-  validationCarbon$Name <- unlist(lapply(validationCarbon$Name, crossSF))
-  validationCarbon$Name <- paste(validationCarbon$Name, "[Type]")
-  
-  validationCarbon$Iteration <- 1
-  if(is.na(crosswalkSUST$StratumId)){validationCarbon$StratumId <- "[Unspecified]" }else{ validationCarbon$StratumId <- crosswalkSUST$StratumId }
-  validationCarbon$SecondaryStratumId <- crosswalkSUST$SecondaryStratumId
-  validationCarbon$TertiaryStratumId <- crosswalkSUST$TertiaryStratumId
-  validationCarbon$StateClassId <- crosswalkSUST$StateClassId
-  names(validationCarbon)[which(names(validationCarbon) == "Name")] <- "StockGroupId"
-  Validation_OutputStock <- rbind(Validation_OutputStock, validationCarbon)
+    # Remove time steps above run control maxTimestep
+    validationDataWide <- validationDataWide[validationDataWide$`Time Step` <= maxTimestep,]
+    
+    # convert validation carbon data from wide to long format
+    if(forestType == "Softwood"){ validationStocks <- CBM_Stocks_SW }
+    if(forestType == "Hardwood"){ validationStocks <- CBM_Stocks_HW }
+    validationDataWide <- cbind("Timestep"=validationDataWide[, "Time Step"], validationDataWide[, names(validationDataWide) %in% validationStocks])
+    validationCarbon <- gather(validationDataWide, Name, Amount, names(validationDataWide)[2:ncol(validationDataWide)], factor_key = TRUE)
+    validationCarbon$Name <- as.character(validationCarbon$Name)
+    validationCarbon$Name <- unlist(lapply(validationCarbon$Name, crossSF))
+    validationCarbon$Name <- paste(validationCarbon$Name, "[Type]")
+    
+    validationCarbon$Iteration <- 1
+    if(is.na(crosswalkSUST$StratumId)){validationCarbon$StratumId <- "[Unspecified]" }else{ validationCarbon$StratumId <- crosswalkSUST$StratumId }
+    validationCarbon$SecondaryStratumId <- crosswalkSUST$SecondaryStratumId
+    validationCarbon$TertiaryStratumId <- crosswalkSUST$TertiaryStratumId
+    validationCarbon$StateClassId <- crosswalkSUST$StateClassId
+    names(validationCarbon)[which(names(validationCarbon) == "Name")] <- "StockGroupId"
+    Validation_OutputStock <- rbind(Validation_OutputStock, validationCarbon)
+  }
 }
 
 # output validation carbon stocks to result scenario
