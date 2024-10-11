@@ -13,9 +13,9 @@ options(stringsAsFactors=FALSE)
 
 rootPath <- "C:/Users/AmandaSchwantes/Documents/GitHub/lucasbuilder/"
 
-mySession <- session("C:/Program Files/SyncroSim3")
+mySession <- session("C:/Program Files/SyncroSim Studio")
 # version(mySession)
-libraryName <- paste0(rootPath,"model/Lucas Example Merchantable")
+libraryName <- paste0(rootPath,"model/Lucas Example Merch")
 myProjectName <- "Definitions"
 #initialInputsDirectory <- "C:/GitHub/lucasbuilder/data/" # "../data/"
 #initialInputsDirectory <- "~/A303/CBM/data/" # "../data/"
@@ -589,10 +589,11 @@ mySheetFull <- read.csv(paste0(initialInputsDirectory,"MerchantableVolumeCurves.
 mySheetFull <- mySheetFull %>%
   mutate(StratumId = unique(crosswalkSUSTFull$StratumId),
          SecondaryStratumId = unique(crosswalkSUSTFull$SecondaryStratumId)) %>%
-  arrange(Age)
+  arrange(Age) %>% 
+  rename(MerchantableVolume = Volume)
 
 #names(mySheetFull) <- names(mySheet)
-saveDatasheet(myScenario, mySheetFull, sheetName)
+saveDatasheet(myScenario, mySheetFull, sheetName, append = F)
 
 #### Generate Flow Multiplier Dependencies ---- 
 
