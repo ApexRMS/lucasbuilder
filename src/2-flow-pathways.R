@@ -1,11 +1,5 @@
 ## stsimcbmcfs3 - flow pathways           
-## ApexRMS, August 2024
-
-# Run with R-4.1.1       
-# Before running script make sure that Microsoft Access Database Engine is 
-# installed so that you can connect to a MS Access db from R x64bit
-# On Sept 27 2018: AccessDatabaseEngine_X64.exe installed from 
-# https://www.microsoft.com/en-us/download/details.aspx?id=13255
+## ApexRMS, Oct 2024
 
 # source constants and helper functions
 pkg_dir <- (Sys.getenv("ssim_package_directory"))
@@ -29,7 +23,7 @@ useCBMAgeVsCarbonCurves=T
 ###################################
 # Get CBM database and crosswalks #
 ###################################
-CBMDatabase <- datasheet(myLibrary, "lucasbuilder_Database")[1,"Path"]
+
 crosswalkStratumState <- datasheet(myScenario, "lucasbuilder_CrosswalkSpecies", 
                                    optional = T) # crosswalkStratumState <- datasheet(myLibrary, scenario = 11, "lucasbuilder_CrosswalkSpecies", optional = T)
 
@@ -70,8 +64,8 @@ proportionFineRootsToBGVeryFast <- 0.5
 proportionCoarseRootsToAGFast <- 0.5
 proportionCoarseRootsToBGFast <- 0.5
 
-stateAttributesNetGrowthMaster = datasheet(myScenario, name="stsim_StateAttributeValue", empty = T, optional = T)
-flowMultiplierMaster = datasheet(myScenario, name="stsim_FlowMultiplier", empty = T, optional = T)
+stateAttributesNetGrowthMaster = datasheet(myScenario, name="stsim_StateAttributeValue", empty = T, optional = T, lookupsAsFactors = F)
+flowMultiplierMaster = datasheet(myScenario, name="stsim_FlowMultiplier", empty = T, optional = T, lookupsAsFactors = F)
 grossMerchantableVolume = datasheet(myScenario, name = "lucasbuilder_MerchantableVolumeCurve")
 
 crosswalkDisturbance = datasheet(myScenario, name = "lucasbuilder_CrosswalkDisturbance") # crosswalkDisturbance <- datasheet(myLibrary, scenario = 7,"lucasbuilder_CrosswalkDisturbance")
@@ -86,29 +80,27 @@ for(i in 1: nrow(crosswalkStratumState)){
   ####################################
   # CBM parameters from CBM Database # 
   ####################################
-  # Connect to CBM-CFS3 "ArchiveIndex_Beta_Install.mdb"
-  CBMdatabase <- odbcDriverConnect(paste0("Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=", CBMDatabase))
   
   # Get Admin Boundary Id
-  adminBoundaryTable <- sqlFetch(CBMdatabase, "tblAdminBoundaryDefault")
-  adminBoundaryId <- adminBoundaryTable$AdminBoundaryId[adminBoundaryTable$AdminBoundaryName == as.character(crosswalkStratumState$AdminBoundaryId[i])]
+  adminBoundaryTable <- read.csv(paste0(pkg_dir,"\\data\\tblAdminBoundaryDefault.csv"), stringsAsFactors = F)
+  adminBoundaryId <- adminBoundaryTable$AdminBoundaryID[adminBoundaryTable$AdminBoundaryName == as.character(crosswalkStratumState$AdminBoundaryId[i])]
   
   # Get Ecological Boundary Id
-  ecoBoundaryTable <- sqlFetch(CBMdatabase, "tblEcoBoundaryDefault")
-  ecoBoundaryId <- ecoBoundaryTable$EcoBoundaryId[ecoBoundaryTable$EcoBoundaryName == as.character(crosswalkStratumState$EcoBoundaryId[i])]
+  ecoBoundaryTable <- read.csv(paste0(pkg_dir,"\\data\\tblEcoBoundaryDefault.csv"), stringsAsFactors = F)
+  ecoBoundaryId <- ecoBoundaryTable$EcoBoundaryID[ecoBoundaryTable$EcoBoundaryName == as.character(crosswalkStratumState$EcoBoundaryId[i])]
   
   # Get Species and Forest Type Ids
-  speciesTypeTable <- sqlFetch(CBMdatabase, "tblSpeciesTypeDefault")
-  speciesTypeId <- speciesTypeTable$SpeciesTypeId[speciesTypeTable$SpeciesTypeName == as.character(crosswalkStratumState$SpeciesTypeId[i])]
-  forestTypeId <- speciesTypeTable$ForestTypeId[speciesTypeTable$SpeciesTypeId == speciesTypeId]
+  speciesTypeTable <- read.csv(paste0(pkg_dir,"\\data\\tblSpeciesTypeDefault.csv"), stringsAsFactors = F)
+  speciesTypeId <- speciesTypeTable$SpeciesTypeID[speciesTypeTable$SpeciesTypeName == as.character(crosswalkStratumState$SpeciesTypeId[i])]
+  forestTypeId <- speciesTypeTable$ForestTypeID[speciesTypeTable$SpeciesTypeID == speciesTypeId]
   
   # Get Forest Type Name
-  forestTypeTable <- sqlFetch(CBMdatabase, "tblForestTypeDefault")
-  ForestType <- as.character(forestTypeTable$ForestTypeName[forestTypeTable$ForestTypeId == forestTypeId])
+  forestTypeTable <- read.csv(paste0(pkg_dir,"\\data\\tblForestTypeDefault.csv"), stringsAsFactors = F)
+  ForestType <- as.character(forestTypeTable$ForestTypeName[forestTypeTable$ForestTypeID == forestTypeId])
   
   # Get Spatial Planning Unit Id (SPUId) from adminBoundary and ecoBoundary
-  SPUTable <- sqlFetch(CBMdatabase, "tblSPUDefault")
-  SPUId <- SPUTable$SPUId[SPUTable$AdminBoundaryId==adminBoundaryId & SPUTable$EcoBoundaryId==ecoBoundaryId]
+  SPUTable <- read.csv(paste0(pkg_dir,"\\data\\tblSPUDefault.csv"), stringsAsFactors = F)
+  SPUId <- SPUTable$SPUID[SPUTable$AdminBoundaryID==adminBoundaryId & SPUTable$EcoBoundaryID==ecoBoundaryId]
   
   # Throw error if SPUId is empty
   if(is.na(SPUId) || is.null(SPUId) || length(SPUId) == 0){
@@ -116,27 +108,27 @@ for(i in 1: nrow(crosswalkStratumState)){
   }
   
   # Get Stratums and stateclass Ids
-  the_stratum <- crosswalkStratumState$StratumId[i]
-  the_secondarystratum <- crosswalkStratumState$SecondaryStratumId[i]
-  the_class <- crosswalkStratumState$StateClassId[i]
+  the_stratum <- as.character(crosswalkStratumState$StratumId[i])
+  the_secondarystratum <- as.character(crosswalkStratumState$SecondaryStratumId[i])
+  the_class <- as.character(crosswalkStratumState$StateClassId[i])
   
   # Get biomass expansion factors
-  biomassExpansionTable <- sqlFetch(CBMdatabase,"tblBioTotalStemwoodForestTypeDefault")
+  #biomassExpansionTable <- read.csv(paste0(pkg_dir,"\\data\\tblBioTotalStemwoodForestTypeDefault.csv"), stringsAsFactors = F)
   
   # Get biomass to carbon multipliers
-  biomassComponentTable <- sqlFetch(CBMdatabase,"tblBiomassComponent")
-  biomassToCarbonTable <- sqlFetch(CBMdatabase,"tblBiomassToCarbonDefault")
+  biomassComponentTable <- read.csv(paste0(pkg_dir,"\\data\\tblBiomassComponent.csv"), stringsAsFactors = F)
+  biomassToCarbonTable <- read.csv(paste0(pkg_dir,"\\data\\tblBiomassToCarbonDefault.csv"), stringsAsFactors = F)
   biomassToCarbonTable <- merge.data.frame(biomassToCarbonTable, biomassComponentTable)
   
   # Decay multipliers
   # Temperature modifier parameters
-  climateTable <- sqlFetch(CBMdatabase,"tblClimateDefault")
+  climateTable <- read.csv(paste0(pkg_dir,"\\data\\tblClimateDefault.csv"), stringsAsFactors = F)
   # There are 2 reference years but they seem to have the same values, I'm arbitrarily choosing 1980
   climateRefYear <- 1980
   if (!is.na(crosswalkStratumState$AverageTemperature[i])){
     meanAnnualTemp <- crosswalkStratumState$AverageTemperature[i]
   } else {
-    meanAnnualTemp <- climateTable[climateTable$DefaultSPUId==SPUId & climateTable$Year == climateRefYear, "MeanAnnualTemp"]
+    meanAnnualTemp <- climateTable[climateTable$DefaultSPUID==SPUId & climateTable$Year == climateRefYear, "MeanAnnualTemp"]
   }
   # Stand modifier parameters
   # Note that the maxDecayMult in CBM-CFS3 is 1 which makes the StandMod = 1
@@ -145,10 +137,11 @@ for(i in 1: nrow(crosswalkStratumState)){
   # defaults to one because more recent studies that examined open canopy effects on decomposition indicated 
   # that decomposition rates are not always higher under open canopies and that decomposition rate responses 
   # may be ecosystem specific (Yanai et al., 2000)." 
-  maxDecayMult <- ecoBoundaryTable[ecoBoundaryTable$EcoBoundaryId==ecoBoundaryId, "DecayMult"]
+  maxDecayMult <- ecoBoundaryTable[ecoBoundaryTable$EcoBoundaryID==ecoBoundaryId, "DecayMult"]
   
   # Get DOM parameters
-  DOMParametersTable <- sqlFetch(CBMdatabase,"tblDOMParametersDefault")
+  DOMParametersTable <- read.csv(paste0(pkg_dir,"\\data\\tblDOMParametersDefault.csv"), stringsAsFactors = F) %>%
+    rename(SoilPoolId = SoilPoolID)
   DOMParametersTable <- merge(crosswalkStock[crosswalkStock$StockTypeId %in% DOMStockTypes,], DOMParametersTable)
   DOMParametersTable$TempMod <- exp((meanAnnualTemp - DOMParametersTable$ReferenceTemp)*log(DOMParametersTable$Q10)*0.1)
   if(ForestType=="Softwood"){
@@ -166,7 +159,7 @@ for(i in 1: nrow(crosswalkStratumState)){
   DOMTable <- rbind(DOMDecayTable, DOMEmissionTable)
   
   # Get DOM transfer rates
-  DOMTransferTable <- sqlFetch(CBMdatabase, "tblSlowAGToBGTransferRate")
+  DOMTransferTable <- read.csv(paste0(pkg_dir,"\\data\\tblSlowAGToBGTransferRate.csv"), stringsAsFactors = F)
   transferRateSlowAGToBG <- signif(DOMTransferTable$SlowAGToBGTransferRate,6)
   if(ForestType=="Softwood"){
     transferRateStemSnagToDOM <- signif(ecoBoundaryTable$SoftwoodStemSnagToDOM[ecoBoundaryTable$EcoBoundaryName == as.character(crosswalkStratumState$EcoBoundaryId[i])],6)
@@ -177,40 +170,37 @@ for(i in 1: nrow(crosswalkStratumState)){
     transferRateBranchSnagToDOM <- signif(ecoBoundaryTable$HardwoodBranchSnagToDOM[ecoBoundaryTable$EcoBoundaryName == as.character(crosswalkStratumState$EcoBoundaryId[i])],6)
   }
   # Get biomass turnover rates
-  speciesTurnoverRatesTable <- sqlFetch(CBMdatabase, "tblSpeciesTypeDefault")
+  speciesTurnoverRatesTable <- read.csv(paste0(pkg_dir,"\\data\\tblSpeciesTypeDefault.csv"), stringsAsFactors = F)
   turnoverRates <- speciesTurnoverRatesTable[speciesTurnoverRatesTable$SpeciesTypeName==as.character(crosswalkStratumState$SpeciesTypeId[i]),]
   
   # Get the disturbance matrix information
-  DMassociation = sqlFetch(CBMdatabase, "tblDMAssociationDefault")
-  DMassociation = DMassociation[DMassociation$DefaultEcoBoundaryId == ecoBoundaryId,]
+  DMassociation = read.csv(paste0(pkg_dir,"\\data\\tblDMAssociationDefault.csv"), stringsAsFactors = F)
+  DMassociation = DMassociation[DMassociation$DefaultEcoBoundaryID == ecoBoundaryId,]
   
-  disturbanceType = sqlFetch(CBMdatabase, "tblDisturbanceTypeDefault")
-  disturbanceMatrix <- sqlFetch(CBMdatabase, "tblDM")
+  disturbanceType = read.csv(paste0(pkg_dir,"\\data\\tblDisturbanceTypeDefault.csv"), stringsAsFactors = F)
+  disturbanceMatrix <- read.csv(paste0(pkg_dir,"\\data\\tblDM.csv"), stringsAsFactors = F)
   
-  dmValuesLookup = sqlFetch(CBMdatabase, "tblDMValuesLookup")
+  dmValuesLookup = read.csv(paste0(pkg_dir,"\\data\\tblDMValuesLookup.csv"), stringsAsFactors = F)
   
-  sourceName <- sqlFetch(CBMdatabase, "tblSourceName") %>% rename("DMRow" = "Row")
-  sinkName <- sqlFetch(CBMdatabase, "tblSinkName") %>% rename("DMColumn" = "Column")
-  
-  # Close the database (do not forget this, otherwise you lock access database from editing)
-  close(CBMdatabase)
+  sourceName <- read.csv(paste0(pkg_dir,"\\data\\tblSourceName.csv"), stringsAsFactors = F) %>% rename("DMRow" = "Row")
+  sinkName <- read.csv(paste0(pkg_dir,"\\data\\tblSinkName.csv"), stringsAsFactors = F) %>% rename("DMColumn" = "Column")
   
   # Disturbance Stuff -----------------------------------------------------------
   
   if ((doDisturbances == T) & (nrow(crosswalkDisturbance)>0)) {
     
-    #Need to rename DMassociation DistTypeId column
-    names(DMassociation)[1] = "DistTypeId"
+    #Need to rename DMassociation DistTypeID column
+    names(DMassociation)[1] = "DistTypeID"
     
     df = DMassociation %>%
-      left_join(disturbanceType, by="DistTypeId") %>% 
-      select(DMId,DistTypeId,DistTypeName) %>%
-      left_join(disturbanceMatrix, by="DMId") %>% 
-      select(DMId,DistTypeId,DistTypeName,DMStructureId) %>%
-      left_join(dmValuesLookup, by="DMId") %>%
-      left_join(sourceName, by=c("DMStructureId","DMRow")) %>% 
+      left_join(disturbanceType, by="DistTypeID") %>% 
+      select(DMID,DistTypeID,DistTypeName) %>%
+      left_join(disturbanceMatrix, by="DMID") %>% 
+      select(DMID,DistTypeID,DistTypeName,DMStructureID) %>%
+      left_join(dmValuesLookup, by="DMID") %>%
+      left_join(sourceName, by=c("DMStructureID","DMRow")) %>% 
       rename("Source" = "Description") %>%
-      left_join(sinkName, by=c("DMStructureId", "DMColumn")) %>% 
+      left_join(sinkName, by=c("DMStructureID", "DMColumn")) %>% 
       rename("Sink" = "Description") %>%
       mutate(Source = as.character(Source), Sink = as.character(Sink)) %>% 
       filter(DistTypeName %in% crosswalkDisturbance$DisturbanceTypeId)
@@ -394,10 +384,10 @@ for(i in 1: nrow(crosswalkStratumState)){
   # STSim-SF datasheets #
   #######################
   # State Attribute Values for net growth based on mass-balance equations
-  stateAttributesNetGrowth = datasheet(myScenario, name="stsim_StateAttributeValue", empty = T, optional = T)
-  stateAttributesNetGrowth[1:nrow(volumeToCarbon), "StratumId"] <- volumeToCarbon$StratumId[1:nrow(volumeToCarbon)]
-  stateAttributesNetGrowth[1:nrow(volumeToCarbon), "SecondaryStratumId"] <- volumeToCarbon$SecondaryStratumId[1:nrow(volumeToCarbon)]
-  stateAttributesNetGrowth[1:nrow(volumeToCarbon), "StateClassId"] <- volumeToCarbon$StateClassId[1:nrow(volumeToCarbon)]
+  stateAttributesNetGrowth = datasheet(myScenario, name="stsim_StateAttributeValue", empty = T, optional = T, lookupsAsFactors = F)
+  stateAttributesNetGrowth[1:nrow(volumeToCarbon), "StratumId"] <- as.character(volumeToCarbon$StratumId[1:nrow(volumeToCarbon)])
+  stateAttributesNetGrowth[1:nrow(volumeToCarbon), "SecondaryStratumId"] <- as.character(volumeToCarbon$SecondaryStratumId[1:nrow(volumeToCarbon)])
+  stateAttributesNetGrowth[1:nrow(volumeToCarbon), "StateClassId"] <- as.character(volumeToCarbon$StateClassId[1:nrow(volumeToCarbon)])
   stateAttributesNetGrowth[1:nrow(volumeToCarbon), "StateAttributeTypeId"] <- rep(as.character(flowPathways$StateAttributeTypeId[(flowPathways$FromStockTypeId==crossSF("Atmosphere") & flowPathways$ToStockTypeId==crossSF("Merchantable"))]), nrow(volumeToCarbon))
   stateAttributesNetGrowth[1:nrow(volumeToCarbon), "AgeMin"] <- volumeToCarbon$AgeMin[1:nrow(volumeToCarbon)]
   stateAttributesNetGrowth[1:nrow(volumeToCarbon), "AgeMax"] <- volumeToCarbon$AgeMax[1:nrow(volumeToCarbon)]
@@ -408,10 +398,10 @@ for(i in 1: nrow(crosswalkStratumState)){
   
   # SF Flow Pathways
   # Flow Multipliers for biomass net growth based on volume-to-carbon proportions 
-  flowMultiplierNetGrowth <- datasheet(myScenario, name="stsim_FlowMultiplier", empty = T, optional = T)
-  flowMultiplierNetGrowth[1:(nrow(volumeToCarbon)*numBiomassStocks), "StratumId"] <- crosswalkStratumState$StratumId[i]
-  flowMultiplierNetGrowth[1:(nrow(volumeToCarbon)*numBiomassStocks), "SecondaryStratumId"] <- crosswalkStratumState$SecondaryStratumId[i]
-  flowMultiplierNetGrowth[1:(nrow(volumeToCarbon)*numBiomassStocks),"StateClassId"] <- crosswalkStratumState$StateClassId[i]
+  flowMultiplierNetGrowth <- datasheet(myScenario, name="stsim_FlowMultiplier", empty = T, optional = T, lookupsAsFactors = F)
+  flowMultiplierNetGrowth[1:(nrow(volumeToCarbon)*numBiomassStocks), "StratumId"] <- as.character(crosswalkStratumState$StratumId[i])
+  flowMultiplierNetGrowth[1:(nrow(volumeToCarbon)*numBiomassStocks), "SecondaryStratumId"] <- as.character(crosswalkStratumState$SecondaryStratumId[i])
+  flowMultiplierNetGrowth[1:(nrow(volumeToCarbon)*numBiomassStocks),"StateClassId"] <- as.character(crosswalkStratumState$StateClassId[i])
   flowMultiplierNetGrowth[1:(nrow(volumeToCarbon)*numBiomassStocks), "AgeMin"] <- rep(volumeToCarbon$AgeMin[1:nrow(volumeToCarbon)], numBiomassStocks)
   flowMultiplierNetGrowth[1:(nrow(volumeToCarbon)*numBiomassStocks), "AgeMax"] <- rep(stateAttributesNetGrowth$AgeMax, numBiomassStocks)
   flowMultiplierNetGrowth[1:(nrow(volumeToCarbon)*numBiomassStocks), "FlowGroupId"] <- c(rep(paste0(as.character(flowPathways$FlowTypeId[(flowPathways$FromStockTypeId==crossSF("Atmosphere") & flowPathways$ToStockTypeId==crossSF("Merchantable"))])," [Type]"), nrow(volumeToCarbon)),
@@ -431,10 +421,10 @@ for(i in 1: nrow(crosswalkStratumState)){
   
   #Flow Pathways for biomass turnover rates and DOM transfer and decay rates
   flowPathwayTable <- rbind(biomassTurnoverTable, DOMTable[,names(biomassTurnoverTable)])
-  flowMultiplierTurnoverTransferDecayEmission <- datasheet(myScenario, name="stsim_FlowMultiplier", empty=T, optional=T)
-  flowMultiplierTurnoverTransferDecayEmission[1:nrow(flowPathwayTable), "StratumId"] <- crosswalkStratumState$StratumId[i]
-  flowMultiplierTurnoverTransferDecayEmission[1:nrow(flowPathwayTable), "SecondaryStratumId"] <- crosswalkStratumState$SecondaryStratumId[i]
-  flowMultiplierTurnoverTransferDecayEmission[1:nrow(flowPathwayTable), "StateClassId"] <- crosswalkStratumState$StateClassId[i]
+  flowMultiplierTurnoverTransferDecayEmission <- datasheet(myScenario, name="stsim_FlowMultiplier", empty=T, optional=T, lookupsAsFactors = F)
+  flowMultiplierTurnoverTransferDecayEmission[1:nrow(flowPathwayTable), "StratumId"] <- as.character(crosswalkStratumState$StratumId[i])
+  flowMultiplierTurnoverTransferDecayEmission[1:nrow(flowPathwayTable), "SecondaryStratumId"] <- as.character(crosswalkStratumState$SecondaryStratumId[i])
+  flowMultiplierTurnoverTransferDecayEmission[1:nrow(flowPathwayTable), "StateClassId"] <- as.character(crosswalkStratumState$StateClassId[i])
   flowMultiplierTurnoverTransferDecayEmission[1:nrow(flowPathwayTable), "FlowGroupId"] = paste0(flowPathwayTable$FlowTypeId," [Type]")
   flowMultiplierTurnoverTransferDecayEmission[1:nrow(flowPathwayTable), "Value"] = flowPathwayTable$Multiplier
   
@@ -451,7 +441,14 @@ final_pathways_df_unique <- final_pathways_df %>%
   mutate_if(is.factor, as.character) %>% 
   bind_rows(flowPathways) %>% 
   unique()
-saveDatasheet(myScenario, final_pathways_df_unique, name = "stsim_FlowPathway")
+saveDatasheet(myScenario, final_pathways_df_unique, name = "stsim_FlowPathway", append = FALSE)
+
+# remove rows that are all NAs
+stateAttributesNetGrowthMaster <- stateAttributesNetGrowthMaster %>%
+  filter(rowSums(is.na(stateAttributesNetGrowthMaster)) != ncol(stateAttributesNetGrowthMaster))
+
+flowMultiplierMaster <- flowMultiplierMaster %>%
+  filter(rowSums(is.na(flowMultiplierMaster)) != ncol(flowMultiplierMaster))
 
 saveDatasheet(myScenario, stateAttributesNetGrowthMaster, name = "stsim_StateAttributeValue", append = TRUE)
 saveDatasheet(myScenario, flowMultiplierMaster, name="stsim_FlowMultiplier", append=T)
