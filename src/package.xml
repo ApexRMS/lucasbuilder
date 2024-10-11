@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!--package name="stsimcbmcfs3" displayName="Integrates the Carbon Budget Model for the Canadian Forest Sector (CBM-CFS3) into the ST-Sim simulation model." version="1.0.17" isAddOn="True" extendsPackage="stsim" requiresAddOns="stsimsf" url="https://apexrms.github.io/stsimcbmcfs3/"-->
-<package name="lucasbuilder" displayName="LUCAS Carbon Budget Model" version="2.0.0" url="https://apexrms.github.io/stsimcbmcfs3/">
+<package name="lucasbuilder" displayName="LUCAS Carbon Budget Model" version="2.0.5" url="https://apexrms.github.io/stsimcbmcfs3/">
 
 <builtFor package="stsim" version="4.0.0"/>
 <!--builtFor package="stsim" version=""/-->
@@ -124,8 +124,10 @@
     <dataSheet name="CrosswalkSpecies" type="Input"/>        
     <dataSheet name="CrosswalkDisturbance" type="Input"/>        
     <dataSheet name="CrosswalkStock" type="Input"/>
-    <datafeed name="stsim_InitialStocks" type="Input"/>
+    <!--dataSheet name="stsim_InitialStocks" type="Input"/-->
+    <dataSheet name="stsim_InitialStockNonSpatial" type="Input"/>
     <dataSheet name="stsim_OutputOptionsStockFlow" type="Input"/> 
+    <dataSheet name="stsim_FlowPathwayDiagram" type="Both"/>
     <dataSheet name="stsim_FlowPathway" type="Both"/>        
     <dataSheet name="stsim_StockTypeGroupMembership" type="Input"/>  
     <dataSheet name="stsim_FlowTypeGroupMembership" type="Input"/>  
@@ -135,7 +137,7 @@
     <dataSheet name="stsim_OutputOptions" type="Input"/>
     <dataSheet name="stsim_Transition" type="Both"/> 
     <!--dataSheet name="stsim_FlowType" type="Input"/-->	
-    <dataSheet name="MerchantableVolumeCurve" type="Output"/>		
+    <dataSheet name="MerchantableVolumeCurve" type="Input"/>		
   </transformer>
 
   <!--transformer
