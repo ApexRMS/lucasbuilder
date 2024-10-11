@@ -1,5 +1,5 @@
 ## stsimcbmcfs3 - load cbmcfs3 output
-## ApexRMS, August 2024
+## ApexRMS, Oct 2024
 
 # Run with R-4.1.1
 # This script loads in crosswalks for CBM-CFS3 to ST-Sim species type and 
