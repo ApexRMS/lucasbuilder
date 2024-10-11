@@ -140,7 +140,7 @@ for (rownb in 1:nrow_unique){
   # included in the multipliers, set them to 
   # zero for the run.
   includedTransGroups = unique(temp_df$TransitionGroupId)
-  allTransitionGroups = datasheet(myProject, name = "TransitionGroup")
+  allTransitionGroups = datasheet(myProject, name = "stsim_TransitionGroup", returnInvisible = TRUE)
   excludeTransitionGroups = filter(allTransitionGroups, Name != includedTransGroups & IsAuto == TRUE)
   nExclude = nrow(excludeTransitionGroups)
   
@@ -224,6 +224,7 @@ new_transitions <- deter_transitions %>%
   as.data.frame()
 
 transitions_final <- bind_rows(transitions, new_transitions) %>% 
-  unique()
+  unique() %>%
+  filter(rowSums(is.na(transitions_final)) != ncol(transitions_final))
 
 saveDatasheet(myScenario, data = transitions_final, name = "stsim_Transition")
