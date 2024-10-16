@@ -152,10 +152,15 @@ for(i in 1: nrow(crosswalkStratumState)){
     DOMParametersTable <- DOMParametersTable[DOMParametersTable$CBMStock != "Softwood Stem Snag",]
     DOMParametersTable <- DOMParametersTable[DOMParametersTable$CBMStock != "Softwood Branch Snag",]
   }
+  
+  DOMParametersTable <- DOMParametersTable %>%
+    mutate(OrganicMatterDecayRateTempCorected = ifelse(OrganicMatterDecayRate*TempMod > 1,1,
+                                                     OrganicMatterDecayRate*TempMod))
+  
   DOMDecayTable <- merge(decayFlows, DOMParametersTable, by.x="FromStockTypeId", by.y="StockTypeId")
   DOMEmissionTable <- merge(emissionFlows, DOMParametersTable, by.x="FromStockTypeId", by.y="StockTypeId")
-  DOMDecayTable$Multiplier <- (1 - DOMDecayTable$PropToAtmosphere) * DOMDecayTable$OrganicMatterDecayRate * DOMDecayTable$TempMod
-  DOMEmissionTable$Multiplier <- DOMEmissionTable$PropToAtmosphere * DOMEmissionTable$OrganicMatterDecayRate * DOMEmissionTable$TempMod
+  DOMDecayTable$Multiplier <- (1 - DOMDecayTable$PropToAtmosphere) * DOMDecayTable$OrganicMatterDecayRateTempCorected
+  DOMEmissionTable$Multiplier <- DOMEmissionTable$PropToAtmosphere * DOMEmissionTable$OrganicMatterDecayRateTempCorected
   DOMTable <- rbind(DOMDecayTable, DOMEmissionTable)
   
   # Get DOM transfer rates
