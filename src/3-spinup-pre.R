@@ -224,7 +224,9 @@ new_transitions <- deter_transitions %>%
   as.data.frame()
 
 transitions_final <- bind_rows(transitions, new_transitions) %>% 
-  unique() %>%
+  unique()
+
+transitions_final <- transitions_final %>%
   filter(rowSums(is.na(transitions_final)) != ncol(transitions_final))
 
 saveDatasheet(myScenario, data = transitions_final, name = "stsim_Transition")
