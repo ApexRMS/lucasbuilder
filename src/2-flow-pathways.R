@@ -16,8 +16,8 @@ myScenario <- scenario() # myScenario <- scenario(myLibrary,scenario = 15)
 doDisturbances = T
 
 # Use CBM output to derive expansion factors?
-useCBMAgeVsCarbonCurves=T
-# useCBMAgeVsCarbonCurves=F
+#useCBMAgeVsCarbonCurves=T
+useCBMAgeVsCarbonCurves=F
 
 
 ###################################
@@ -66,7 +66,7 @@ proportionCoarseRootsToBGFast <- 0.5
 
 stateAttributesNetGrowthMaster = datasheet(myScenario, name="stsim_StateAttributeValue", empty = T, optional = T, lookupsAsFactors = F)
 flowMultiplierMaster = datasheet(myScenario, name="stsim_FlowMultiplier", empty = T, optional = T, lookupsAsFactors = F)
-grossMerchantableVolume = datasheet(myScenario, name = "lucasbuilder_MerchantableVolumeCurve")
+grossMerchantableVolumeAll = datasheet(myScenario, name = "lucasbuilder_MerchantableVolumeCurve", optional = T, lookupsAsFactors = F)
 
 crosswalkDisturbance = datasheet(myScenario, name = "lucasbuilder_CrosswalkDisturbance") # crosswalkDisturbance <- datasheet(myLibrary, scenario = 7,"lucasbuilder_CrosswalkDisturbance")
 
@@ -76,11 +76,19 @@ pathways_all <- c()
 final_pathways_df <- data.frame()
 
 for(i in 1: nrow(crosswalkStratumState)){
+  
   #i<-1
   ####################################
   # CBM parameters from CBM Database # 
   ####################################
   
+  # Merchantable volume curve data
+  grossMerchantableVolume <- grossMerchantableVolumeAll %>%
+    filter(StateClassId == as.character(crosswalkStratumState$StateClassId[i]) & 
+           StratumId == as.character(crosswalkStratumState$StratumId[i]) & 
+           SecondaryStratumId == as.character(crosswalkStratumState$SecondaryStratumId[i])) %>%
+    arrange(Age)
+
   # Get Admin Boundary Id
   adminBoundaryTable <- read.csv(paste0(pkg_dir,"\\data\\tblAdminBoundaryDefault.csv"), stringsAsFactors = F)
   adminBoundaryId <- adminBoundaryTable$AdminBoundaryID[adminBoundaryTable$AdminBoundaryName == as.character(crosswalkStratumState$AdminBoundaryId[i])]
@@ -93,11 +101,13 @@ for(i in 1: nrow(crosswalkStratumState)){
   speciesTypeTable <- read.csv(paste0(pkg_dir,"\\data\\tblSpeciesTypeDefault.csv"), stringsAsFactors = F)
   speciesTypeId <- speciesTypeTable$SpeciesTypeID[speciesTypeTable$SpeciesTypeName == as.character(crosswalkStratumState$SpeciesTypeId[i])]
   forestTypeId <- speciesTypeTable$ForestTypeID[speciesTypeTable$SpeciesTypeID == speciesTypeId]
+  genusTypeId <- speciesTypeTable$GenusID[speciesTypeTable$SpeciesTypeID == speciesTypeId]
   
   # Get Forest Type Name
   forestTypeTable <- read.csv(paste0(pkg_dir,"\\data\\tblForestTypeDefault.csv"), stringsAsFactors = F)
   ForestType <- as.character(forestTypeTable$ForestTypeName[forestTypeTable$ForestTypeID == forestTypeId])
-  
+  forestType <- ForestType
+
   # Get Spatial Planning Unit Id (SPUId) from adminBoundary and ecoBoundary
   SPUTable <- read.csv(paste0(pkg_dir,"\\data\\tblSPUDefault.csv"), stringsAsFactors = F)
   SPUId <- SPUTable$SPUID[SPUTable$AdminBoundaryID==adminBoundaryId & SPUTable$EcoBoundaryID==ecoBoundaryId]
@@ -113,8 +123,44 @@ for(i in 1: nrow(crosswalkStratumState)){
   the_class <- as.character(crosswalkStratumState$StateClassId[i])
   
   # Get biomass expansion factors
-  #biomassExpansionTable <- read.csv(paste0(pkg_dir,"\\data\\tblBioTotalStemwoodForestTypeDefault.csv"), stringsAsFactors = F)
-  
+  if (grepl("- Genus type", crosswalkStratumState$SpeciesTypeId[i])){
+    
+    biomassExpansionTable <- read.csv(paste0(pkg_dir,"\\data\\tblBioTotalStemwoodGenusDefault.csv"), stringsAsFactors = F)
+    
+    biomassExpansionTableRow <- biomassExpansionTable %>%
+      filter(DefaultSPUID == SPUId, DefaultGenusID == genusTypeId)
+    
+  } else {
+    
+    biomassExpansionTable <- read.csv(paste0(pkg_dir,"\\data\\tblBioTotalStemwoodSpeciesTypeDefault.csv"), stringsAsFactors = F)
+    
+    biomassExpansionTableRow <- biomassExpansionTable %>%
+      filter(DefaultSPUID == SPUId, DefaultSpeciesTypeID == speciesTypeId)
+    
+    if (nrow(biomassExpansionTableRow) == 0) {
+      
+      #print(paste0(the_class," is missing expansion factors, trying genus type instead"))
+      
+      biomassExpansionTable <- read.csv(paste0(pkg_dir,"\\data\\tblBioTotalStemwoodGenusDefault.csv"), stringsAsFactors = F)
+      
+      biomassExpansionTableRow <- biomassExpansionTable %>%
+        filter(DefaultSPUID == SPUId, DefaultGenusID == genusTypeId)
+      
+      if (nrow(biomassExpansionTableRow) == 0) {
+        
+        #print(paste0(the_class," is still missing expansion factors, trying forest type instead"))
+        
+        biomassExpansionTable <- read.csv(paste0(pkg_dir,"\\data\\tblBioTotalStemwoodForestTypeDefault.csv"), stringsAsFactors = F)
+        
+        biomassExpansionTableRow <- biomassExpansionTable %>%
+          filter(DefaultSPUID == SPUId, DefaultForestTypeID==forestTypeId)
+        
+      }
+      
+    }
+    
+  }
+
   # Get biomass to carbon multipliers
   biomassComponentTable <- read.csv(paste0(pkg_dir,"\\data\\tblBiomassComponent.csv"), stringsAsFactors = F)
   biomassToCarbonTable <- read.csv(paste0(pkg_dir,"\\data\\tblBiomassToCarbonDefault.csv"), stringsAsFactors = F)
@@ -285,9 +331,222 @@ for(i in 1: nrow(crosswalkStratumState)){
   if(ForestType == "Softwood") proportionFoliageToAGVeryFast <- 1
   if(ForestType == "Hardwood") proportionFoliageToAGVeryFast <- 1
   
-  ###
-  # TODO: put biomass expansion factor stuff in here...
+  #####################################################
+  # Volume to biomass
+  # Parameters for equations in Boudewyn et al. 2007
+  #####################################################
+
+  if(useCBMAgeVsCarbonCurves==F){
+    
+    A <- biomassExpansionTableRow %>% pull(A)
+    B <- biomassExpansionTableRow %>% pull(B)
+    
+    a_nonmerch <- biomassExpansionTableRow %>% pull(a_nonmerch)
+    b_nonmerch <- biomassExpansionTableRow %>% pull(b_nonmerch)
+    k_nonmerch <- biomassExpansionTableRow %>% pull(k_nonmerch)
+    cap_nonmerch <- biomassExpansionTableRow %>% pull(cap_nonmerch)
+    
+    a_sap <- biomassExpansionTableRow %>% pull(a_sap)
+    b_sap <- biomassExpansionTableRow %>% pull(b_sap)
+    k_sap <- biomassExpansionTableRow %>% pull(k_sap)
+    cap_sap <- biomassExpansionTableRow %>% pull(cap_sap)
+    
+    a1 <- biomassExpansionTableRow %>% pull(a1)
+    a2 <- biomassExpansionTableRow %>% pull(a2)
+    a3 <- biomassExpansionTableRow %>% pull(a3)
+    
+    b1 <- biomassExpansionTableRow %>% pull(b1)
+    b2 <- biomassExpansionTableRow %>% pull(b2)
+    b3 <- biomassExpansionTableRow %>% pull(b3)
+    
+    c1 <- biomassExpansionTableRow %>% pull(c1)
+    c2 <- biomassExpansionTableRow %>% pull(c2)
+    c3 <- biomassExpansionTableRow %>% pull(c3)
+    
+    minVolume <- biomassExpansionTableRow %>% pull(min_volume)
+    maxVolume <- biomassExpansionTableRow %>% pull(max_volume)
+    
+    # Grab the proportion of the stem that is top or stump by admin region
+    adminBoundaryTableSub <- adminBoundaryTable %>%
+      filter(AdminBoundaryID == adminBoundaryId)
+    
+    propTop <- adminBoundaryTableSub %>% pull(paste0(forestType,"TopProportion"))/100
+    propStump <- adminBoundaryTableSub %>% pull(paste0(forestType,"StumpProportion"))/100
+    
+    # Set up dataframe to hold results
+    volumeToCarbon <- data.frame(age = grossMerchantableVolume$Age, 
+                                 volume = grossMerchantableVolume$MerchantableVolume)
+    
+    # Total stem wood biomass/ha for live, merchantable size trees
+    # b_m = total stem wood biomass of merchantable-sized live trees (biomass includes stumps and tops), in metric tonnes per ha
+    volumeToCarbon$b_m <- A * volumeToCarbon$volume ^ B
+    
+    # Total stem wood biomass/ha for live, non-merchantable size trees
+    # Nonmerchantable expansion factor
+    volumeToCarbon$nonmerchfactor <- k_nonmerch + a_nonmerch * volumeToCarbon$b_m ^ b_nonmerch
+    
+    # Add Cap
+    volumeToCarbon$nonmerchfactor <- ifelse(volumeToCarbon$nonmerchfactor > cap_nonmerch,cap_nonmerch,volumeToCarbon$nonmerchfactor)
+    
+    # b_nm = stem wood biomass of live, merchantable and nonmerchantable-sized trees (tonnes/ha)
+    volumeToCarbon$b_nm <- volumeToCarbon$nonmerchfactor * volumeToCarbon$b_m
+    # b_n = stem wood biomass of live, nonmerchantable-sized trees (tonnes/ha)
+    volumeToCarbon$b_n <- (volumeToCarbon$nonmerchfactor * volumeToCarbon$b_m) - volumeToCarbon$b_m
+    
+    # Total stem wood biomass/ha for live sapling size trees
+    #Sapling expansion factor
+    volumeToCarbon$saplingfactor <- k_sap + a_sap * (volumeToCarbon$b_nm ^ b_sap)
+    
+    
+    # Add Cap
+    volumeToCarbon$saplingfactor <- ifelse(volumeToCarbon$saplingfactor > cap_sap,cap_sap,volumeToCarbon$saplingfactor)
+    
+    # b_s = stem wood biomass of live, sapling-sized trees (tonnes/ha)
+    volumeToCarbon$b_s <- (volumeToCarbon$saplingfactor * volumeToCarbon$b_nm) - volumeToCarbon$b_nm
+    
+    # Total stemwood of all live trees
+    volumeToCarbon$b_sw <- volumeToCarbon$b_m + volumeToCarbon$b_n + volumeToCarbon$b_s
+    
+    # Compute proportions
+    volumeToCarbon$denominator <- (1 + exp(a1 + a2 * volumeToCarbon$volume + a3 * log(volumeToCarbon$volume + 5)) 
+                                   + exp(b1 + b2 * volumeToCarbon$volume + b3 * log(volumeToCarbon$volume + 5)) 
+                                   + exp(c1 + c2 * volumeToCarbon$volume + c3 * log(volumeToCarbon$volume + 5)))
+    
+    # Stem wood proportion
+    volumeToCarbon$p_stemwood <- 1 / volumeToCarbon$denominator  
+    
+    # Stem bark proportion  
+    volumeToCarbon$p_bark <- exp(a1 + a2 * volumeToCarbon$volume + a3 * log(volumeToCarbon$volume + 5)) / volumeToCarbon$denominator
+    
+    # Branches proportion
+    volumeToCarbon$p_branches <- exp(b1 + b2 * volumeToCarbon$volume + b3 * log(volumeToCarbon$volume + 5)) / volumeToCarbon$denominator
+    
+    # Foliage proportion
+    volumeToCarbon$p_foliage <- exp(c1 + c2 * volumeToCarbon$volume + c3 * log(volumeToCarbon$volume + 5)) / volumeToCarbon$denominator
+    
+    #Total tree biomass/ha live
+    volumeToCarbon$b <- volumeToCarbon$b_sw / volumeToCarbon$p_stemwood
+    
+    # Biomass based on b (total biomass of live trees)
+    volumeToCarbon$b_bark <- volumeToCarbon$b * volumeToCarbon$p_bark
+    volumeToCarbon$b_branches <- volumeToCarbon$b * volumeToCarbon$p_branches
+    volumeToCarbon$b_foliage <- volumeToCarbon$b * volumeToCarbon$p_foliage
+    #volumeToCarbon$b_other <- volumeToCarbon$b_bark + volumeToCarbon$b_branches + volumeToCarbon$b_n + volumeToCarbon$b_s
+    
+    # Partition bark on the merchantable stem or the nonmerchantable/sapling trees
+    volumeToCarbon$b_bark_m <- volumeToCarbon$b_bark*(volumeToCarbon$b_m/volumeToCarbon$b_sw)
+    volumeToCarbon$b_bark_ns <- volumeToCarbon$b_bark*((volumeToCarbon$b_n + volumeToCarbon$b_s)/volumeToCarbon$b_sw)
+    
+    # Merchantable in CBM includes bark but does not include the top and stump 
+    volumeToCarbon$b_m_CBM <- (volumeToCarbon$b_m * (1-propTop-propStump)) + 
+      (volumeToCarbon$b_bark_m * (1-propTop-propStump))
+    
+    # The other pool includes the remaining biomass pools, including the stumps and tops
+    volumeToCarbon$b_other <- (volumeToCarbon$b_m * (propTop + propStump)) + 
+      (volumeToCarbon$b_bark_m * (propTop + propStump))  + 
+      volumeToCarbon$b_branches + 
+      volumeToCarbon$b_n + 
+      volumeToCarbon$b_s +
+      volumeToCarbon$b_bark_ns
+    
+    #Replace NoN values with 0's
+    is.nan.data.frame <- function(x)
+      do.call(cbind, lapply(x, is.nan))
+    
+    volumeToCarbon[is.nan.data.frame(volumeToCarbon)] <- 0
+    
+    # smoothing functions
+    
+    # Smooth foliage
+    min1 <- max(volumeToCarbon$age[volumeToCarbon$volume <= minVolume])
+    
+    minF2 <- volumeToCarbon$age[which(diff(sign(diff(volumeToCarbon$b_foliage))) == 2)]
+    
+    if (length(minF2) == 0){
+      minF <- min1
+    } else {
+      minF <- max(min1,minF2)
+    }
+    
+    volumeToCarbon = volumeToCarbon %>% 
+      arrange(age) %>% 
+      mutate(b_foliageSmooth = if_else(age <= minF, NA, b_foliage)) %>% 
+      mutate(b_foliageSmooth = if_else(age == 0, 0, b_foliageSmooth)) %>%
+      mutate(b_foliageSmooth = na_interpolation(b_foliageSmooth, option = "spline", method = "natural"))
+    
+    # Smooth other wood
+    
+    minO2 <- volumeToCarbon$age[which(diff(sign(diff(volumeToCarbon$b_other))) == 2)]
   
+    if (length(minO2) == 0){
+      minO <- min1
+    } else {
+      minO <- max(min1,minO2)
+    }
+    
+    volumeToCarbon = volumeToCarbon %>% 
+      arrange(age) %>% 
+      mutate(b_otherSmooth = if_else(age <= minO, NA, b_other)) %>% 
+      mutate(b_otherSmooth = if_else(age == 0, 0, b_otherSmooth)) %>%
+      mutate(b_otherSmooth = na_interpolation(b_otherSmooth, option = "spline", method = "natural"))
+    
+    # Smooth merchantable
+    
+    minM2 <- volumeToCarbon$age[which(diff(sign(diff(volumeToCarbon$b_m_CBM))) == 2)]
+
+    if (length(minM2) == 0){
+      minM <- min1
+    } else {
+      minM <- max(min1,minM2)
+    }
+    
+    volumeToCarbon = volumeToCarbon %>% 
+      arrange(age) %>% 
+      mutate(b_mSmooth = if_else(age <= minM, NA, b_m_CBM)) %>% 
+      mutate(b_mSmooth = if_else(age == 0, 0, b_mSmooth)) %>%
+      mutate(b_mSmooth = na_interpolation(b_mSmooth, option = "spline", method = "natural"))
+    
+    volumeToCarbon <- volumeToCarbon %>%
+      mutate(b_aboveground = b_mSmooth+b_foliageSmooth+b_otherSmooth)
+    
+    ## Biomass to carbon
+    isSoftwood <- if(forestType == "Softwood") 1 else 0
+    volumeToCarbon$c_aboveground <- volumeToCarbon$b_aboveground * biomassToCarbonTable[biomassToCarbonTable$BiomassComponentName=="Other biomass component" & 
+                                                                                          biomassToCarbonTable$Softwood==isSoftwood, "Multiplier"]
+    volumeToCarbon$c_other <- volumeToCarbon$b_otherSmooth * biomassToCarbonTable[biomassToCarbonTable$BiomassComponentName=="Other biomass component" & 
+                                                                                    biomassToCarbonTable$Softwood==isSoftwood, "Multiplier"]
+    volumeToCarbon$c_foliage <- volumeToCarbon$b_foliageSmooth * biomassToCarbonTable[biomassToCarbonTable$BiomassComponentName=="Foliage biomass component" & 
+                                                                                        biomassToCarbonTable$Softwood==isSoftwood, "Multiplier"]
+    volumeToCarbon$c_m <- volumeToCarbon$b_mSmooth * biomassToCarbonTable[biomassToCarbonTable$BiomassComponentName=="Merchantable biomass component" & 
+                                                                            biomassToCarbonTable$Softwood==isSoftwood, "Multiplier"]
+    
+  }
+  
+  ###################################################
+  # Volume to belowground biomass carbon conversion
+  # Parameters from Li et al. 2003
+  ###################################################
+  
+  if(useCBMAgeVsCarbonCurves==F){
+    
+    if(forestType == "Softwood") {volumeToCarbon$b_roots <- 0.222 * volumeToCarbon$b_aboveground} else {volumeToCarbon$b_roots <- 1.576 * volumeToCarbon$b_aboveground ^ 0.615}
+    #if(isSoftwood) {volumeToCarbon$b_roots <- 0.2222 * volumeToCarbon$b_aboveground} else {volumeToCarbon$b_roots <- 1.576 * volumeToCarbon$b_aboveground ^ 0.615}
+    volumeToCarbon$p_fineroots <- 0.072 + 0.354 * exp(-0.060 * volumeToCarbon$b_roots)
+    volumeToCarbon$b_fineroots <- volumeToCarbon$p_fineroots * volumeToCarbon$b_roots
+    volumeToCarbon$b_coarseroots <- volumeToCarbon$b_roots - volumeToCarbon$b_fineroots
+    # Add in hardwood equation
+    
+    ## Biomass to carbon
+    isSoftwood <- if(forestType == "Softwood") 1 else 0
+    volumeToCarbon$c_fineroots <- volumeToCarbon$b_fineroots * biomassToCarbonTable[biomassToCarbonTable$BiomassComponentName=="Fine root biomass component" & 
+                                                                                      biomassToCarbonTable$Softwood==isSoftwood, "Multiplier"]
+    volumeToCarbon$c_coarseroots <- volumeToCarbon$b_coarseroots * biomassToCarbonTable[biomassToCarbonTable$BiomassComponentName=="Coarse root biomass component" & 
+                                                                                          biomassToCarbonTable$Softwood==isSoftwood, "Multiplier"]
+    volumeToCarbon$c_belowground <- volumeToCarbon$c_fineroots + volumeToCarbon$c_coarseroots
+    
+  }
+
+
   #####################################################
   # Biomass Turnover and DOM Decay and Transfer rates #
   #####################################################
@@ -340,27 +599,27 @@ for(i in 1: nrow(crosswalkStratumState)){
   ########################################################
   
   
-  # Original approach using CBM Output. Remove eventually...
-  if(useCBMAgeVsCarbonCurves==T){
-    stateAttributeValues <- datasheet(myScenario, "stsim_StateAttributeValue", empty=FALSE, optional=TRUE) #  stateAttributeValues <- datasheet(myLibrary, scenario = 12, "stsim_StateAttributeValue", empty=FALSE, optional=TRUE)
-    stateAttributeValuesWide <- spread(stateAttributeValues, key="StateAttributeTypeId", value = "Value") %>%
-      mutate_if(is.factor, as.character)
-    carbonInitialConditions <- datasheet(myScenario, "stsim_InitialStockNonSpatial", empty=FALSE, optional=TRUE) # carbonInitialConditions <- datasheet(myLibrary, scenario = 5, "stsimsf_InitialStockNonSpatial", empty=FALSE, optional=TRUE)
- 
-    if(!is.na(crosswalkStratumState$StratumId[i]) & !is.na(crosswalkStratumState$SecondaryStratumId[i])){ 
-      volumeToCarbon <- filter(stateAttributeValuesWide, StratumId == as.character(crosswalkStratumState$StratumId[i]) &  SecondaryStratumId == as.character(crosswalkStratumState$SecondaryStratumId[i]) & StateClassId == as.character(crosswalkStratumState$StateClassId[i])) }
-    if(!is.na(crosswalkStratumState$StratumId[i]) & is.na(crosswalkStratumState$SecondaryStratumId[i])){ 
-      volumeToCarbon <- filter(stateAttributeValuesWide, StratumId == as.character(crosswalkStratumState$StratumId[i]) & StateClassId == as.character(crosswalkStratumState$StateClassId[i])) }
-    if(is.na(crosswalkStratumState$StratumId[i]) & is.na(crosswalkStratumState$SecondaryStratumId[i])){ 
-     volumeToCarbon <- filter(stateAttributeValuesWide, StateClassId == crosswalkStratumState$StateClassId[i])}
-    
-    volumeToCarbon$c_m <- volumeToCarbon[, as.character(carbonInitialConditions$StateAttributeTypeId[carbonInitialConditions$StockTypeId == crossSF("Merchantable")])]
-    volumeToCarbon$c_foliage <- volumeToCarbon[, as.character(carbonInitialConditions$StateAttributeTypeId[carbonInitialConditions$StockTypeId == crossSF("Foliage")])]
-    volumeToCarbon$c_other <- volumeToCarbon[, as.character(carbonInitialConditions$StateAttributeTypeId[carbonInitialConditions$StockTypeId == crossSF("Other")])]
-    volumeToCarbon$c_fineroots <- volumeToCarbon[, as.character(carbonInitialConditions$StateAttributeTypeId[carbonInitialConditions$StockTypeId == crossSF("Fine Roots")])]
-    volumeToCarbon$c_coarseroots <- volumeToCarbon[, as.character(carbonInitialConditions$StateAttributeTypeId[carbonInitialConditions$StockTypeId == crossSF("Coarse Roots")])]
-
-  }
+  # # Original approach using CBM Output. Remove eventually...
+  # if(useCBMAgeVsCarbonCurves==T){
+  #   stateAttributeValues <- datasheet(myScenario, "stsim_StateAttributeValue", empty=FALSE, optional=TRUE) #  stateAttributeValues <- datasheet(myLibrary, scenario = 12, "stsim_StateAttributeValue", empty=FALSE, optional=TRUE)
+  #   stateAttributeValuesWide <- spread(stateAttributeValues, key="StateAttributeTypeId", value = "Value") %>%
+  #     mutate_if(is.factor, as.character)
+  #   carbonInitialConditions <- datasheet(myScenario, "stsim_InitialStockNonSpatial", empty=FALSE, optional=TRUE) # carbonInitialConditions <- datasheet(myLibrary, scenario = 5, "stsimsf_InitialStockNonSpatial", empty=FALSE, optional=TRUE)
+  # 
+  #   if(!is.na(crosswalkStratumState$StratumId[i]) & !is.na(crosswalkStratumState$SecondaryStratumId[i])){ 
+  #     volumeToCarbon <- filter(stateAttributeValuesWide, StratumId == as.character(crosswalkStratumState$StratumId[i]) &  SecondaryStratumId == as.character(crosswalkStratumState$SecondaryStratumId[i]) & StateClassId == as.character(crosswalkStratumState$StateClassId[i])) }
+  #   if(!is.na(crosswalkStratumState$StratumId[i]) & is.na(crosswalkStratumState$SecondaryStratumId[i])){ 
+  #     volumeToCarbon <- filter(stateAttributeValuesWide, StratumId == as.character(crosswalkStratumState$StratumId[i]) & StateClassId == as.character(crosswalkStratumState$StateClassId[i])) }
+  #   if(is.na(crosswalkStratumState$StratumId[i]) & is.na(crosswalkStratumState$SecondaryStratumId[i])){ 
+  #    volumeToCarbon <- filter(stateAttributeValuesWide, StateClassId == crosswalkStratumState$StateClassId[i])}
+  #   
+  #   volumeToCarbon$c_m <- volumeToCarbon[, as.character(carbonInitialConditions$StateAttributeTypeId[carbonInitialConditions$StockTypeId == crossSF("Merchantable")])]
+  #   volumeToCarbon$c_foliage <- volumeToCarbon[, as.character(carbonInitialConditions$StateAttributeTypeId[carbonInitialConditions$StockTypeId == crossSF("Foliage")])]
+  #   volumeToCarbon$c_other <- volumeToCarbon[, as.character(carbonInitialConditions$StateAttributeTypeId[carbonInitialConditions$StockTypeId == crossSF("Other")])]
+  #   volumeToCarbon$c_fineroots <- volumeToCarbon[, as.character(carbonInitialConditions$StateAttributeTypeId[carbonInitialConditions$StockTypeId == crossSF("Fine Roots")])]
+  #   volumeToCarbon$c_coarseroots <- volumeToCarbon[, as.character(carbonInitialConditions$StateAttributeTypeId[carbonInitialConditions$StockTypeId == crossSF("Coarse Roots")])]
+  # 
+  # }
 
   volumeToCarbon$c_m1 <- c(volumeToCarbon$c_m[2:nrow(volumeToCarbon)], NA)
   volumeToCarbon$c_foliage1 <- c(volumeToCarbon$c_foliage[2:nrow(volumeToCarbon)], NA)
@@ -382,6 +641,11 @@ for(i in 1: nrow(crosswalkStratumState)){
   # Replace NaN values with 0's
   volumeToCarbon[is.nan.data.frame(volumeToCarbon)] <- 0
   volumeToCarbon <- volumeToCarbon %>% mutate_if(is.factor, as.character)
+  
+  volumeToCarbon$StratumId <- the_stratum
+  volumeToCarbon$SecondaryStratumId <- the_secondarystratum
+  volumeToCarbon$StateClassId <- the_class
+  
   volumeToCarbon <- cbind(volumeToCarbon[,c("StratumId", "SecondaryStratumId", "StateClassId")], do.call(data.frame,lapply(volumeToCarbon[,!(names(volumeToCarbon) %in% c("StratumId", "SecondaryStratumId", "StateClassId"))], function(x) replace(x, is.infinite(x),0))))
   
   
@@ -394,8 +658,8 @@ for(i in 1: nrow(crosswalkStratumState)){
   stateAttributesNetGrowth[1:nrow(volumeToCarbon), "SecondaryStratumId"] <- as.character(volumeToCarbon$SecondaryStratumId[1:nrow(volumeToCarbon)])
   stateAttributesNetGrowth[1:nrow(volumeToCarbon), "StateClassId"] <- as.character(volumeToCarbon$StateClassId[1:nrow(volumeToCarbon)])
   stateAttributesNetGrowth[1:nrow(volumeToCarbon), "StateAttributeTypeId"] <- rep(as.character(flowPathways$StateAttributeTypeId[(flowPathways$FromStockTypeId==crossSF("Atmosphere") & flowPathways$ToStockTypeId==crossSF("Merchantable"))]), nrow(volumeToCarbon))
-  stateAttributesNetGrowth[1:nrow(volumeToCarbon), "AgeMin"] <- volumeToCarbon$AgeMin[1:nrow(volumeToCarbon)]
-  stateAttributesNetGrowth[1:nrow(volumeToCarbon), "AgeMax"] <- volumeToCarbon$AgeMax[1:nrow(volumeToCarbon)]
+  stateAttributesNetGrowth[1:nrow(volumeToCarbon), "AgeMin"] <- volumeToCarbon$age[1:nrow(volumeToCarbon)]
+  stateAttributesNetGrowth[1:nrow(volumeToCarbon), "AgeMax"] <- volumeToCarbon$age[1:nrow(volumeToCarbon)]
   stateAttributesNetGrowth[1:nrow(volumeToCarbon), "Value"] <- volumeToCarbon$g_all[1:nrow(volumeToCarbon)]
   stateAttributesNetGrowth[nrow(volumeToCarbon), "AgeMax"] <- NA
   
@@ -407,7 +671,7 @@ for(i in 1: nrow(crosswalkStratumState)){
   flowMultiplierNetGrowth[1:(nrow(volumeToCarbon)*numBiomassStocks), "StratumId"] <- as.character(crosswalkStratumState$StratumId[i])
   flowMultiplierNetGrowth[1:(nrow(volumeToCarbon)*numBiomassStocks), "SecondaryStratumId"] <- as.character(crosswalkStratumState$SecondaryStratumId[i])
   flowMultiplierNetGrowth[1:(nrow(volumeToCarbon)*numBiomassStocks),"StateClassId"] <- as.character(crosswalkStratumState$StateClassId[i])
-  flowMultiplierNetGrowth[1:(nrow(volumeToCarbon)*numBiomassStocks), "AgeMin"] <- rep(volumeToCarbon$AgeMin[1:nrow(volumeToCarbon)], numBiomassStocks)
+  flowMultiplierNetGrowth[1:(nrow(volumeToCarbon)*numBiomassStocks), "AgeMin"] <- rep(volumeToCarbon$age[1:nrow(volumeToCarbon)], numBiomassStocks)
   flowMultiplierNetGrowth[1:(nrow(volumeToCarbon)*numBiomassStocks), "AgeMax"] <- rep(stateAttributesNetGrowth$AgeMax, numBiomassStocks)
   flowMultiplierNetGrowth[1:(nrow(volumeToCarbon)*numBiomassStocks), "FlowGroupId"] <- c(rep(paste0(as.character(flowPathways$FlowTypeId[(flowPathways$FromStockTypeId==crossSF("Atmosphere") & flowPathways$ToStockTypeId==crossSF("Merchantable"))])," [Type]"), nrow(volumeToCarbon)),
                                                                                          rep(paste0(as.character(flowPathways$FlowTypeId[(flowPathways$FromStockTypeId==crossSF("Atmosphere") & flowPathways$ToStockTypeId==crossSF("Other"))]), " [Type]"),nrow(volumeToCarbon)),
