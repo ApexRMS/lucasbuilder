@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!--package name="stsimcbmcfs3" displayName="Integrates the Carbon Budget Model for the Canadian Forest Sector (CBM-CFS3) into the ST-Sim simulation model." version="1.0.17" isAddOn="True" extendsPackage="stsim" requiresAddOns="stsimsf" url="https://apexrms.github.io/stsimcbmcfs3/"-->
-<package name="lucasbuilder" displayName="LUCAS Carbon Budget Model" version="2.0.5" url="https://apexrms.github.io/stsimcbmcfs3/">
+<package name="lucasbuilder" displayName="LUCAS Carbon Budget Model" version="2.0.1" url="https://apexrms.github.io/stsimcbmcfs3/">
 
 <builtFor package="stsim" version="4.0.0"/>
 <!--builtFor package="stsim" version=""/-->
