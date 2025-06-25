@@ -1,0 +1,10 @@
+name: lucasbuilder-r-conda
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - r-base=4.1.3
+  - r-rodbc=1.3_23
+  - r-rsyncrosim=2.1.4
+  - r-tidyverse=2.0.0
+
