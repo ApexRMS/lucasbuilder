@@ -11,12 +11,10 @@ options(stringsAsFactors=FALSE)
 
 # Settings ----
 
-rootPath <- "C:/Users/AmandaSchwantes/Documents/GitHub/lucasbuilder/"
-
-mySession <- session("C:/Program Files/SyncroSim Studio")
-libraryName <- paste0(rootPath,"model/lucasbuilder-conus")
+mySession <- session()
+libraryName <- paste0(getwd(),"/model/lucasbuilder-conus")
 myProjectName <- "Definitions"
-initialInputsDirectory <- paste0(rootPath,"data/user-example-inputs-merch/")
+initialInputsDirectory <- paste0(dirname(getwd()), "/data/user-example-inputs-merch/")
 definitionsPath <- paste0(initialInputsDirectory,"ConusLibrary/")
 
 # Build base library ----
@@ -47,7 +45,8 @@ myProject <- project(myLibrary, project=myProjectName)
 
 sheetName <- "stsim_TransitionType"
 mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull <- read.csv(paste0(definitionsPath,"Transition Type.csv"))
+mySheetFull <- read.csv(paste0(definitionsPath,"Transition Type.csv")) %>%
+  rename(Id = ID)
 saveDatasheet(myProject, mySheetFull, sheetName)
 
 sheetName <- "stsim_TransitionGroup"
@@ -85,7 +84,7 @@ saveDatasheet(myProject, myData, sheetName)
 ### Age groups
 sheetName <- "stsim_AgeGroup"
 mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(rootPath, "data/Age Groups.xlsx"), sheet = "Age Groups") %>%
+mySheetFull <- read_xlsx(path = paste0(dirname(getwd()), "/data/Age Groups.xlsx"), sheet = "Age Groups") %>%
   data.frame()
 saveDatasheet(myProject, mySheetFull, sheetName)
 
@@ -101,7 +100,7 @@ saveDatasheet(myProject, mySheetFull, sheetName)
 sheetName <- "stsim_StateAttributeType"
 mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
 mySheetFull <- read.csv(paste0(definitionsPath, "State Attribute Type.csv"))
-names(myData) <- gsub("ID","Id",names(myData))
+names(mySheetFull) <- gsub("ID","Id",names(mySheetFull))
 saveDatasheet(myProject, mySheetFull, sheetName)
 
 ### Stock/Flow definitions ----
@@ -262,7 +261,7 @@ myScenario <- scenario(myProject, scenario = myScenarioName, folder = folderId(f
 
 sheetName <- "stsim_OutputOptionsStockFlow"
 mySheet <- datasheet(myScenario, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(rootPath, "Data/SF Output Options - Spatial.xlsx"), sheet = "SF Output Options") %>%
+mySheetFull <- read_xlsx(path = paste0(dirname(getwd()), "/Data/SF Output Options - Spatial.xlsx"), sheet = "SF Output Options") %>%
   data.frame()
 # names(mySheetFull) <- names(mySheet)
 saveDatasheet(myScenario, mySheetFull, sheetName)
@@ -354,6 +353,7 @@ crosswalkSUSTFull$CBMOutputFile <- paste0(CBMDir, crosswalkSUSTFull$CBMOutputFil
 sheetName <- "stsim_Stratum"
 csvName <- "Ecological Boundary.csv"
 myData <- read.csv(paste0(definitionsPath, csvName))
+names(myData) <- gsub("ID", "Id", names(myData))
 saveDatasheet(myProject, myData, sheetName)
 
 
@@ -374,11 +374,13 @@ saveDatasheet(myProject, myData, sheetName)
 sheetName <- "stsim_SecondaryStratum"
 csvName <- "Administrative Boundary.csv"
 myData <- read.csv(paste0(definitionsPath, csvName))
+names(myData) <- gsub("ID", "Id", names(myData))
 saveDatasheet(myProject, myData, sheetName)
 
 sheetName <- "stsim_TertiaryStratum"
 csvName <- "Tertiary Stratum.csv"
 myData <- read.csv(paste0(definitionsPath, csvName))
+names(myData) <- gsub("ID", "Id", names(myData))
 saveDatasheet(myProject, myData, sheetName)
 
 # ### State Label X 
@@ -428,12 +430,7 @@ saveDatasheet(myProject, myData, sheetName)
 sheetName <- "stsim_StateClass"
 csvName <- "State Class.csv"
 myData <- read.csv(paste0(definitionsPath, csvName))
-
-myData <- myData %>%
-  rename(StateLabelXId = StateLabelXID,
-         StateLabelYId = StateLabelYID,
-         Id = ID)
-
+names(myData) <- gsub("ID", "Id", names(myData))
 saveDatasheet(myProject, myData, sheetName)
 
 
@@ -553,7 +550,6 @@ saveDatasheet(myScenario, mySheetFull, sheetName)
 myScenarioName = "Spin-up"
 myScenario = scenario(myProject, scenario = myScenarioName, folder = folderId(folder2.1))
 sheetName = "lucasbuilder_Spinup"
-sheetData = datasheet(myScenario, sheetName, empty = T)
 sheetData = read.csv(paste0(definitionsPath,"Spin-up.csv"))
 names(sheetData) <- gsub("ID","Id",names(sheetData))
 saveDatasheet(myScenario, sheetData, sheetName)
@@ -606,7 +602,6 @@ sheetName <- "core_Pipeline"
 mySheet <- datasheet(myScenario, name=sheetName, optional=T)
 mySheet <- data.frame(
   StageNameId = "2 - Generate Flow Pathways",
-  MaximumJobs = NA,
   RunOrder = 1)
 saveDatasheet(myScenario, mySheet, sheetName)
 
@@ -627,6 +622,8 @@ mySheetFull <- data.frame(StageNameId = c("3 Spin-up Pre-Process (before ST-Sim)
                           RunOrder = c(1, 2, 3))
 saveDatasheet(myScenario, mySheetFull, sheetName)
 
+# ignore dependencies for "OutputStock"
+ignoreDependencies(myScenario) <- "stsim_OutputStock"
 
 ### IN UI: set ignore dependencies for "OutputStock"
 
@@ -661,6 +658,8 @@ mySheetFull <- data.frame(StageNameId = c("ST-Sim"),
 saveDatasheet(myScenario, mySheetFull, sheetName)
 
 ### IN UI: set ignore dependencies for "OutputStock" and "Pipeline" 
+ignoreDependencies(myScenario) <- "stsim_OutputStock"
+ignoreDependencies(myScenario) <- "core_Pipeline"
 
 
 ##########################

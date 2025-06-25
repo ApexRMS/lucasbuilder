@@ -1,5 +1,5 @@
 stsimcbmcfs3.ssimpkg
-src/.metadata
+#src/.metadata
 install_script.cmd
 data/.Rhistory
 .Rproj.user
@@ -12,3 +12,4 @@ data/.Rhistory
 model
 dev
 LUCAS_CBMCFS3
+Libraries/

@@ -167,7 +167,8 @@ for (row in 1:nrow(crosswalkSUSTFull)) { # row = 1
     Validation_OutputStock <- rbind(Validation_OutputStock, validationCarbon)
   }
 }
-
+# add default ResolutionId value
+Validation_OutputStock$ResolutionId <- as.character(0)
 # output validation carbon stocks to result scenario
 SF_OutputStock <- datasheet(myScenario, name = "stsim_OutputStock", optional = T, lookupsAsFactors = F) 
 SF_OutputStock1 <- add_row(SF_OutputStock, Validation_OutputStock)
