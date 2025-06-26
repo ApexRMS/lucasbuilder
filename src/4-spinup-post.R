@@ -24,6 +24,7 @@ initial_stocks <- datasheet(myScenario, "stsim_InitialStockNonSpatial") %>%
 output_stocks <- datasheet(myScenario, "stsim_OutputStock") %>%
   mutate_if(is.factor, as.character) %>% 
   mutate(StockTypeId = strip_type(StockGroupId)) %>% 
+  select(-ResolutionId) %>%
   left_join(initial_stocks, by = "StockTypeId")
 
 # remove all entries with no match in the initial_stocks table
