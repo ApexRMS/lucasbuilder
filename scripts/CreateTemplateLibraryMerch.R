@@ -12,7 +12,7 @@ options(stringsAsFactors=FALSE)
 # Settings ----
 
 mySession <- session()
-libraryName <- paste0(getwd(),"/model/lucasbuilder-conus")
+libraryName <- paste0(getwd(),"/model/CBM-CFS3 CONUS")
 myProjectName <- "Definitions"
 initialInputsDirectory <- paste0(dirname(getwd()), "/data/user-example-inputs-merch/")
 definitionsPath <- paste0(initialInputsDirectory,"ConusLibrary/")
@@ -40,6 +40,13 @@ myProject <- project(myLibrary, project=myProjectName)
 # mySheet <- datasheet(myProject, name = sheetName)
 # mySheetFull <- add_row(mySheet, Name = "[Unspecified]")
 # saveDatasheet(myProject, mySheetFull, sheetName, append = F)
+
+
+# Library definitions -----
+sheetName <- "core_Option"
+mySheet <- datasheet(myProject, sheetName)
+mySheet$UseConda = TRUE
+saveDatasheet(myProject, mySheet, sheetName)
 
 ## Transitions ----
 
@@ -663,13 +670,11 @@ ignoreDependencies(myScenario) <- "core_Pipeline"
 
 
 ##########################
-## Rename Folders in UI ##
+## Folders in UI ##
 ##########################
 
-# 1 - Predefined Inputs ## make this folder read-only
-# 2 - User Defined Inputs
-## 1 - Run Setup Inputs 
-## 2 - Run Forecast Inputs
+# 1 - Run Setup Inputs 
+# 2 - Run Forecast Inputs
 # 3 - Run Setup
 # 4 - Run Forecast
 
@@ -702,6 +707,26 @@ ignoreDependencies(myScenario) <- "core_Pipeline"
 ## show tiles
 # Format:
 # 1 decimal place (y)
+
+
+stockVariables <- datasheet(myProject, "stsim_StockGroup") %>%
+  pull(Name)
+
+biomass <- stockVariables[grepl("Biomass", stockVariables)]
+myChart <- chart(myProject, chart="01 - Single Cell - Biomass")
+myChart <- chartOptionsYAxis(myChart, minZero = TRUE, decimals=1)
+myChart <- chartData(myChart, type="Line", addY = biomass)
+
+aboveground <- stockVariables[grepl("DOM: Aboveground", stockVariables)]
+myChart <- chart(myProject, chart="02 - Single Cell - Aboveground DOM")
+myChart <- chartOptionsYAxis(myChart, minZero = TRUE, decimals=1)
+myChart <- chartData(myChart, type="Line", addY = aboveground)
+
+belowground <- stockVariables[grepl("DOM: Belowground", stockVariables)]
+myChart <- chart(myProject, chart="03 - Single Cell - Belowground DOM")
+myChart <- chartOptionsYAxis(myChart, minZero = TRUE, decimals=1)
+myChart <- chartData(myChart, type="Line", addY = belowground)
+
 
 # Maps ---
 # 1 - Biomass
