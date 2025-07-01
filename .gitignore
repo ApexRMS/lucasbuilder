@@ -1,4 +1,4 @@
-stsimcbmcfs3.ssimpkg
+*.ssimpkg
 #src/.metadata
 install_script.cmd
 data/.Rhistory
