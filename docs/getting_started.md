@@ -24,17 +24,17 @@ If you do not have **Miniforge** installed on your computer, a dialog box will o
 
 > **Miniforge** is an installer for conda, a package environment manager that installs any required packages and their dependencies. By default, **LUCAS Builder** runs conda to install, create, save, and load the required environment for running **LUCAS Builder**, including the R software and necessary packages.
 
-> **Note:** The **LUCAS Builder** package includes a template library, **CBM-CFS3 CONUS**, that contain example inputs and outputs. Installation of conda or R is not required to view the Template Library inputs and outputs.
+> **Note:** The **LUCAS Builder** package includes a template library, **LUCAS Builder - CONUS**, that contain example inputs and outputs. Installation of conda or R is not required to view the Template Library inputs and outputs.
 
 ## **Step 2: Create a new LUCAS Builder Library**
-Having installed the **LUCAS Builder** package, you are now ready to create your first SyncroSim Library. A *Library* is a file (with extension *.ssim*) that contains all of your model inputs and outputs. The format of each library is specific to the Package for which it was initially created. You can opt to create an empty library or download the **lucasbuilder** template library. In this tutorial, we will be using the the **CBM-CFS3 CONUS** template library.
+Having installed the **LUCAS Builder** package, you are now ready to create your first SyncroSim Library. A *Library* is a file (with extension *.ssim*) that contains all of your model inputs and outputs. The format of each library is specific to the Package for which it was initially created. You can opt to create an empty library or download the **lucasbuilder** template library. In this tutorial, we will be using the the **LUCAS Builder - CONUS** template library.
 <br>
 <img align="middle" style="padding: 3px" width="680" src="assets/images/screencap-2_1.png">
 <br>
 In this window:
 <br>
 * Go to **File > New > From Online Template...** Select the row for **lucasbuilder**. Note that as you select a row, the list of **Templates** available and suggested **File name** for that base package are updated.
-* Select the **CBM-CFS3 CONUS** template as shown above.
+* Select the **LUCAS Builder - CONUS** template as shown above.
 * Optionally, type in a new **File name** for the library (or accept the default); you can also change the target **Folder** using the **Browse...** button.
 
 > **Note:** If you intend on using Multiprocessing (recommended), ensure your SyncroSim library is saved to a drive that is not being syncronized to the cloud. Saving your library to OneDrive, Dropbox or some other similar location can result in an error when completing a model run.
@@ -44,7 +44,7 @@ When you are ready to create the library file, click **OK**. A new library will 
 ## **Step 3: Review the model inputs and outputs**
 The contents of the template library are now displayed in the *Explorer*. Model inputs in SyncroSim are organized into *Scenarios*, where each scenario consists of a suite of values, one for each of the model's required inputs.
 
-Because you chose the **CBM-CFS3 CONUS** template when you created your library, it already contains four folders:
+Because you chose the **LUCAS Builder - CONUS** template when you created your library, it already contains four folders:
 * 1 - Predefined Inputs
 * 2 - User Defined Inputs
 * 3 - Run Setup
@@ -111,7 +111,7 @@ Following the steps above, view the *Run Stage* and input and output **Datafeeds
 
 ## **Step 4: Run the model**
 
-If not using conda, SyncroSim needs the location of your R executable, which will be found automatically if it is installed in the default location. To check, double-click on **CBM-CFS3 CONUS** and navigate to the **System** tab. In the **Tools > R** datasheet, you should see the file path to your R executable. If not, click **Browse...** and navigate to the correct file location. 
+If not using conda, SyncroSim needs the location of your R executable, which will be found automatically if it is installed in the default location. To check, double-click on **lucasbuilder-conus** and navigate to the **System** tab. In the **Tools > R** datasheet, you should see the file path to your R executable. If not, click **Browse...** and navigate to the correct file location. 
 
 Select the **Calculate Flow Rates** scenario and press **Run** on the top toolbar. If prompted to save your project, click **Yes**. 
 <br>
