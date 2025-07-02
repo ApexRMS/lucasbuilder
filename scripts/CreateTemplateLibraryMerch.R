@@ -12,7 +12,7 @@ options(stringsAsFactors=FALSE)
 # Settings ----
 
 mySession <- session()
-libraryName <- paste0(getwd(),"/model/CBM-CFS3 CONUS")
+libraryName <- paste0(getwd(),"/model/lucasbuilder-conus")
 myProjectName <- "Definitions"
 initialInputsDirectory <- paste0(dirname(getwd()), "/data/user-example-inputs-merch/")
 definitionsPath <- paste0(initialInputsDirectory,"ConusLibrary/")
@@ -25,6 +25,9 @@ myLibrary <- ssimLibrary(libraryName,
                          session = mySession)
 myProject <- project(myLibrary, project=myProjectName)
 
+description(myLibrary) <- "Library for the LUCAS Builder package containing the 
+29 forest types required to run forest carbon simulations for the 
+Conterminous United States (CONUS)."
 
 #######################
 ## Predefined Inputs ##
@@ -714,17 +717,17 @@ stockVariables <- datasheet(myProject, "stsim_StockGroup") %>%
 
 biomass <- stockVariables[grepl("Biomass", stockVariables)]
 myChart <- chart(myProject, chart="01 - Single Cell - Biomass")
-myChart <- chartOptionsYAxis(myChart, minZero = TRUE, decimals=1)
+myChart <- chartOptionsYAxis(myChart, minZero = TRUE, decimals=1, title = "Metric Tons C")
 myChart <- chartData(myChart, type="Line", addY = biomass)
 
 aboveground <- stockVariables[grepl("DOM: Aboveground", stockVariables)]
 myChart <- chart(myProject, chart="02 - Single Cell - Aboveground DOM")
-myChart <- chartOptionsYAxis(myChart, minZero = TRUE, decimals=1)
+myChart <- chartOptionsYAxis(myChart, minZero = TRUE, decimals=1, title = "Metric Tons C")
 myChart <- chartData(myChart, type="Line", addY = aboveground)
 
 belowground <- stockVariables[grepl("DOM: Belowground", stockVariables)]
 myChart <- chart(myProject, chart="03 - Single Cell - Belowground DOM")
-myChart <- chartOptionsYAxis(myChart, minZero = TRUE, decimals=1)
+myChart <- chartOptionsYAxis(myChart, minZero = TRUE, decimals=1, title = "Metric Tons C")
 myChart <- chartData(myChart, type="Line", addY = belowground)
 
 

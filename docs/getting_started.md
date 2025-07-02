@@ -74,18 +74,21 @@ The crosswalk datasheet allows a user to associate each forest type to a CBM equ
 <br>
 >**Note:** In the example, the **ST-Sim Stratum**, **ST-Sim Secondary Stratum**, and **Average Temperature** columns have been populated and hidden for image clarity. In a custom library, users will need to manually set values for these columns.
 
-Looking at the **Spin-up** scenario, we see that each ST-Sim State Class defined in the species crosswalk has been linked with each transition (disturbance) type.   
+Looking at the **Spin-up** scenario, we see that each ST-Sim State Class defined in the species crosswalk has been linked with each transition (disturbance) type.
 <br>
 <img align="middle" style="padding: 3px" width="975" src="assets/images/screencap-3_4.png">
 <br>
+
 Merchantable volume curves need to be added to the **Merchantable Volume Curve** scenario for each ST-Sim State Class defined in the species crosswalk.
 <br>
-<img align="middle" style="padding: 3px" width="975" src="">
+<img align="middle" style="padding: 3px" width="975" src="assets/images/screencap-3_5.png">
 <br>
+
 When all scenarios in the **User Defined Inputs** folder are populated, the **Run Setup** scenarios can be run.
 <br>
-<img align="middle" style="padding: 3px" width="500" src="assets/images/screencap-3_5.png">
+<img align="middle" style="padding: 3px" width="500" src="assets/images/screencap-3_6.png">
 <br>
+
 Click on the scenarios in the **Run Setup** and **Run Forecast** folders to view the scenario dependencies and familiarize yourself with each scenario's inputs. 
 The **CBM Output** scenario has already been run, so you will also see a *Results* folder within this scenario.
 
@@ -93,15 +96,15 @@ Open the **CBM Output** scenario and select **Pipeline** from the **General** ta
 
 Now select **Datafeeds** from the **General** tab to see the scenario's active datasheets. 
 <br>
-<img align="middle" style="padding: 3px" width="975" src="assets/images/screencap-3_6.png">
+<img align="middle" style="padding: 3px" width="975" src="assets/images/screencap-3_7.png">
 <br>
 Open the Result Scenario for **CBM Output**. 
 <br>
-<img align="middle" style="padding: 3px" width="500" src="assets/images/screencap-3_7.png">
+<img align="middle" style="padding: 3px" width="500" src="assets/images/screencap-3_8.png">
 <br>
 Looking at **Datafeeds**, notice that the **State Attribute Values** datasheet was populated as a result of running the **CBM Output** scenario. 
 <br>
-<img align="middle" style="padding: 3px" width="975" src="assets/images/screencap-3_8.png">
+<img align="middle" style="padding: 3px" width="975" src="assets/images/screencap-3_9.png">
 <br>
 
 Following the steps above, view the *Run Stage* and input and output **Datafeeds** for the **Calculate Flow Rates** and **Run Spin-up** scenarios.
