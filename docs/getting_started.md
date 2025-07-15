@@ -29,7 +29,7 @@ If you do not have **Miniforge** installed on your computer, a dialog box will o
 ## **Step 2: Create a new LUCAS Builder Library**
 Having installed the **LUCAS Builder** package, you are now ready to create your first SyncroSim Library. A *Library* is a file (with extension *.ssim*) that contains all of your model inputs and outputs. The format of each library is specific to the Package for which it was initially created. You can opt to create an empty library or download the **lucasbuilder** template library. In this tutorial, we will be using the the **LUCAS Builder - CONUS** template library.
 <br>
-<img align="middle" style="padding: 3px" width="680" src="assets/images/screencap-2_1.png">
+<img align="middle" style="padding: 3px" width="750" src="assets/images/screencap-2_1.png">
 <br>
 In this window:
 <br>
@@ -124,7 +124,7 @@ If the run is successful, you will see a *Status* of **Done** in the *Run Monito
 
 Repeat the process with the **Run Spin-up** scenario. Notice that the outputs from the **Calculate Flow Rates** scenario serve as inputs for the spin-up runs. In turn, the results from the **Run Spin-up** scenario are used as inputs for the **Single Cell - No Disturbance** scenario. Looking at the *Pipeline* of each scenario, you can notice the sequence of modeling stages. 
 
-> **Warning Note:** Running these scenarios will take approximatelly 17.4 GB of disk space.
+> **Warning Note:** Running these scenarios will take approximatelly 3.5 GB of disk space.
 
 Once the **Run Setup** scenarios have completed successfully, the **Run Forecast** scenarios can be run. 
 

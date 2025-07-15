@@ -55,8 +55,8 @@ saveDatasheet(myProject, mySheet, sheetName)
 
 sheetName <- "stsim_TransitionType"
 mySheet <- datasheet(myProject, name=sheetName, optional=T, empty = T)
-mySheetFull <- read.csv(paste0(definitionsPath,"Transition Type.csv")) %>%
-  rename(Id = ID)
+mySheetFull <- read.csv(paste0(definitionsPath,"Transition Type.csv"))
+names(mySheetFull) <- gsub("ID","Id",names(mySheetFull))
 saveDatasheet(myProject, mySheetFull, sheetName)
 
 sheetName <- "stsim_TransitionGroup"
@@ -268,10 +268,9 @@ saveDatasheet(myScenario, mySheetFull, sheetName)
 ## Stock flow output options
 myScenarioName <- "Stock Flow Output Options"
 myScenario <- scenario(myProject, scenario = myScenarioName, folder = folderId(folder1))
-
 sheetName <- "stsim_OutputOptionsStockFlow"
 mySheet <- datasheet(myScenario, name=sheetName, optional=T, empty = T)
-mySheetFull <- read_xlsx(path = paste0(dirname(getwd()), "/Data/SF Output Options - Spatial.xlsx"), sheet = "SF Output Options") %>%
+mySheetFull <- read_xlsx(path = paste0(dirname(getwd()), "/data/Stock-Flow Output Options.xlsx"), sheet = "Stock-Flow Output") %>%
   data.frame()
 # names(mySheetFull) <- names(mySheet)
 saveDatasheet(myScenario, mySheetFull, sheetName)
@@ -446,7 +445,7 @@ saveDatasheet(myProject, myData, sheetName)
 
 ## Project Definitions ---- [Needed for Flow-pathways/spin-up Transformers]
 
-maxAge <- 600 
+maxAge <- 300 
 initialStandAge <- 0
 standArea <- 1
 
