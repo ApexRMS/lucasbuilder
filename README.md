@@ -4,3 +4,5 @@
 
 The package allows users to load outputs from the CBM-CFS3, calculate flow rates by carbon pool based on CBM-CFS3 parameters and user defined temperatures, run spin-up simulations to create initial carbon maps based on forest type and recent disturbance, and generate spatially explicit forecasts of forest carbon under alternative scenarios.
 
+* See the [Home page](https://apexrms.github.io/lucasbuilder/) for an overview of **lucasbuilder**
+* See the [Getting Started](https://apexrms.github.io/lucasbuilder/getting_started.html) page to get up and running quickly 

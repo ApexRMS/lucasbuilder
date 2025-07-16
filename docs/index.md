@@ -12,11 +12,11 @@ permalink: /
 
 ## Landscape scale forest carbon simulations
 
-### *LUCAS Builder* is an open-source <a href="https://syncrosim.com/download/" target="_blank">Syncrosim</a> package for integrating dynamics from the Carbon Budget Model of the Canadian Forest Sector (CBM-CFS3) into the <a href="http://docs.stsim.net" target="_blank">ST-Sim</a> landscape simulation model.
+### *LUCAS Builder* is an open-source <a href="https://syncrosim.com/download/" target="_blank">SyncroSim</a> package for integrating dynamics from the Carbon Budget Model of the Canadian Forest Sector (CBM-CFS3) into the <a href="http://docs.stsim.net" target="_blank">ST-Sim</a> landscape simulation model.
 
-**LUCAS Builder** integrates inputs and outputs from the Carbon Budget Model of the Canadian Forest Sector (<a href="https://natural-resources.canada.ca/climate-change/climate-change-impacts-forests/carbon-budget-model" target="_blank">CBM-CFS3</a>, <a href="https://doi.org/10.1016/j.ecolmodel.2008.10.018" target="_blank">Kurz *et al*. 2009</a>) into landscape scale simulations using the <a href="http://docs.stsim.net" target="_blank">ST-Sim</a> <a href="https://syncrosim.com/" target="_blank">Syncrosim</a> package. The package allows users to load outputs from the CBM-CFS3, calculate flow rates by carbon pool based on CBM-CFS3 parameters and user defined temperatures, run spin-up simulations to create initial carbon maps based on forest type and recent disturbance, and generate spatially explicit forecasts of forest carbon under alternative scenarios.
+**LUCAS Builder** integrates inputs and outputs from the Carbon Budget Model of the Canadian Forest Sector (<a href="https://natural-resources.canada.ca/climate-change/climate-change-impacts-forests/carbon-budget-model" target="_blank">CBM-CFS3</a>, <a href="https://doi.org/10.1016/j.ecolmodel.2008.10.018" target="_blank">Kurz *et al*. 2009</a>) into landscape scale simulations using the <a href="http://docs.stsim.net" target="_blank">ST-Sim</a> <a href="https://syncrosim.com/" target="_blank">SyncroSim</a> package. The package allows users to load outputs from the CBM-CFS3, calculate flow rates by carbon pool based on CBM-CFS3 parameters and user defined temperatures, run spin-up simulations to create initial carbon maps based on forest type and recent disturbance, and generate spatially explicit forecasts of forest carbon under alternative scenarios.
 
-**LUCAS Builder** is a package that plugs into the <a href="https://syncrosim.com/" target="_blank">Syncrosim</a> modeling framework. It can also be run from the R programming language using the <a href="https://syncrosim.com/r-package/" target="_blank">rsyncrosim</a> R package and from the Python programming language using the <a href="https://pysyncrosim.readthedocs.io/en/latest/" target="_blank">pysyncrosim</a> Python package.
+**LUCAS Builder** is a package that plugs into the <a href="https://syncrosim.com/" target="_blank">SyncroSim</a> modeling framework. It can also be run from the R programming language using the <a href="https://syncrosim.com/r-package/" target="_blank">rsyncrosim</a> R package and from the Python programming language using the <a href="https://pysyncrosim.readthedocs.io/en/latest/" target="_blank">pysyncrosim</a> Python package.
 
 ## Requirements
 
@@ -33,7 +33,7 @@ For more information on **LUCAS Builder**, including a Quickstart Tutorial, see 
 
 ## Templates
 
-- CBM-CFS3 CONUS: **LUCAS Builder** Library containing the 29 forest types required to run forest carbon simulations for CONUS.
+- LUCAS Builder - CONUS: **LUCAS Builder** Library containing the 29 forest types required to run forest carbon simulations for CONUS.
 
 ## Links
 

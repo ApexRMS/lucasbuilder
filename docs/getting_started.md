@@ -22,7 +22,7 @@ To install the **LUCAS Builder** package, open **SyncroSim** and select **File >
 
 If you do not have **Miniforge** installed on your computer, a dialog box will open asking if you would like to install Miniforge. Click **Yes**. Once Miniforge is installed, a dialog box will open asking if you would like to create a new conda environment. Click **Yes**. Note that the process of installing Miniforge and the **lucasbuilder** conda environment can take several minutes. If you choose not to install the conda environment, you will need to install <a href="https://www.r-project.org/" target="_blank">**R**</a> version 4.1.3 or later.
 
-> **Miniforge** is an installer for conda, a package environment manager that installs any required packages and their dependencies. By default, **LUCAS Builder** runs conda to install, create, save, and load the required environment for running **LUCAS Builder**, including the R software and necessary packages.
+> **Miniforge** is an installer for conda, a package environment manager that installs any required packages and their dependencies. By default, **lucasbuilder** runs conda to install, create, save, and load the required environment for running **LUCAS Builder**, including the R software and necessary packages.
 
 > **Note:** The **LUCAS Builder** package includes a template library, **LUCAS Builder - CONUS**, that contain example inputs and outputs. Installation of conda or R is not required to view the Template Library inputs and outputs.
 
