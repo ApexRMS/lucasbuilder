@@ -8,11 +8,11 @@ title: Getting started
 ## Quickstart Tutorial
 
 This quickstart tutorial will introduce you to the basics of working with **LUCAS Builder**. The steps include:
-<br>
-* Installing LUCAS Builder
-* Creating a LUCAS Builder Library from a template
-* Viewing model inputs and outputs
-* Running the model
+
+1. Installing LUCAS Builder
+2. Creating a LUCAS Builder Library from a template
+3. Viewing model inputs and outputs
+4. Running the model
 
 
 ## **Step 1: Install LUCAS Builder**
@@ -28,12 +28,13 @@ If you do not have **Miniforge** installed on your computer, a dialog box will o
 
 ## **Step 2: Create a new LUCAS Builder Library**
 Having installed the **LUCAS Builder** package, you are now ready to create your first SyncroSim Library. A *Library* is a file (with extension *.ssim*) that contains all of your model inputs and outputs. The format of each library is specific to the Package for which it was initially created. You can opt to create an empty library or download the **lucasbuilder** template library. In this tutorial, we will be using the the **LUCAS Builder - CONUS** template library.
+* Go to **File > New > From Online Template...** 
 <br>
 <img align="middle" style="padding: 3px" width="750" src="assets/images/screencap-2_1.png">
 <br>
 In this window:
 <br>
-* Go to **File > New > From Online Template...** Select the row for **lucasbuilder**. Note that as you select a row, the list of **Templates** available and suggested **File name** for that base package are updated.
+* Select the row for **lucasbuilder**. Note that as you select a row, the list of **Templates** available and suggested **File name** for that base package are updated.
 * Select the **LUCAS Builder - CONUS** template as shown above.
 * Optionally, type in a new **File name** for the library (or accept the default); you can also change the target **Folder** using the **Browse...** button.
 
@@ -52,20 +53,23 @@ Because you chose the **LUCAS Builder - CONUS** template when you created your l
 
 The **Predefined Inputs** folder contains pre-configured scenarios that act as inputs for the **Run Setup** and **Run Forecast** scenarios. The **User Defined Inputs** folder contains two sub-folders (**Run Setup Inputs** and **Run Forecast Inputs**) that house user input scenarios that need to be populated before running the **Run Setup** and **Run Forecast** scenarios.
 >**Note:** The **User Defined Inputs** have been populated to provide an executable example to help you get started quickly.
+
+In the  **User Defined Inputs**  folder, select and review the inputs for the scenarios in the **Run Setup Inputs** sub-folder.
 <br>
 <img align="middle" style="padding: 3px" width="500" src="assets/images/screencap-3_1.png">
 <br>
-In the  **User Defined Inputs**  folder, select and review the inputs for the scenarios in the **Run Setup Inputs** sub-folder.
 
 * Select the Scenario named  **CBM Crosswalk – Spatial Unit and Species Type**  in the *Explorer*.
 * Double-click to open the scenario and view its details.
 
 This opens the scenario *Properties* window. The first tab in this window, called **General**, contains three *datasheets*. The first, **Summary**, displays some general information for the scenario. The second, **Pipeline**, allows the user to select the run order of the inputs in the model. Finally, the **Datafeeds** datasheet (shown below) displays a list of all data sources.
+
+* Select the **CBM Crosswalk to ST-Sim – Spatial Unit and Species Type** datafeed to view the example inputs.
+
 <br>
 <img align="middle" style="padding: 3px" width="975" src="assets/images/screencap-3_2.png">
 <br>
-Select the **CBM Crosswalk to ST-Sim – Spatial Unit and Species Type** datafeed to view the example inputs.
-<br>
+
 >**Note:** Populated datasheets will appear at the top of the Datafeeds list with a green check mark in the *Data* field.
 
 The crosswalk datasheet allows a user to associate each forest type to a CBM equivalent combination of Ecological Boundary, Admin Boundary, and Species Type.  Here a user can specify temperature values that should be used when modeling dead organic matter transfer and decay rates.  Note that if temperature values are not specified, the default values for the selected Ecological Boundary will be used. Optionally, a user can load CBM output files, which can be compared against simulations run in ST-Sim for validation purposes (see below).
