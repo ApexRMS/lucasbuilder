@@ -165,5 +165,5 @@ Here we use 5 return intervals as the number of disturbance cycles in our Spin-u
 
 Also, minor differences with the CBM output occurred, because we used regionally specific parameters instead of using the default values in the CBM. For example, we used a fire return interval of 1000 years for the Redwoods Forest Type Group.
 
-Lastly, we used a different smoothing algorithm for aboveground biomass pools at low merchantable volumes compared to the CBM-CFS3, which resulted in minor differences with the CBM output for the biomass and DOM pools at young stand ages. We used a different smoothing algorithm because the default CBM-CFS3 smoothing algorithm occasionally causes unrealistic peaks at young stand ages in the biomass pools.”
+Lastly, we used a different smoothing algorithm for aboveground biomass pools at low merchantable volumes compared to the CBM-CFS3, which resulted in minor differences with the CBM output for the biomass and DOM pools at young stand ages. We used a different smoothing algorithm because the default CBM-CFS3 smoothing algorithm occasionally causes unrealistic peaks at young stand ages in the biomass pools.
 
