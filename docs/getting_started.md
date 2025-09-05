@@ -157,4 +157,13 @@ Double-click on the **Single Cell – Aboveground DOM** and **Single Cell – Be
 <img align="middle" style="padding: 3px" width="975" src="assets/images/screencap-4_6.png">
 <br>
 
+For some forest types, the biomass and Dead Organic Matter (DOM) pools, in the **Single Cell- No Disturbance** scenario differ slightly from the CBM output. The CBM output relies on different default parameter values. For example, modifying the average temperature in the **CBM Crosswalk – Spatial Unit and Species Type** scenario or modifying the return interval and the number of return intervals in the **Spin-up** scenario will affect how much carbon accumulates in the DOM pools. 
+
+Here we use 5 return intervals as the number of disturbance cycles in our Spin-up as an example; however, the number of return intervals should be increased (e.g., >= 10) to ensure the Dead Organic Matter pools have reached equilibrium. For example, Kurz et al. (2009) assumes that equilibrium has been reached only when the sum, of the above- and below- ground slow pools, differs by less than 1% between two consecutive disturbance intervals. To determine whether equilibrium has been reached look at the difference between the last two peaks summed for the above- and below-ground slow pools in the results of the **Run Spin-up** scenario. If values have not reached equilibrium, increase the number of return intervals in the **Spin-up** scenario which can be found in the **2.1 Run Setup Inputs** folder. Then, re-run the **Run Spin-up** scenario in the **3 – Run Setup** folder. To apply these changes to the initial stock values, re-run the **Single-Cell - No Disturbance** scenario in the **4 – Run Forecast** folder. 
+
+Also, minor differences with the CBM output occurred, because we used regionally specific parameters instead of using the default values in the CBM. For example, we used a fire return interval of 1000 years for the Redwoods Forest Type Group.
+
+Lastly, we used a different smoothing algorithm for aboveground biomass pools at low merchantable volumes compared to the CBM-CFS3, which resulted in minor differences with the CBM output for the biomass and DOM pools at young stand ages. We used a different smoothing algorithm because the default CBM-CFS3 smoothing algorithm occasionally causes unrealistic peaks at young stand ages in the biomass pools.”
+
+
 > **Note:** This example is non-spatial. Therefore, there are no map outputs to display.
