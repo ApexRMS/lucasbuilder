@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<package name="lucasbuilder" displayName="LUCAS Carbon Budget Model" description="Integrates the Carbon Budget Model of the Canadian Forest Sector (CBM-CFS3) into the ST-Sim simulation model." version="2.0.3" minSyncroSimVersion="3.1.9" url="https://apexrms.github.io/stsimcbmcfs3/">
+<package name="lucasbuilder" displayName="LUCAS Carbon Budget Model" description="Integrates the Carbon Budget Model of the Canadian Forest Sector (CBM-CFS3) into the ST-Sim simulation model." version="2.0.3" minSyncroSimVersion="3.1.9" url="https://apexrms.github.io/lucasbuilder/">
 
 <builtFor package="stsim" version="4.5.0"/>
 
