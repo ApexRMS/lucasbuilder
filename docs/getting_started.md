@@ -18,7 +18,7 @@ This quickstart tutorial will introduce you to the basics of working with **LUCA
 ## **Step 1: Install LUCAS Builder**
 **LUCAS Builder** is a *package* within the Syncrosim simulation modeling framework, and requires **SyncroSim Studio** to be installed on your computer. Download and install <a href="https://syncrosim.com/download/" target="_blank">**SyncroSim**</a>  3.1.9 or later.
 
-To install the **LUCAS Builder** package, open **SyncroSim** and select **File > Local Packages > Install from Server...**, select the **lucasbuilder** package and click OK. Repeat the process to intall the **stsim** package. Visit the <a href="https://docs.stsim.net/" target="_blank">ST-Sim documentation</a> page for additional information on ST-Sim.
+To install the **LUCAS Builder** package, open **SyncroSim** and select **File > Local Packages > Install from Server...**, select the **lucasbuilder** package and click OK. Repeat the process to install the **stsim** package. Visit the <a href="https://docs.stsim.net/" target="_blank">ST-Sim documentation</a> page for additional information on ST-Sim.
 
 If you do not have **Miniforge** installed on your computer, a dialog box will open asking if you would like to install Miniforge. Click **Yes**. Once Miniforge is installed, a dialog box will open asking if you would like to create a new conda environment. Click **Yes**. Note that the process of installing Miniforge and the **lucasbuilder** conda environment can take several minutes. If you choose not to install the conda environment, you will need to install <a href="https://www.r-project.org/" target="_blank">**R**</a> version 4.1.3 or later.
 
@@ -38,7 +38,7 @@ In this window:
 * Select the **LUCAS Builder - CONUS** template as shown above.
 * Optionally, type in a new **File name** for the library (or accept the default); you can also change the target **Folder** using the **Browse...** button.
 
-> **Note:** If you intend on using Multiprocessing (recommended), ensure your SyncroSim library is saved to a drive that is not being syncronized to the cloud. Saving your library to OneDrive, Dropbox or some other similar location can result in an error when completing a model run.
+> **Note:** If you intend on using Multiprocessing (recommended), ensure your SyncroSim library is saved to a drive that is not being synchronized to the cloud. Saving your library to OneDrive, Dropbox or some other similar location can result in an error when completing a model run.
 
 When you are ready to create the library file, click **OK**. A new library will be created and loaded into the library *Explorer*.
 
@@ -126,7 +126,7 @@ If the run is successful, you will see a *Status* of **Done** in the *Run Monito
 <img align="middle" style="padding: 3px" width="750" src="assets/images/screencap-4_2.png">
 <br>
 
-Repeat the process with the **Run Spin-up** scenario. Notice that the outputs from the **Calculate Flow Rates** scenario serve as inputs for the spin-up runs. In turn, the results from the **Run Spin-up** scenario are used as inputs for the **Single Cell - No Disturbance** scenario. Looking at the *Pipeline* of each scenario, you can notice the sequence of modeling stages. 
+Repeat the process with the **Run Spin-up** scenario. Notice that the outputs from the **Calculate Flow Rates** scenario serve as inputs for the spin-up runs. In turn, the results from the **Run Spin-up** scenario are used as inputs for the **Single Cell – No Disturbance** scenario. Looking at the *Pipeline* of each scenario, you can notice the sequence of modeling stages. 
 
 > **Warning Note:** Running these scenarios will take approximatelly 3.5 GB of disk space.
 
@@ -134,7 +134,7 @@ Once the **Run Setup** scenarios have completed successfully, the **Run Forecast
 
 Repeat the steps above to run the **Single Cell – No Disturbance** scenario.
 
-When a scenario is run, a new Results Scenario will appear in the Results folder, and its results are automatically loaded after a successfull scenario run. **Scenarios** which contain results added to the results viewer appear in **bold** in the *Explorer*. 
+When a scenario is run, a new Results Scenario will appear in the Results folder, and its results are automatically loaded after a successful scenario run. **Scenarios** which contain results added to the results viewer appear in **bold** in the *Explorer*. 
 <br>
 <img align="middle" style="padding: 3px" width="500" src="assets/images/screencap-4_3.png">
 <br>
@@ -159,5 +159,5 @@ Double-click on the **Single Cell – Aboveground DOM** and **Single Cell – Be
 
 > **Note:** This example is non-spatial. Therefore, there are no map outputs to display.
 
-The **Single Cell- No Disturbance** scenario differs slightly from the CBM output for some forest types. These discrepancies are due to different default input parameter values in the CBM output. For example, in this **LUCAS Builder – CONUS** template library, we used a fire return interval of 1000 years for the Redwoods Forest Type Group, whereas the CBM output used a default fire return interval of 300 years. Also, LUCAS Builder uses a different smoothing algorithm for nonmerchantable biomass pools at young stand ages; therefore, results from the LUCAS Builder package will differ slightly from the CBM output at young stand ages.
+The **Single Cell – No Disturbance** scenario differs slightly from the CBM output for some forest types. These discrepancies are due to different default input parameter values in the CBM output. For example, in this **LUCAS Builder – CONUS** template library, we used a fire return interval of 1000 years for the Redwoods Forest Type Group, whereas the CBM output used a default fire return interval of 300 years. Also, LUCAS Builder uses a different smoothing algorithm for nonmerchantable biomass pools at young stand ages; therefore, results from the LUCAS Builder package will differ slightly from the CBM output at young stand ages.
 
