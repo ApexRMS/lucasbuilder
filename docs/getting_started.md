@@ -24,7 +24,7 @@ If you do not have **Miniforge** installed on your computer, a dialog box will o
 
 > **Miniforge** is an installer for conda, a package environment manager that installs any required packages and their dependencies. By default, **lucasbuilder** runs conda to install, create, save, and load the required environment for running **LUCAS Builder**, including the R software and necessary packages.
 
-> **Note:** The **LUCAS Builder** package includes a template library, **LUCAS Builder - CONUS**, that contain example inputs and outputs. Installation of conda or R is not required to view the Template Library inputs and outputs.
+> **Note:** The **LUCAS Builder** package includes a template library, **LUCAS Builder - CONUS**, that contains example inputs and outputs. Installation of conda or R is not required to view the Template Library inputs and outputs.
 
 ## **Step 2: Create a new LUCAS Builder Library**
 Having installed the **LUCAS Builder** package, you are now ready to create your first SyncroSim Library. A *Library* is a file (with extension *.ssim*) that contains all of your model inputs and outputs. The format of each library is specific to the Package for which it was initially created. You can opt to create an empty library or download the **lucasbuilder** template library. In this tutorial, we will be using the the **LUCAS Builder - CONUS** template library.
@@ -111,7 +111,7 @@ Looking at **Datafeeds**, notice that the **State Attribute Values** datasheet w
 <img align="middle" style="padding: 3px" width="975" src="assets/images/screencap-3_9.png">
 <br>
 
-Following the steps above, view the *Run Stage* and input and output **Datafeeds** for the **Calculate Flow Rates** and **Run Spin-up** scenarios.
+Following the steps above, view the **Pipeline** and input and output **Datafeeds** for the **Calculate Flow Rates** and **Run Spin-up** scenarios.
 
 ## **Step 4: Run the model**
 
@@ -132,7 +132,7 @@ Repeat the process with the **Run Spin-up** scenario. Notice that the outputs fr
 
 Once the **Run Setup** scenarios have completed successfully, the **Run Forecast** scenarios can be run. 
 
-Repeat the steps above to run the **Single Cell – No Disturbance**
+Repeat the steps above to run the **Single Cell – No Disturbance** scenario.
 
 When a scenario is run, a new Results Scenario will appear in the Results folder, and its results are automatically loaded after a successfull scenario run. **Scenarios** which contain results added to the results viewer appear in **bold** in the *Explorer*. 
 <br>
@@ -158,3 +158,6 @@ Double-click on the **Single Cell – Aboveground DOM** and **Single Cell – Be
 <br>
 
 > **Note:** This example is non-spatial. Therefore, there are no map outputs to display.
+
+The **Single Cell- No Disturbance** scenario differs slightly from the CBM output for some forest types. These discrepancies are due to different default input parameter values in the CBM output. For example, in this **LUCAS Builder – CONUS** template library, we used a fire return interval of 1000 years for the Redwoods Forest Type Group, whereas the CBM output used a default fire return interval of 300 years. Also, LUCAS Builder uses a different smoothing algorithm for nonmerchantable biomass pools at young stand ages; therefore, results from the LUCAS Builder package will differ slightly from the CBM output at young stand ages.
+
