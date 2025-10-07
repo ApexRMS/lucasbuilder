@@ -28,42 +28,52 @@ adminRast <- rast(file.path(
   "admin-boundary.tif"
 ))
 ageRast <- rast(file.path(initialInputsDirectory, "spatial", "age.tif"))
+
+# reclassify eco boundary rast to 45 - Piedmont fall line and 67 - Ridge and Valley
 ecoRast <- rast(file.path(
   initialInputsDirectory,
   "spatial",
   "eco-boundary.tif"
-))
-# reclassify rast to 45 - Piedmont fall line
-ecoRastPiedmont <- classify(ecoRast, rcl = matrix(c(1, 45), ncol = 2))
+)) %>%
+  classify(rcl = matrix(c(1, 45), ncol = 2))
+ecoRast[c(1:35), c(1:35)] <- 67
+
+plot(ecoRast)
+
 writeRaster(
-  ecoRastPiedmont,
-  file.path(initialInputsDirectory, "spatial", "eco-boundary_Piedmont.tif")
+  ecoRast,
+  file.path(initialInputsDirectory, "spatial", "eco-boundary_P_RV.tif")
 )
 # reclassify state class 61 to 31 (Barren)
 stateClassRast <- rast(file.path(
   initialInputsDirectory,
   "spatial",
   "state-class.tif"
-))
-# stateClassRast[stateClassRast == 61] <- 31
-# writeRaster(stateClassRast, file.path(initialInputsDirectory, "spatial", "state-class.tif"), overwrite=T)
+)) %>%
+  classify(rcl = matrix(c(61, 31), ncol = 2))
+writeRaster(
+  stateClassRast,
+  file.path(initialInputsDirectory, "spatial", "state-class.tif"),
+  overwrite = T
+)
+
 # create TST rasters for Harvest and Fire, based on the ages raster
 tstRast <- rast(file.path(initialInputsDirectory, "spatial", "age.tif"))
-plot(tstRast)
+
 harvestRast <- tstRast
 harvestRast[harvestRast > 200] <- 9999
-
-fireRast <- tstRast
-fireRast[fireRast <= 200] <- 9999
-
 writeRaster(
   harvestRast,
   file.path(initialInputsDirectory, "spatial", "tst_harvest.tif")
 )
+
+fireRast <- tstRast
+fireRast[fireRast <= 200] <- 9999
 writeRaster(
   fireRast,
   file.path(initialInputsDirectory, "spatial", "tst_fire.tif")
 )
+
 # Build base library ----
 
 # Create library
@@ -74,8 +84,9 @@ myLibrary <- ssimLibrary(
 )
 myProject <- project(myLibrary, project = myProjectName)
 
-description(myLibrary) <- "Library for the LUCAS Builder package containing the 
-29 forest types required to run forest carbon simulations for the 
+description(myLibrary) <- "Library for the LUCAS Builder package spatial example
+in Alabama, including the Piedmont Fall Line and Ridge and Valley ecoregions.
+Contains the 29 forest types required to run forest carbon simulations for the 
 Conterminous United States (CONUS)."
 
 #######################
