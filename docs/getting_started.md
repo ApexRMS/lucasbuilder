@@ -106,7 +106,7 @@ Notice that only the first stage, *1 - Load CBM Output*, has been selected for t
 
 * Select **Datafeeds** from the **General** tab to see the scenario's active datasheets. 
 <br>
-<img align="middle" style="padding: 3px" width="975" src="assets/images/screencap-3_7.png" alt="The active datasheets in the CBM Outut scenario.">
+<img align="middle" style="padding: 3px" width="975" src="assets/images/screencap-3_7.png" alt="The active datasheets in the CBM Output scenario.">
 <br>
 
 * Open the Result Scenario for **CBM Output**. 
