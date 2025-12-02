@@ -139,7 +139,7 @@ If the run is successful, you will see a *Status* of **Done** in the *Run Monito
 
 Notice that the outputs from the **Calculate Flow Rates** scenario serve as inputs for the spin-up runs. In turn, the results from the **Run Spin-up** scenario are used as inputs for the **Single Cell – No Disturbance** scenario. Looking at the *Pipeline* of each scenario, you can notice the sequence of modeling stages. 
 
-> **Warning Note:** Running these scenarios will take approximatelly 3.5 GB of disk space.
+> **Warning Note:** Running these scenarios will take approximately 3.5 GB of disk space.
 
 Once the **Run Setup** scenarios have completed successfully, the **Run Forecast** scenario can be run. 
 
