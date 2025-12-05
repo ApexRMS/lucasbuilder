@@ -106,11 +106,13 @@ Notice that only the first stage, *1 - Load CBM Output*, has been selected for t
 
 * Select **Datafeeds** from the **General** tab to see the scenario's active datasheets. 
 <br>
+
 <img align="middle" style="padding: 3px" width="975" src="assets/images/screencap-3_7.png" alt="The active datasheets in the CBM Output scenario.">
 <br>
 
 * Open the Result Scenario for **CBM Output**. 
 <br>
+
 <img align="middle" style="padding: 3px" width="500" src="assets/images/screencap-3_8.png" alt="The Result scenario for CBM Output.">
 <br>
 
@@ -127,6 +129,7 @@ If not using conda, SyncroSim needs the location of your R executable, which wil
 
 * Select the **Calculate Flow Rates** scenario and press **Run** on the top toolbar. If prompted to save your library, click **Yes**. 
 <br>
+
 <img align="middle" style="padding: 3px" width="750" src="assets/images/screencap-4_1.png" alt="The Calculate Flow Rates scenario after it is run.">
 <br>
 
@@ -156,10 +159,12 @@ Scenario results can be viewed and compared through **Charts** and **Maps**. You
 
 * Move to the **Charts** tab at the bottom left of the **Scenario Manager** screen and double-click on the **Single Cell – Biomass** chart to open it.
 <br>
+
 <img align="middle" style="padding: 3px" width="500" src="assets/images/screencap-4_4.png" alt="The Charts tab.">
 <br>
 The following charts will be plotted. The two colours correspond to the two scenarios that were added to the Results Viewer.
 <br>
+
 <img align="middle" style="padding: 3px" width="975" src="assets/images/screencap-4_5.png" alt="The plotted charts after selecting the Single Cell - Biomass Chart.">
 <br>
 
