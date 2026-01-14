@@ -775,8 +775,8 @@ for (i in 1:nrow(crosswalkStratumState)) {
         )
     }
 
-    plot(volumeToCarbon$age, volumeToCarbon$b_foliage)
-    plot(volumeToCarbon$age, volumeToCarbon$b_foliageSmooth)
+    #plot(volumeToCarbon$age, volumeToCarbon$b_foliage)
+    #plot(volumeToCarbon$age, volumeToCarbon$b_foliageSmooth)
 
     # Smooth other wood
 
@@ -813,8 +813,8 @@ for (i in 1:nrow(crosswalkStratumState)) {
         )
     }
 
-    plot(volumeToCarbon$age, volumeToCarbon$b_other)
-    plot(volumeToCarbon$age, volumeToCarbon$b_otherSmooth)
+    #plot(volumeToCarbon$age, volumeToCarbon$b_other)
+    #plot(volumeToCarbon$age, volumeToCarbon$b_otherSmooth)
 
     # Don't Smooth merchantable
 
@@ -822,7 +822,7 @@ for (i in 1:nrow(crosswalkStratumState)) {
       arrange(age) %>%
       mutate(b_mSmooth = b_m_CBM)
 
-    plot(volumeToCarbon$age, volumeToCarbon$b_mSmooth)
+    #plot(volumeToCarbon$age, volumeToCarbon$b_mSmooth)
 
     volumeToCarbon <- volumeToCarbon %>%
       mutate(b_aboveground = b_mSmooth + b_foliageSmooth + b_otherSmooth)
