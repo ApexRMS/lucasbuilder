@@ -748,21 +748,35 @@ for (i in 1:nrow(crosswalkStratumState)) {
 
     if (length(minF2) == 0) {
       minF <- min1
+    } else if (min(minF2) > 50) {
+      minF <- min1
     } else {
-      minF <- max(min1, minF2)
+      minF <- max(min1, min(minF2))
     }
 
-    volumeToCarbon = volumeToCarbon %>%
+    volumeToCarbon <- volumeToCarbon %>%
       arrange(age) %>%
       mutate(b_foliageSmooth = if_else(age <= minF, NA, b_foliage)) %>%
-      mutate(b_foliageSmooth = if_else(age == 0, 0, b_foliageSmooth)) %>%
-      mutate(
-        b_foliageSmooth = na_interpolation(
-          b_foliageSmooth,
-          option = "spline",
-          method = "natural"
+      mutate(b_foliageSmooth = if_else(age == 0, 0, b_foliageSmooth))
+
+    if (all(!(diff(volumeToCarbon$b_foliageSmooth) < 0), na.rm = T)) {
+      volumeToCarbon <- volumeToCarbon %>%
+        mutate(
+          b_foliageSmooth = na_interpolation(
+            b_foliageSmooth,
+            option = "spline",
+            method = "hyman"
+          )
         )
-      )
+    } else {
+      volumeToCarbon <- volumeToCarbon %>%
+        mutate(
+          b_foliageSmooth = na_interpolation(b_foliageSmooth, option = "linear")
+        )
+    }
+
+    #plot(volumeToCarbon$age, volumeToCarbon$b_foliage)
+    #plot(volumeToCarbon$age, volumeToCarbon$b_foliageSmooth)
 
     # Smooth other wood
 
@@ -772,45 +786,43 @@ for (i in 1:nrow(crosswalkStratumState)) {
 
     if (length(minO2) == 0) {
       minO <- min1
+    } else if (min(minO2) > 50) {
+      minO <- min1
     } else {
-      minO <- max(min1, minO2)
+      minO <- max(min1, min(minO2))
     }
 
-    volumeToCarbon = volumeToCarbon %>%
+    volumeToCarbon <- volumeToCarbon %>%
       arrange(age) %>%
       mutate(b_otherSmooth = if_else(age <= minO, NA, b_other)) %>%
-      mutate(b_otherSmooth = if_else(age == 0, 0, b_otherSmooth)) %>%
-      mutate(
-        b_otherSmooth = na_interpolation(
-          b_otherSmooth,
-          option = "spline",
-          method = "natural"
+      mutate(b_otherSmooth = if_else(age == 0, 0, b_otherSmooth))
+
+    if (all(!(diff(volumeToCarbon$b_otherSmooth) < 0), na.rm = T)) {
+      volumeToCarbon <- volumeToCarbon %>%
+        mutate(
+          b_otherSmooth = na_interpolation(
+            b_otherSmooth,
+            option = "spline",
+            method = "hyman"
+          )
         )
-      )
-
-    # Smooth merchantable
-
-    minM2 <- volumeToCarbon$age[which(
-      diff(sign(diff(volumeToCarbon$b_m_CBM))) == 2
-    )]
-
-    if (length(minM2) == 0) {
-      minM <- min1
     } else {
-      minM <- max(min1, minM2)
+      volumeToCarbon <- volumeToCarbon %>%
+        mutate(
+          b_otherSmooth = na_interpolation(b_otherSmooth, option = "linear")
+        )
     }
 
-    volumeToCarbon = volumeToCarbon %>%
+    #plot(volumeToCarbon$age, volumeToCarbon$b_other)
+    #plot(volumeToCarbon$age, volumeToCarbon$b_otherSmooth)
+
+    # Don't Smooth merchantable
+
+    volumeToCarbon <- volumeToCarbon %>%
       arrange(age) %>%
-      mutate(b_mSmooth = if_else(age <= minM, NA, b_m_CBM)) %>%
-      mutate(b_mSmooth = if_else(age == 0, 0, b_mSmooth)) %>%
-      mutate(
-        b_mSmooth = na_interpolation(
-          b_mSmooth,
-          option = "spline",
-          method = "natural"
-        )
-      )
+      mutate(b_mSmooth = b_m_CBM)
+
+    #plot(volumeToCarbon$age, volumeToCarbon$b_mSmooth)
 
     volumeToCarbon <- volumeToCarbon %>%
       mutate(b_aboveground = b_mSmooth + b_foliageSmooth + b_otherSmooth)
