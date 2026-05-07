@@ -43,15 +43,9 @@ Report a bug at <a href="https://github.com/ApexRMS/lucasbuilder/issues" target=
 
 ## Developers
 
-Amanda Schwantes (Author, maintainer) <a href="https://orcid.org/0000-0002-7791-1078"><img align="middle" style="padding: 0.5px" width="17" src="assets/images/ORCID.png"></a>
-<br>
-Leonardo Frid (Author) <a href="https://orcid.org/0000-0002-5489-2337"><img align="middle" style="padding: 0.5px" width="17" src="assets/images/ORCID.png"></a>
+[ApexRMS](https://apexrms.com/){:target="_blank"} (Author, maintainer)
 <br>
 Benjamin Sleeter (Author) <a href="https://orcid.org/0000-0003-2371-9571"><img align="middle" style="padding: 0.5px" width="17" src="assets/images/ORCID.png"></a>
 <br>
-Schuyler Pearman-Gillman (Author) <a href="https://orcid.org/0000-0002-3911-1985"><img align="middle" style="padding: 0.5px" width="17" src="assets/images/ORCID.png"></a>
-<br>
-Diego Bilski (Author)
-<br>
-Colin Daniel (Author)
+
 
