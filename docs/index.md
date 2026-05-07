@@ -43,13 +43,7 @@ Report a bug at <a href="https://github.com/ApexRMS/lucasbuilder/issues" target=
 
 ## Developers
 
-<<<<<<< HEAD
 [ApexRMS](https://apexrms.com/){:target="_blank"} (Author, maintainer)
 <br>
 Benjamin Sleeter (Author) <a href="https://orcid.org/0000-0003-2371-9571"><img align="middle" style="padding: 0.5px" width="17" src="assets/images/ORCID.png"></a>
 <br>
-
-=======
-[ApexRMS](https://apexrms.com/) (Author, maintainer)
->>>>>>> edc3e2bcbfa89c0e552c7c51747e2981a89be6de
-
